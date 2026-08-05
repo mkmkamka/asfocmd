@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "node:fs";
-import path from "node:path";
+import { newId, readAll, writeAll } from "@/lib/store";
 
-// Contact messages land here. For the concept phase they are appended to
-// .data/messages.json; in production this will notify the secretariat by email.
-const DATA_DIR = path.join(process.cwd(), ".data");
-const DATA_FILE = path.join(DATA_DIR, "messages.json");
+// Contact messages land in the "messages" collection and show up in the admin
+// inbox. Sending them on by e-mail is still to come — it needs a provider key.
 
 type Message = {
   name: string;
@@ -37,7 +34,11 @@ export async function POST(req: NextRequest) {
   }
 
   const entry = {
+    // The admin inbox acts on rows by id, and legacy rows without one had to
+    // be healed on read — new ones carry theirs from the start.
+    id: newId(),
     receivedAt: new Date().toISOString(),
+    read: false,
     name: body.name.trim().slice(0, 200),
     email: body.email.trim().slice(0, 200),
     subject: String(body.subject ?? "").trim().slice(0, 300),
@@ -45,16 +46,12 @@ export async function POST(req: NextRequest) {
     locale: String(body.locale ?? "ro").slice(0, 5),
   };
 
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  let all: unknown[] = [];
-  try {
-    all = JSON.parse(await fs.readFile(DATA_FILE, "utf8"));
-    if (!Array.isArray(all)) all = [];
-  } catch {
-    all = [];
-  }
+  // Through the store: a JSON file locally, Postgres on Vercel — where the
+  // filesystem is read-only and the direct fs write this replaced returned a
+  // 500 to anyone who used the contact form.
+  const all = await readAll<unknown>("messages");
   all.push(entry);
-  await fs.writeFile(DATA_FILE, JSON.stringify(all, null, 2));
+  await writeAll("messages", all);
 
   return NextResponse.json({ ok: true });
 }
