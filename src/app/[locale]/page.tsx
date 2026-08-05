@@ -16,7 +16,7 @@ import { isLocale, defaultLocale, type Locale } from "@/i18n/config";
    statically generated — without a revalidate window the season would be
    whatever it was on the day the site was built. An hour is far finer than the
    thing being tracked needs. */
-export const revalidate = 3600;
+export const revalidate = 60;
 
 const SERVICE_ICONS: IconName[] = [
   "svcSweep",

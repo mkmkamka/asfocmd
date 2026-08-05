@@ -12,7 +12,8 @@
     "news": "News",
     "contact": "Contact",
     "login": "Sign in",
-    "becomeMember": "Register"
+    "becomeMember": "Register",
+    "resources": "Resources"
   },
   "top": {
     "phone": "+373 79 447 686",
@@ -134,35 +135,6 @@
         {
           "name": "Comrat",
           "count": "9"
-        }
-      ],
-      "members": [
-        {
-          "initials": "IR",
-          "name": "Ion Rusu",
-          "city": "Chișinău, Centru district",
-          "tags": [
-            "Chimney cleaning",
-            "Inspection"
-          ]
-        },
-        {
-          "initials": "VC",
-          "name": "Vasile Croitoru",
-          "city": "Bălți",
-          "tags": [
-            "Chimney building",
-            "Fireplaces"
-          ]
-        },
-        {
-          "initials": "MP",
-          "name": "Mihai Popescu",
-          "city": "Orhei",
-          "tags": [
-            "Stoves",
-            "Ventilation"
-          ]
         }
       ],
       "allMoldova": "All of Moldova",

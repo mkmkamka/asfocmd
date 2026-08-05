@@ -22,6 +22,9 @@ export type Post = {
   title: Localized;
   excerpt: Localized;
   body: PostBlock[];
+  /** Optional link out — a Facebook post, an album, the original article.
+      Set by the admin editor; the archive posts never carry one. */
+  link?: string;
 };
 
 export const posts: Post[] = [

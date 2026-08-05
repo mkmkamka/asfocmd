@@ -5,13 +5,29 @@ import Link from "next/link";
 import DistrictMap from "./DistrictMap";
 import Icon from "./Icon";
 import mapData from "@/data/moldova-districts.json";
-import { members, districtCounts, TOTAL_MEMBERS } from "@/data/members";
+import type { Member } from "@/data/members";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/get-dictionary";
 
 type District = { id: string; ro: string; ru: string; en: string };
 
-export default function Directory({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+/* The directory is a client component (the map needs hover and selection), so
+   its content is handed to it by the server page rather than imported — that
+   is what lets it show whoever the owner has actually approved in /admin
+   instead of a file baked in at build time. */
+export default function Directory({
+  locale,
+  dict,
+  members,
+  districtCounts,
+  totalMembers,
+}: {
+  locale: Locale;
+  dict: Dictionary;
+  members: Member[];
+  districtCounts: Record<string, number>;
+  totalMembers: number;
+}) {
   const d = dict.home.directory;
   const services = dict.home.hero.services;
   const base = `/${locale}`;
@@ -32,7 +48,7 @@ export default function Directory({ locale, dict }: { locale: Locale; dict: Dict
 
   const active = hover ?? selected;
   const readoutName = active ? nameOf[active] : d.allMoldova;
-  const readoutCount = active ? districtCounts[active] ?? 0 : TOTAL_MEMBERS;
+  const readoutCount = active ? (districtCounts[active] ?? 0) : totalMembers;
 
   const list = members.filter(
     (m) =>
@@ -119,8 +135,8 @@ export default function Directory({ locale, dict }: { locale: Locale; dict: Dict
                 </div>
                 <a
                   className="call"
-                  href={`tel:${dict.top.phone.replace(/\s/g, "")}`}
-                  aria-label={dict.top.phone}
+                  href={`tel:${(m.phone ?? dict.top.phone).replace(/\s/g, "")}`}
+                  aria-label={m.phone ?? dict.top.phone}
                 >
                   <Icon name="phone" size={18} />
                 </a>

@@ -12,7 +12,8 @@
     "news": "Știri",
     "contact": "Contact",
     "login": "Autentificare",
-    "becomeMember": "Înregistrează-te"
+    "becomeMember": "Înregistrează-te",
+    "resources": "Resurse"
   },
   "top": {
     "phone": "+373 79 447 686",
@@ -134,35 +135,6 @@
         {
           "name": "Comrat",
           "count": "9"
-        }
-      ],
-      "members": [
-        {
-          "initials": "IR",
-          "name": "Ion Rusu",
-          "city": "Chișinău, sect. Centru",
-          "tags": [
-            "Curățare coș",
-            "Verificare"
-          ]
-        },
-        {
-          "initials": "VC",
-          "name": "Vasile Croitoru",
-          "city": "Bălți",
-          "tags": [
-            "Construcție coș",
-            "Șeminee"
-          ]
-        },
-        {
-          "initials": "MP",
-          "name": "Mihai Popescu",
-          "city": "Orhei",
-          "tags": [
-            "Sobe",
-            "Ventilații"
-          ]
         }
       ],
       "allMoldova": "Toată Moldova",

@@ -4,9 +4,15 @@ import Footer from "@/components/Footer";
 import Directory from "@/components/Directory";
 import MapFocus from "@/components/MapFocus";
 import Icon, { type IconName } from "@/components/Icon";
+import { getDistrictCounts, getMembers, getTotalMembers } from "@/lib/cms";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { isLocale, defaultLocale, type Locale } from "@/i18n/config";
 import type { Metadata } from "next";
+
+/* Content comes from the admin now, so a fully static page would keep serving
+   whatever existed at build time. The admin's own actions revalidate this path
+   on save; the window is the safety net. */
+export const revalidate = 60;
 
 const SERVICE_ICONS: IconName[] = ["svcSweep", "svcStove", "svcFireplace", "svcChimney", "svcHood"];
 
@@ -33,6 +39,11 @@ export default async function ServicesPage({
   const dict = await getDictionary(locale);
   const t = dict.home;
   const base = `/${locale}`;
+  const [members, districtCounts, totalMembers] = await Promise.all([
+    getMembers(),
+    getDistrictCounts(),
+    getTotalMembers(),
+  ]);
 
   return (
     <>
@@ -74,7 +85,13 @@ export default async function ServicesPage({
               sits at the head of that column. A typed locality field floating
               over an interactive map is a second control for the same job, and
               having both is what read as clutter. */}
-          <Directory locale={locale} dict={dict} />
+          <Directory
+            locale={locale}
+            dict={dict}
+            members={members}
+            districtCounts={districtCounts}
+            totalMembers={totalMembers}
+          />
         </div>
         <MapFocus hash="directoriu" />
       </section>

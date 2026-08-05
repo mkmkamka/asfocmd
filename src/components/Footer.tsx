@@ -22,6 +22,9 @@ export default function Footer({
     { label: n.training, href: `${base}/instruire` },
     { label: n.news, href: `${base}/stiri` },
     { label: n.contact, href: `${base}/contact` },
+    // /resurse holds the statute scans and the downloadable documents. It was
+    // reachable only by typing the URL, which is the same as not existing.
+    { label: n.resources, href: `${base}/resurse` },
   ];
 
   return (

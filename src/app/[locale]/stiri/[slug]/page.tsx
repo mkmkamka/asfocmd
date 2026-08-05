@@ -10,6 +10,12 @@ import { isLocale, defaultLocale, locales, type Locale } from "@/i18n/config";
 import { getPost, getPosts, isTrainingPost } from "@/lib/cms";
 import type { Metadata } from "next";
 
+/* Content comes from the admin now, so a fully static page would keep serving
+   whatever existed at build time. The admin's own actions revalidate this path
+   on save; the window is the safety net. */
+export const revalidate = 60;
+
+
 export async function generateStaticParams() {
   const posts = await getPosts();
   return locales.flatMap((locale) =>

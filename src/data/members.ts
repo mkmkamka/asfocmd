@@ -7,6 +7,9 @@ export type Member = {
   initials: string;
   districtId: string;
   services: number[];
+  /** The member's own number, published on the directory card. Absent for the
+      sample entries, which fall back to the association's switchboard. */
+  phone?: string;
 };
 
 export const members: Member[] = [
