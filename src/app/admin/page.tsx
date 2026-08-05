@@ -1,41 +1,21 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import Icon from "@/components/Icon";
 import LogoutButton from "@/components/admin/LogoutButton";
 import { isLoggedIn } from "@/lib/admin-auth";
 import { readAll } from "@/lib/store";
 
-/* Counts for the dashboard tiles. Read straight off disk for now; this is the
-   one place that will change when the storage driver is swapped for a database
-   (see the note in cms/README.md). */
-async function pendingCount(): Promise<number> {
-  try {
-    const raw = await fs.readFile(
-      path.join(process.cwd(), ".data", "submissions.json"),
-      "utf8",
-    );
-    const all = JSON.parse(raw);
-    if (!Array.isArray(all)) return 0;
-    return all.filter((s) => s?.status !== "approved" && s?.status !== "rejected")
-      .length;
-  } catch {
-    return 0;
-  }
-}
+/* Counts for the dashboard tiles.
 
-async function messageCount(): Promise<number> {
-  try {
-    const raw = await fs.readFile(
-      path.join(process.cwd(), ".data", "messages.json"),
-      "utf8",
-    );
-    const all = JSON.parse(raw);
-    return Array.isArray(all) ? all.length : 0;
-  } catch {
-    return 0;
-  }
+   These used to read `.data/*.json` off disk with `fs`, which was wrong twice
+   over: on Vercel the deployed bundle carried a *snapshot* of the developer's
+   local files, so the panel reported counts that had nothing to do with the
+   live database — and it bypassed the storage layer that every other part of
+   the admin goes through. One reader, one source of truth. */
+async function pendingCount(): Promise<number> {
+  const all = await readAll<{ status?: string }>("submissions");
+  return all.filter((s) => s?.status !== "approved" && s?.status !== "rejected")
+    .length;
 }
 
 export default async function AdminHome() {
@@ -43,7 +23,7 @@ export default async function AdminHome() {
 
   const [pending, messages, posts, courses, members] = await Promise.all([
     pendingCount(),
-    messageCount(),
+    readAll("messages").then((r) => r.length),
     readAll("posts").then((r) => r.length),
     readAll("courses").then((r) => r.length),
     readAll("members").then((r) => r.length),

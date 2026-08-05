@@ -1,0 +1,11 @@
+# Never upload the local content store. It holds membership applications and
+# scans of identity documents; the deployed site reads Postgres instead.
+# Vercel falls back to .gitignore only when this file is absent, and the CLI
+# was shipping .data/ regardless — this is the explicit stop.
+.data
+public/uploads
+_archive
+design-concepts
+content
+scripts
+cms

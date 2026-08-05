@@ -24,7 +24,7 @@ const MONTHS: Record<Locale, string[]> = {
   en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
 };
 
-function localizedDate(iso: string): Localized {
+export function localizedDate(iso: string): Localized {
   const [y, m, d] = iso.split("-").map(Number);
   const day = String(d);
   return {
