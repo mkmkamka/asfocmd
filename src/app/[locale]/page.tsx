@@ -109,6 +109,29 @@ export default async function Home({
               href={`${base}/despre`}
               more={t.stats.aboutCta}
             />
+
+            {/* The other question a visitor arrives with. The finder above
+                answers "who can come and sweep my chimney"; this answers "did
+                my application go through", which until now was only reachable
+                by finding /membri in the nav — so the applicants who most
+                needed it were the ones least likely to look for it.
+
+                It is a link, not the lookup itself. The phone field lives on
+                /membri and putting a second one here would give the band two
+                input fields side by side, each asking for something different;
+                the finder is the one thing on this band that should look like
+                a form. */}
+            <Link className="status-strip" href={`${base}/membri`}>
+              <span className="status-strip-body">
+                <span className="status-strip-kick">{t.statusCheck.kick}</span>
+                <b>{t.statusCheck.title}</b>
+                <span className="status-strip-desc">{t.statusCheck.desc}</span>
+              </span>
+              <span className="status-strip-cta">
+                {t.statusCheck.cta}
+                <Icon name="arrowRight" size={17} />
+              </span>
+            </Link>
           </div>
         </div>
       </section>

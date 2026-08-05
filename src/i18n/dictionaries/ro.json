@@ -86,6 +86,12 @@
         }
       ]
     },
+    "statusCheck": {
+      "kick": "Deja ai depus cererea?",
+      "title": "Verifică-ți statutul de membru",
+      "desc": "Introdu numărul de telefon din cerere și afli imediat dacă ai fost înscris în registrul ASFOCMD.",
+      "cta": "Verifică statutul"
+    },
     "services": {
       "kick": "Departamente",
       "title": "Servicii oferite de membrii noștri",

@@ -86,6 +86,12 @@
         }
       ]
     },
+    "statusCheck": {
+      "kick": "Already applied?",
+      "title": "Check your membership status",
+      "desc": "Enter the phone number from your application and find out at once whether you are on the ASFOCMD register.",
+      "cta": "Check status"
+    },
     "services": {
       "kick": "Departments",
       "title": "Services offered by our members",
