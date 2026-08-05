@@ -13,7 +13,9 @@
     "contact": "Contact",
     "login": "Sign in",
     "becomeMember": "Register",
-    "resources": "Resources"
+    "resources": "Resources",
+    "members": "Members",
+    "memberArea": "Members"
   },
   "top": {
     "phone": "+373 79 447 686",
@@ -751,6 +753,26 @@
           "role": "Director"
         }
       ]
+    },
+    "memberArea": {
+      "title": "ASFOCMD members",
+      "lead": "A space for the association's members. Check your status, see what membership gives you and how it is renewed.",
+      "checkTitle": "Check your membership status",
+      "checkLead": "Submitted an application? Enter the phone number from it and find out straight away whether you have been admitted.",
+      "phone": "Phone number",
+      "phonePh": "e.g. 069 123 456",
+      "submit": "Check",
+      "checking": "Checking…",
+      "errPhone": "Enter a valid phone number",
+      "errFailed": "The check failed. Please try again.",
+      "foundTitle": "You are an ASFOCMD member",
+      "foundSince": "Member since",
+      "foundDistrict": "District",
+      "notFoundTitle": "We could not find this number",
+      "notFoundDesc": "The number is not among the admitted members. If you applied recently it may still be under review — the secretariat will contact you. For any question, write to asfocmd@gmail.com.",
+      "privacy": "The check is made by phone number only and never shows another member's details.",
+      "benefitsTitle": "What membership gives you",
+      "applyCta": "Submit a membership application"
     }
   }
 }

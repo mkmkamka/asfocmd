@@ -325,14 +325,21 @@ ul{list-style:none}
    They stay proportional on short screens via the shared `vh` term, so a 720px
    laptop compresses the whole rhythm rather than collapsing one gap. */
 .hero-fold{
-  --fold-step-1:clamp(16px,2.7vh,24px);
-  --fold-step-2:clamp(22px,4vh,36px);
-  --fold-step-3:clamp(28px,5.3vh,48px);
+  /* Opened from 2.7/4/5.3vh. The block read as cramped against the credits
+     rule because its own internal gaps were tighter than the space around it,
+     so the three parts looked like one dense object rather than three. */
+  --fold-step-1:clamp(18px,3.4vh,30px);
+  --fold-step-2:clamp(28px,5.2vh,46px);
+  --fold-step-3:clamp(34px,6.4vh,58px);
 }
 .hero-stage{
   position:relative;z-index:1;
   display:flex;flex-direction:column;align-items:flex-start;
   flex:1;justify-content:flex-end;
+  /* The group used to end flush against the credits rule. Standing it off the
+     bottom is what stops the lower-left corner reading as crowded — the fold
+     has height to spare and the block was spending none of it. */
+  padding-bottom:clamp(24px,6vh,64px);
   /* `.wrap` carries `margin:0 auto`, and an auto cross-axis margin on a flex
      item cancels `stretch` — without this the stage collapses to the width of
      its own text and the whole block drifts inward, off the site's left edge. */
@@ -387,10 +394,12 @@ ul{list-style:none}
    is the one thing that is a *button*, so it can wear the site's own button
    shape without being mistaken for chrome. */
 .hero-cta{
-  display:inline-flex;align-items:center;gap:10px;
+  display:inline-flex;align-items:center;gap:9px;
   background:var(--ember);color:#fff;
-  font-size:15px;font-weight:640;letter-spacing:.005em;
-  padding:15px 28px;border-radius:9999px;
+  /* Down from 15px/15-28. It is still the only saturated object in the fold,
+     so it keeps its rank on colour rather than on bulk. */
+  font-size:13.5px;font-weight:640;letter-spacing:.005em;
+  padding:11px 21px;border-radius:9999px;
   white-space:nowrap;
   box-shadow:0 12px 30px -10px rgba(127,31,22,.75);
   transition:background .25s ease,box-shadow .25s ease,transform .2s ease;
@@ -479,7 +488,9 @@ ul{list-style:none}
 }
 .hero-credits-inner{
   display:flex;align-items:center;justify-content:center;gap:18px;
-  padding-top:20px;padding-bottom:20px;
+  /* Shorter than the 20/20 it carried: the rail is a footnote to the fold and
+     was taking headline-sized height to say so. */
+  padding-top:13px;padding-bottom:13px;
 }
 /* No horizontal reservation for the scroll cue any more. The cue used to be
    pinned to the viewport's bottom-right corner, which put it *inside* this
@@ -503,7 +514,9 @@ ul{list-style:none}
 }
 .hero-fold .ms-label{
   padding:0;margin:0 10px 0 0;border:0;
-  font-size:10.5px;letter-spacing:.15em;color:rgba(255,255,255,.62);
+  /* Smaller and dimmer than the logos it introduces — it is a label, and at
+     10.5px/.62 it was competing with the marks instead of naming them. */
+  font-size:9px;letter-spacing:.14em;color:rgba(255,255,255,.5);
 }
 /* The hit area's own inset, published as a variable so the row can cancel it
    when it needs its first mark flush with the page edge (see the phone block). */
@@ -579,7 +592,20 @@ ul{list-style:none}
    each logo on its own row too, since MemberStrip renders the caption and the
    three links as flat siblings with nothing wrapping the logos. */
 @media(max-width:1023px){
-  .hero-credits-inner{padding-bottom:88px}
+  /* ── The phone fold is its own design, not the desktop one squeezed ──
+
+     Measured before changing anything: the top 366px of an 812px screen — 45%
+     of the picture — was empty, then 220px of content, then a 183px slab of
+     affiliations jammed against the dock. Bottom-heavy, and the emptiest part
+     of the frame was the part the eye reaches first.
+
+     So the phone inverts the desktop: the copy sits high, the way a cover line
+     sits on a magazine, and the footage runs on underneath it with nothing on
+     top. `justify-content:flex-start` is the whole move — the stage stops
+     pushing its contents to the foot of the frame and lets them start near the
+     top instead. */
+  .hero-stage{justify-content:flex-start;padding-bottom:0}
+  .hero-credits-inner{padding-bottom:84px;padding-top:10px}
   .hero-fold .member-strip{flex-wrap:wrap;justify-content:center;gap:4px}
   /* `.ms-label` is an `inline-flex` box in its pill form, and on small screens
      the pill clamps it to `max-width:112px` and right-aligns it so the caption
@@ -587,13 +613,17 @@ ul{list-style:none}
      room for the whole line above them, so all of that has to be undone — the
      max-width especially, or the caption keeps overflowing a 112px box.
      Centred, so the phone rail is the same arrangement as the desktop one. */
-  .hero-fold .ms-label{
-    flex:0 0 100%;width:100%;max-width:none;display:block;
-    text-align:center;white-space:nowrap;margin:0 0 9px;
-  }
+  /* The caption goes on phones. "Membru cu drepturi depline în" is a whole
+     line of type to introduce four marks that are recognisable on their own,
+     and that line was a third of the block's height. The marks keep their
+     tooltips and aria-labels, so nothing is lost to a screen reader. */
+  .hero-fold .ms-label{display:none}
 }
 @media(max-width:640px){
-  .hero-stage{padding-top:92px}
+  /* Clears the top of the screen and puts the eyebrow just above the first
+     third — high enough to be the first thing read, low enough that the
+     picture still opens the frame. */
+  .hero-stage{padding-top:clamp(96px,17vh,150px)}
   .hero-title{
     max-width:none;letter-spacing:-.026em;
     /* The 4.4vw term is far below the floor on a phone, so the floor is the
@@ -1575,3 +1605,64 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
 .admin-fb-body b{font-size:15.5px;color:var(--soot)}
 .admin-fb-text{font-size:13.5px;color:#4a4e57;line-height:1.55;margin-top:6px;white-space:pre-wrap;
   display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+
+/* The bottom dock gained an eighth tab when the members' area was added, and
+   eight 44px tabs plus the pill's own padding is 360px — over a 320px screen
+   and uncomfortably tight on a 375px one. The tabs give up width on narrow
+   phones rather than the dock wrapping or overflowing: below 400px they scale
+   with the viewport, with a floor that keeps them a legal touch target at the
+   narrowest width this site supports. */
+@media(max-width:400px){
+  .navbar-dock [class*="h-11"][class*="w-11"]{
+    height:clamp(34px,10.6vw,44px);
+    width:clamp(34px,10.6vw,44px);
+  }
+  .navbar-dock svg{width:clamp(16px,4.9vw,19px);height:clamp(16px,4.9vw,19px)}
+}
+
+/* ---- members' area -------------------------------------------------------- */
+.members-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:start}
+@media(max-width:860px){.members-grid{grid-template-columns:1fr;gap:26px}}
+
+.check-card{background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:28px 28px 24px;box-shadow:var(--shadow-md)}
+.check-card h2{font-family:var(--display);font-size:22px;font-weight:600;color:var(--soot);
+  margin-bottom:6px}
+.check-lead{font-size:14px;color:var(--muted);line-height:1.55;margin-bottom:18px}
+.check-form{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.check-form .f-field{flex:1 1 200px}
+.check-form .btn{height:46px}
+.check-privacy{font-size:12px;color:var(--muted);line-height:1.5;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--line)}
+
+.check-result{display:flex;gap:14px;align-items:flex-start;margin-top:18px;
+  border-radius:12px;padding:16px 18px}
+.check-result .ic{flex:none;width:44px;height:44px;border-radius:50%;display:grid;
+  place-items:center}
+.check-result b{display:block;font-size:16px;margin-bottom:4px}
+.check-result p{font-size:13.5px;line-height:1.55}
+.check-result dl{display:flex;gap:20px;flex-wrap:wrap;font-size:13.5px;margin-top:4px}
+.check-result dt{color:var(--muted);font-size:11.5px;text-transform:uppercase;
+  letter-spacing:.07em;font-weight:700}
+.check-result dd{font-weight:600}
+/* Confirmed reads green — the one place on this site that is not the ember
+   palette, because "yes, you are a member" is the single message here that
+   must not be mistaken for a warning. */
+.check-result.is-yes{background:rgba(24,110,66,.07);border:1px solid rgba(24,110,66,.22)}
+.check-result.is-yes .ic{background:rgba(24,110,66,.12);color:#186E42}
+.check-result.is-yes b{color:#155C37}
+.check-result.is-no{background:var(--sand);border:1px solid var(--line)}
+.check-result.is-no .ic{background:rgba(20,21,24,.06);color:var(--muted)}
+.check-result.is-no b{color:var(--soot)}
+.check-result.is-no p{color:#4a4e57}
+
+.members-side{background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:26px 26px 22px;box-shadow:var(--shadow-sm)}
+.members-benefits{list-style:none;display:flex;flex-direction:column;gap:16px;
+  margin:16px 0 22px}
+.members-benefits li{display:flex;gap:13px;align-items:flex-start}
+.members-benefits .ic{flex:none;width:34px;height:34px;border-radius:9px;
+  background:var(--ember-tint);color:var(--ember);display:grid;place-items:center}
+.members-benefits b{display:block;font-size:14.5px;color:var(--soot);margin-bottom:2px}
+.members-benefits p{font-size:13px;color:var(--muted);line-height:1.5}
+.members-side .btn{justify-content:center;width:100%}

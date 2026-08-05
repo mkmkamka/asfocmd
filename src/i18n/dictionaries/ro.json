@@ -13,7 +13,9 @@
     "contact": "Contact",
     "login": "Autentificare",
     "becomeMember": "Înregistrează-te",
-    "resources": "Resurse"
+    "resources": "Resurse",
+    "members": "Membri",
+    "memberArea": "Membri"
   },
   "top": {
     "phone": "+373 79 447 686",
@@ -751,6 +753,26 @@
           "role": "Director"
         }
       ]
+    },
+    "memberArea": {
+      "title": "Membrii ASFOCMD",
+      "lead": "Spațiu pentru membrii asociației. Verifică-ți statutul, vezi ce îți oferă calitatea de membru și cum se reînnoiește.",
+      "checkTitle": "Verifică-ți statutul de membru",
+      "checkLead": "Ai depus o cerere de aderare? Introdu numărul de telefon din cerere și afli imediat dacă ai fost înscris.",
+      "phone": "Număr de telefon",
+      "phonePh": "ex: 069 123 456",
+      "submit": "Verifică",
+      "checking": "Se verifică…",
+      "errPhone": "Introdu un număr de telefon valid",
+      "errFailed": "Verificarea a eșuat. Încearcă din nou.",
+      "foundTitle": "Ești membru ASFOCMD",
+      "foundSince": "Membru din",
+      "foundDistrict": "Raion",
+      "notFoundTitle": "Nu am găsit acest număr",
+      "notFoundDesc": "Numărul nu figurează printre membrii înscriși. Dacă ai depus cererea recent, aceasta poate fi încă în examinare — secretariatul te va contacta. Pentru orice nelămurire, scrie-ne la asfocmd@gmail.com.",
+      "privacy": "Verificarea se face doar după numărul de telefon și nu afișează date despre alți membri.",
+      "benefitsTitle": "Ce îți oferă calitatea de membru",
+      "applyCta": "Depune o cerere de aderare"
     }
   }
 }

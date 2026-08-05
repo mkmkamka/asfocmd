@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
+  ShieldCheck,
   House,
   Info,
   Wrench,
@@ -87,6 +88,7 @@ export default function TubelightNav({
     { name: nav.training, url: `${base}/instruire` },
     { name: nav.news, url: `${base}/stiri` },
     { name: nav.contact, url: `${base}/contact` },
+    { name: nav.memberArea, url: `${base}/membri` },
     { name: nav.becomeMember, url: `${base}/membru` },
   ];
 
@@ -99,6 +101,7 @@ export default function TubelightNav({
     { name: nav.training, url: `${base}/instruire`, icon: GraduationCap },
     { name: nav.news, url: `${base}/stiri`, icon: Newspaper },
     { name: nav.contact, url: `${base}/contact`, icon: Mail },
+    { name: nav.memberArea, url: `${base}/membri`, icon: ShieldCheck },
     { name: nav.becomeMember, url: `${base}/membru`, icon: UserPlus },
   ];
 
