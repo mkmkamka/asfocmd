@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 ~/.claude/skills/ui-ux-pro-max/scripts/search.py \"beauty spa wellness service\" --design-system -p \"Serenity Spa\")",
+      "Bash(python3 ~/.claude/skills/ui-ux-pro-max/scripts/search.py \"fintech trust\" --domain color -n 2)",
+      "Bash(python3 ~/.claude/skills/ui-ux-pro-max/scripts/search.py \"form validation\" --stack react -n 1)",
+      "Bash(python3 ~/.claude/skills/ui-ux-pro-max/scripts/search.py \"dashboard\" --domain style -n 1)",
+      "Bash(npm run *)",
+      "Bash(npx eslint *)"
+    ]
+  }
+}

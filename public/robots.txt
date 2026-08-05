@@ -1,0 +1,4 @@
+# Client preview — not the live site. Nothing here should be indexed.
+# Remove this file (and the X-Robots-Tag block in next.config.ts) at launch.
+User-agent: *
+Disallow: /

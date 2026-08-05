@@ -1,0 +1,784 @@
+{
+  "meta": {
+    "title": "ASFOCMD — National Association of Chimney Sweeps",
+    "description": "Certified chimney sweeps and builders in the Republic of Moldova. Find a verified specialist for cleaning, inspecting and building chimneys, stoves and fireplaces."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "directory": "Find a sweep",
+    "training": "Training",
+    "news": "News",
+    "contact": "Contact",
+    "login": "Sign in",
+    "becomeMember": "Register"
+  },
+  "top": {
+    "phone": "+373 79 447 686",
+    "email": "asfocmd@gmail.com",
+    "veuko": "VEUKO member"
+  },
+  "scrollHint": "Scroll to explore",
+  "home": {
+    "hero": {
+      "eyebrow": "Employers' association",
+      "titleLine1": "The National Association of Chimney Sweeps, Chimney and Fireplace Builders",
+      "titlePre": "Homes kept ",
+      "titleEm": "safe",
+      "titlePost": ".",
+      "lead": "The National Association of Chimney Sweeps, Chimney and Fireplace Builders",
+      "searchLabel": "Find a specialist near you",
+      "locationPlaceholder": "City (e.g. Chișinău)",
+      "serviceAll": "All services",
+      "services": [
+        "Chimney cleaning",
+        "Chimney building",
+        "Stoves",
+        "Fireplaces",
+        "Ventilation"
+      ],
+      "searchBtn": "Search",
+      "popularLabel": "Popular:",
+      "popular": [
+        "Chimney cleaning",
+        "Technical inspection",
+        "Fireplace building"
+      ]
+    },
+    "stats": {
+      "veukoLabel": "Member of the confederation",
+      "veukoName": "VEUKO Europe",
+      "bothLabel": "Full member of",
+      "totalCaption": "Combined figures across both European confederations",
+      "aboutCta": "Learn more about the association",
+      "kick": "ASFOCMD",
+      "blurb": "Since 2017, ASFOCMD has brought together the chimney sweeps and chimney builders of the Republic of Moldova. We certify craftsmen, keep the public register of specialists and hold the trade to European standards — so that every home heated by fire is a safe home.",
+      "items": [
+        {
+          "n": "230+",
+          "l": "Certified members"
+        },
+        {
+          "n": "35",
+          "l": "Localities covered"
+        },
+        {
+          "n": "2017",
+          "l": "Founded"
+        },
+        {
+          "n": "100%",
+          "l": "Verified & certified"
+        }
+      ],
+      "itemsExtra": [
+        {
+          "n": "2",
+          "l": "European confederations"
+        },
+        {
+          "n": "2018",
+          "l": "Partnership with ASFOCH Romania"
+        }
+      ]
+    },
+    "services": {
+      "kick": "Departments",
+      "title": "Services offered by our members",
+      "subtitle": "Every ASFOCMD member is trained to European standards and verified for the quality and safety of their work.",
+      "items": [
+        {
+          "title": "Chimney sweeps",
+          "desc": "Periodic cleaning and technical inspection of chimneys."
+        },
+        {
+          "title": "Stoves",
+          "desc": "Building and repairing stoves to European standards."
+        },
+        {
+          "title": "Fireplaces",
+          "desc": "Design and installation of classic and modern fireplaces."
+        },
+        {
+          "title": "Chimneys",
+          "desc": "Building new ceramic and metal chimneys to standard."
+        },
+        {
+          "title": "Hoods & Ventilation",
+          "desc": "Ventilation and exhaust systems for homes and HoReCa."
+        }
+      ]
+    },
+    "directory": {
+      "kick": "Verified directory",
+      "title": "Find a certified chimney sweep",
+      "subtitle": "Search the map for ASFOCMD-certified specialists across Moldova — with verified contact details.",
+      "cities": [
+        {
+          "name": "Chișinău",
+          "count": "68"
+        },
+        {
+          "name": "Bălți",
+          "count": "24"
+        },
+        {
+          "name": "Cahul",
+          "count": "11"
+        },
+        {
+          "name": "Orhei",
+          "count": "15"
+        },
+        {
+          "name": "Comrat",
+          "count": "9"
+        }
+      ],
+      "members": [
+        {
+          "initials": "IR",
+          "name": "Ion Rusu",
+          "city": "Chișinău, Centru district",
+          "tags": [
+            "Chimney cleaning",
+            "Inspection"
+          ]
+        },
+        {
+          "initials": "VC",
+          "name": "Vasile Croitoru",
+          "city": "Bălți",
+          "tags": [
+            "Chimney building",
+            "Fireplaces"
+          ]
+        },
+        {
+          "initials": "MP",
+          "name": "Mihai Popescu",
+          "city": "Orhei",
+          "tags": [
+            "Stoves",
+            "Ventilation"
+          ]
+        }
+      ],
+      "allMoldova": "All of Moldova",
+      "specialists": "specialists",
+      "mapHint": "Choose a district on the map to see available specialists.",
+      "emptyTitle": "No members here yet",
+      "emptyDesc": "Be the first ASFOCMD-certified sweep in your area.",
+      "reset": "View the whole country",
+      "becomeMember": "Register",
+      "legend": {
+        "has": "With specialists",
+        "none": "No members yet",
+        "sel": "Selected"
+      },
+      "verified": "Verified",
+      "viewAll": "View all 230 members"
+    },
+    "trust": {
+      "items": [
+        {
+          "title": "Verified members",
+          "desc": "Every specialist is validated by the secretariat and the association council."
+        },
+        {
+          "title": "European standards",
+          "desc": "Training in line with European fire-safety regulations."
+        },
+        {
+          "title": "Safe work",
+          "desc": "Preventing fires and poisoning through regular inspections."
+        },
+        {
+          "title": "European network",
+          "desc": "Member of the VEUKO confederation, alongside associations across Europe."
+        }
+      ]
+    },
+    "memberships": {
+      "kick": "European network",
+      "title": "European partners & affiliations",
+      "subtitle": "ASFOCMD represents the country's chimney sweeps and stove builders in Europe's leading professional bodies, and works closely with ASFOCH Romania, the sister association in the region.",
+      "visit": "Visit website",
+      "memberLabel": "Full membership",
+      "items": [
+        {
+          "logo": "/brand/eschfoe-logo.png",
+          "name": "ESCHFOE",
+          "full": "European Federation of Master Chimney Sweeps — equal-rights member",
+          "href": "https://www.eschfoe.com/en/associations#heading-id-5420157"
+        },
+        {
+          "logo": "/brand/veuko-logo.svg",
+          "name": "VEUKO",
+          "full": "European Union of tiled-stove builders' associations",
+          "href": "https://www.veuko.com/en/members/asfocmd-nationaler-verband-der-schornsteinfeger-schornsteinbauer-und-kachelofenbauer"
+        }
+      ],
+      "asfoc": {
+        "name": "ASFOCMD",
+        "desc": "The National Chimney Sweeps Association — 230+ authorised members, founded in 2017",
+        "cta": "About the association"
+      },
+      "asfoch": {
+        "name": "ASFOCH Romania",
+        "desc": "Sister association in Romania — chimney sweeps, chimney and fireplace builders",
+        "href": "https://www.asfoch.ro/"
+      }
+    },
+    "membership": {
+      "kick": "Register",
+      "title": "Join the association in 4 steps",
+      "subtitle": "A simple, transparent process from application to a listing in the public directory.",
+      "steps": [
+        {
+          "title": "Fill in the form",
+          "desc": "Apply online with your details and professional experience."
+        },
+        {
+          "title": "Secretariat review",
+          "desc": "We verify the documents and qualifications submitted."
+        },
+        {
+          "title": "Council review",
+          "desc": "The association council reviews and approves the request."
+        },
+        {
+          "title": "You're a member",
+          "desc": "You receive the certificate and appear in the public directory."
+        }
+      ],
+      "cta": "Start the application"
+    },
+    "membershipForm": {
+      "title": "Membership application",
+      "subtitle": "Fill in the form — the ASFOCMD secretariat will review your file and get in touch.",
+      "steps": [
+        "Personal details",
+        "Professional activity",
+        "Motivation and documents",
+        "Confirmation"
+      ],
+      "fullName": "Full name",
+      "fullNamePh": "e.g. Ion Rusu",
+      "phone": "Phone",
+      "phonePh": "e.g. +373 79 000 000",
+      "email": "Email",
+      "emailPh": "e.g. name@example.md",
+      "district": "District / municipality",
+      "districtPh": "Choose a district",
+      "locality": "Locality",
+      "localityPh": "e.g. Strășeni",
+      "services": "Services you provide",
+      "experience": "Years of experience",
+      "about": "About your work (optional)",
+      "aboutPh": "Qualifications, completed courses, notable projects…",
+      "consent": "I confirm the details are correct and accept the ASFOCMD statute.",
+      "back": "Back",
+      "next": "Continue",
+      "becomeCta": "Become a member.",
+      "submit": "Submit application",
+      "sending": "Sending…",
+      "review": "Review your details before submitting",
+      "successTitle": "Application sent!",
+      "successDesc": "The ASFOCMD secretariat will review your file and contact you within 10 working days.",
+      "backHome": "Back to the homepage",
+      "errRequired": "This field is required",
+      "errEmail": "Invalid email address",
+      "errPhone": "Invalid phone number",
+      "errServices": "Choose at least one service",
+      "errConsent": "Tick the agreement to continue",
+      "errSubmit": "Submission failed. Check your connection and try again.",
+      "entity": "Are you applying on behalf of a legal entity (company)?",
+      "isCompany": "Yes, I am applying on behalf of a company",
+      "companyName": "Legal entity name",
+      "companyNamePh": "e.g. Hornar-Expert Prim SRL",
+      "companyIdno": "IDNO / fiscal code",
+      "companyIdnoPh": "e.g. 1017620001842",
+      "companyAddress": "Registered address (if different from the one above)",
+      "companyAddressPh": "e.g. Chișinău, 76 Decebal Blvd., office 601",
+      "companyEmail": "Official contact e-mail (if different)",
+      "companyEmailPh": "e.g. office@firma.md",
+      "companyDesc": "Short description of the company",
+      "companyDescPh": "Field of work, years active, team…",
+      "domainsLabel": "Fields of interest",
+      "domains": [
+        "Chimney sweeping",
+        "Chimney building",
+        "Stoves",
+        "Fireplaces",
+        "Ventilation",
+        "Manufacture / import of chimneys and stoves",
+        "Extractor hoods: cleaning, sales, installation",
+        "Air conditioning and photovoltaic panels: cleaning and sanitising"
+      ],
+      "heardFrom": "How did you hear about ASFOCMD?",
+      "heardFromPh": "e.g. from a colleague, Facebook, a training course…",
+      "advantage": "What do you think is the main advantage of being an ASFOCMD member?",
+      "advantagePh": "…",
+      "attraction": "What made you want to join ASFOCMD?",
+      "attractionPh": "…",
+      "docs": "Supporting documents",
+      "docsHint": "A copy of the registration certificate / IDNO and a copy of the applicant's identity card. PDF, JPG, PNG or WebP — up to 10 files, 8 MB each.",
+      "docsAdd": "Add files",
+      "docsRemove": "Remove",
+      "docsChosen": "files attached",
+      "optional": "(optional)",
+      "consentGdpr": "I consent to the processing of my personal data (GDPR policy).",
+      "consentStatut": "I have read the association's Statute, the Code of Conduct, Ethics and Professionalism, and the ASFOCMD internal training conditions in force at the date of this application, and undertake to observe them.",
+      "declaration": "By this form I request full membership of the National Association of Chimney Sweeps, Chimney and Fireplace Builders — ASFOCMD, and await further instructions.",
+      "errDocs": "Attach at least one document",
+      "errDocsType": "Unsupported format — we accept PDF, JPG, PNG or WebP",
+      "errDocsSize": "File too large — 8 MB maximum",
+      "errDocsCount": "10 files maximum",
+      "errCheck": "Tick to continue",
+      "docsChosenOne": "file attached",
+      "docsChosenFew": "files attached"
+    },
+    "news": {
+      "kick": "News & Events",
+      "title": "From the association's activity",
+      "items": [
+        {
+          "cat": "Training",
+          "date": "12 June 2026",
+          "title": "Training course to European standard",
+          "excerpt": "Hands-on session on building stoves in line with EU standards."
+        },
+        {
+          "cat": "Association",
+          "date": "28 May 2026",
+          "title": "Annual general assembly 2026",
+          "excerpt": "A review of the year's activity and objectives for the next."
+        },
+        {
+          "cat": "International",
+          "date": "15 April 2026",
+          "title": "Taking part in the VEUKO congress",
+          "excerpt": "The ASFOCMD delegation at the European chimney sweeps' meeting."
+        }
+      ],
+      "more": "Read more"
+    },
+    "cta": {
+      "title": "Need a certified chimney sweep?",
+      "subtitle": "Quickly find a verified specialist in your area, or contact the association for guidance.",
+      "primary": "Find a specialist",
+      "secondary": "Contact us"
+    }
+  },
+  "footer": {
+    "about": "The National Association of Chimney Sweeps, Chimney and Fireplace Builders of the Republic of Moldova.",
+    "colAssoc": {
+      "title": "Association",
+      "links": [
+        "About ASFOCMD",
+        "Statute",
+        "Leadership",
+        "Legislation",
+        "VEUKO Europe"
+      ]
+    },
+    "colServices": {
+      "title": "Services",
+      "links": [
+        "Find a sweep",
+        "Register",
+        "Training",
+        "Resources & forms",
+        "Gallery"
+      ]
+    },
+    "colContact": {
+      "title": "Contact",
+      "address": "Chișinău, Republic of Moldova"
+    },
+    "quickTitle": "Quick links",
+    "followTitle": "Follow us",
+    "newsletter": {
+      "title": "Stay connected",
+      "subtitle": "Subscribe to our newsletter for updates, training and resources.",
+      "placeholder": "Your email address",
+      "cta": "Subscribe"
+    },
+    "rights": "© 2026 ASFOCMD. All rights reserved.",
+    "concept": "Design concept — mockup, not the official site."
+  },
+  "pages": {
+    "about": {
+      "kick": "About the association",
+      "title": "An old craft, new standards",
+      "lead": "The Chimney Sweeps Association of Moldova (ASFOCMD) brings together specialists in sweeping and inspecting chimneys, promoting fire safety and the professionalisation of the sweep's craft.",
+      "mission": {
+        "title": "Our mission",
+        "p1": "We work so that every home in Moldova heated by a stove, fireplace or boiler has a safe chimney, checked by a certified specialist. A clean chimney means fewer fires, fewer carbon monoxide poisonings and more efficient heat.",
+        "p2": "The association certifies craftsmen, runs European-standard training and represents the guild in dialogue with the authorities and with European partners."
+      },
+      "directions": {
+        "title": "What we do",
+        "items": [
+          {
+            "title": "Certifying craftsmen",
+            "desc": "We verify sweeps' training and experience and maintain the public register of certified members."
+          },
+          {
+            "title": "Continuous training",
+            "desc": "Hands-on courses in sweeping, inspection and stove building, aligned with European standards."
+          },
+          {
+            "title": "Fire prevention",
+            "desc": "Awareness campaigns on chimney maintenance and the risks of carbon monoxide."
+          },
+          {
+            "title": "Representation",
+            "desc": "The guild's voice before national authorities and the European federation VEUKO."
+          }
+        ]
+      },
+      "veuko": {
+        "title": "Member of the European federation VEUKO",
+        "p": "ASFOCMD is a member of VEUKO, the European federation of master chimney sweeps, alongside national associations from more than twenty countries. Membership gives us access to standards, training materials and exchange of experience at European level.",
+        "cta": "Visit veuko.eu"
+      },
+      "memberships": {
+        "kick": "International recognition",
+        "title": "Member of the European professional bodies",
+        "subtitle": "ASFOCMD is a full, equal-rights member of the European network of chimney sweeps and stove builders, alongside national associations across Europe.",
+        "visit": "Visit website",
+        "items": [
+          {
+            "logo": "/brand/eschfoe-logo.png",
+            "name": "ESCHFOE",
+            "full": "European Federation of Master Chimney Sweeps",
+            "role": "Equal-rights member",
+            "href": "https://www.eschfoe.com/en/associations#heading-id-5420157"
+          },
+          {
+            "logo": "/brand/veuko-logo.svg",
+            "name": "VEUKO",
+            "full": "European Union of tiled-stove builders' associations",
+            "role": "Member",
+            "href": "https://www.veuko.com/en/members/asfocmd-nationaler-verband-der-schornsteinfeger-schornsteinbauer-und-kachelofenbauer"
+          }
+        ]
+      },
+      "leadership": {
+        "title": "Leadership",
+        "subtitle": "The association is led by a president and a board elected by the general assembly of members.",
+        "presidentName": "Alexei Golomoz",
+        "presidentRole": "President",
+        "presidentBio": "Master chimney sweep and founder of the association, representing ASFOCMD in the European federation VEUKO.",
+        "boardNote": "The full composition of the board will be published here."
+      },
+      "statute": {
+        "title": "The association's statute",
+        "p": "The ASFOCMD statute sets out the association's purpose, the rights and obligations of members, and how the association is organised.",
+        "purposeTitle": "The association's purpose (art. 2.1)",
+        "purposeIntro": "ASFOCMD's purpose is to:",
+        "aims": [
+          "represent, promote, support and protect the economic, technical and legal interests of its members in relations with public authorities, governmental and non-governmental organisations, natural or legal persons and other authorities; and to foster a favourable image of ASFOCMD and its members nationally and internationally;",
+          "create the organisational framework for members to carry out the concepts, measures and actions that lead to developing, refining and increasing the contribution of the association's specialists to improving the design, installation, operation, maintenance and repair of chimneys, ventilation systems, stoves and fireplaces in the Republic of Moldova;",
+          "provide members with useful information to facilitate relations among themselves and with other organisations, offer consultancy and assistance in the field, and promote fair competition in economic activity and in the relations between members, ensuring equal conditions for each;",
+          "represent its members in international professional organisations."
+        ],
+        "soon": "Document available soon",
+        "viewFull": "View the full statute",
+        "viewFullHref": "https://drive.google.com/open?id=10iteD05ck19APUnDAe6u709zYqtiOrcr",
+        "href": "/docs/statut-asfocmd.pdf",
+        "download": "Download the statute (PDF)"
+      }
+    },
+    "training": {
+      "kick": "Training & certification",
+      "title": "European-standard training",
+      "lead": "We run hands-on courses for chimney sweeps, stove builders and installers — from the basics of the craft to inspecting modern heating systems.",
+      "intro": {
+        "title": "How it works",
+        "p": "Sessions combine theory with practical work on mock-ups and real installations, guided by trainers with international experience. Groups are small, and participants take a practical test at the end."
+      },
+      "modules": {
+        "title": "Course modules",
+        "items": [
+          {
+            "title": "Sweeping and inspecting chimneys",
+            "desc": "Sweeping techniques, professional tools, assessing draught and chimney condition."
+          },
+          {
+            "title": "Building and rehabilitating stoves",
+            "desc": "Sizing, materials, bricklaying and commissioning to EU standards."
+          },
+          {
+            "title": "Fire safety and CO",
+            "desc": "Preventing chimney fires, detecting carbon monoxide, correct interventions."
+          },
+          {
+            "title": "Paperwork and client relations",
+            "desc": "The inspection certificate, work records, communicating with clients and authorities."
+          }
+        ]
+      },
+      "facts": [
+        {
+          "label": "Duration",
+          "value": "2–5 days / module"
+        },
+        {
+          "label": "Certificate",
+          "value": "Recognised by the association"
+        },
+        {
+          "label": "Language",
+          "value": "Romanian / Russian"
+        }
+      ],
+      "upcoming": {
+        "title": "Upcoming sessions",
+        "p": "The session calendar is announced on the news page and directly to members. ASFOCMD members get priority when registering.",
+        "cta": "I want to take part"
+      },
+      "recent": {
+        "title": "Training & courses",
+        "subtitle": "Courses, training sessions and certifications from the association's activity.",
+        "back": "All training"
+      }
+    },
+    "news": {
+      "kick": "News & events",
+      "title": "From the association's activity",
+      "lead": "Updates on training, prevention campaigns and the life of the guild.",
+      "back": "All news",
+      "published": "Published"
+    },
+    "resources": {
+      "kick": "Resources",
+      "title": "Documents & gallery",
+      "lead": "Forms, useful documents and photos from the association's activity.",
+      "docs": {
+        "title": "Documents",
+        "subtitle": "Download the association's official documents.",
+        "soon": "Coming soon",
+        "download": "Download",
+        "previewTitle": "Membership application",
+        "previewDesc": "The application form to join ASFOCMD as an affiliated member.",
+        "scansTitle": "Official records",
+        "scansSubtitle": "The association's statute and registration certificates.",
+        "scansHint": "Click to enlarge",
+        "scans": [
+          {
+            "img": "/docs/statut-scans/statut.jpg",
+            "label": "ASFOCMD statute"
+          },
+          {
+            "img": "/docs/statut-scans/decizie-inregistrare.jpg",
+            "label": "Registration decision"
+          },
+          {
+            "img": "/docs/statut-scans/certificat-inregistrare.jpg",
+            "label": "Registration certificate"
+          }
+        ],
+        "items": [
+          {
+            "title": "ASFOCMD statute",
+            "desc": "The association's founding document",
+            "meta": "PDF",
+            "href": "/docs/statut-asfocmd.pdf"
+          },
+          {
+            "title": "Membership application",
+            "desc": "Form for new members",
+            "meta": "PDF",
+            "href": "/docs/cerere-aderare.pdf"
+          },
+          {
+            "title": "Guide: chimney maintenance",
+            "desc": "Recommendations for homeowners",
+            "meta": "PDF"
+          },
+          {
+            "title": "Sample inspection certificate",
+            "desc": "Document issued after sweeping/inspection",
+            "meta": "PDF"
+          },
+          {
+            "title": "Relevant legislation",
+            "desc": "Rules on operating stoves and chimneys",
+            "meta": "Link"
+          }
+        ]
+      },
+      "gallery": {
+        "title": "Photo gallery",
+        "subtitle": "Photos from the association's activity.",
+        "note": "More photos will be added soon.",
+        "photos": [
+          {
+            "img": "/gallery/foto-1.jpg",
+            "caption": "From ASFOCMD's activity"
+          },
+          {
+            "img": "/gallery/foto-2.jpg",
+            "caption": "From ASFOCMD's activity"
+          }
+        ]
+      }
+    },
+    "contact": {
+      "kick": "Contact",
+      "title": "Write to us or call us",
+      "lead": "For bookings, membership questions or partnerships, the association's team is at your service.",
+      "cards": {
+        "phone": "Phone",
+        "email": "E-mail",
+        "address": "Address",
+        "hours": "Hours",
+        "hoursValue": "Monday–Friday, 9:00–17:00"
+      },
+      "org": {
+        "title": "Legal details",
+        "subtitle": "The association's official details.",
+        "rows": [
+          {
+            "label": "Name",
+            "value": "National Employers' Association of Chimney Sweeps and Builders of Chimneys, Ventilation and Fireplaces — ASFOCMD"
+          },
+          {
+            "label": "President",
+            "value": "Alexei Golomoz"
+          },
+          {
+            "label": "Address",
+            "value": "bd. Decebal 76, of. 601, Chișinău, Republic of Moldova"
+          },
+          {
+            "label": "Phone",
+            "value": "+373 79 447 686"
+          },
+          {
+            "label": "Tel./fax",
+            "value": "+373 22 890 940"
+          },
+          {
+            "label": "E-mail",
+            "value": "asfocmd@gmail.com"
+          },
+          {
+            "label": "Fiscal code (IDNO)",
+            "value": "1017620001842"
+          },
+          {
+            "label": "IBAN",
+            "value": "MD47MO2224ASV17334677100"
+          },
+          {
+            "label": "Bank",
+            "value": "BC Mobiasbanca — Groupe Société Générale SA, Chișinău"
+          },
+          {
+            "label": "BIC/SWIFT",
+            "value": "MOBBMD22"
+          }
+        ]
+      },
+      "form": {
+        "title": "Send a message",
+        "name": "Name",
+        "namePh": "Your name",
+        "email": "E-mail",
+        "emailPh": "address@example.md",
+        "subject": "Subject",
+        "subjectPh": "What is your message about?",
+        "message": "Message",
+        "messagePh": "Write your message here…",
+        "send": "Send message",
+        "sending": "Sending…",
+        "successTitle": "Message sent!",
+        "successDesc": "Thank you. We will get back to you as soon as possible.",
+        "again": "Send another message",
+        "errRequired": "Required field",
+        "errEmail": "Invalid e-mail address",
+        "errSubmit": "Could not send the message. Please try again."
+      }
+    },
+    "members": {
+      "kick": "Members",
+      "title": "ASFOCMD member companies",
+      "subtitle": "Authorised companies working in chimneys, ventilation, stoves and fireplaces.",
+      "fieldReg": "Registration no.",
+      "fieldIdno": "Fiscal code (IDNO)",
+      "fieldAddress": "Registered office",
+      "fieldRep": "Legal representative",
+      "companies": [
+        {
+          "name": "SRL „Hornar-Expert”",
+          "reg": "257312 · 15.10.2012",
+          "idno": "1012600007515",
+          "address": "Chișinău, str. Dumitru Caraciobanu 14",
+          "rep": "Golomoz Alexei",
+          "role": "Administrator"
+        },
+        {
+          "name": "SRL „Hornar-Expert Prim”",
+          "reg": "316933 · 10.08.2015",
+          "idno": "1015600026382",
+          "address": "Chișinău, str. Dumitru Caraciobanu 14",
+          "rep": "Burac Tudor",
+          "role": "Deputy director"
+        },
+        {
+          "name": "SRL „Geomap-Plus”",
+          "reg": "21378 · 25.06.2008",
+          "idno": "1008600031964",
+          "address": "Chișinău, or. Vatra, str. Mihail Frunze 3",
+          "rep": "Blăniță Igor",
+          "role": "Director"
+        },
+        {
+          "name": "SRL „Smoc”",
+          "reg": "344741 · 10.06.1998",
+          "idno": "1003600000327",
+          "address": "Chișinău, str. A. Hîjdeu 6/3",
+          "rep": "Șevcenco Alexandr",
+          "role": "Administrator"
+        },
+        {
+          "name": "SRL „Hornar-Expert Gaz”",
+          "reg": "343905 · 13.10.2016",
+          "idno": "1016600032588",
+          "address": "Chișinău, str. Dumitru Caraciobanu 14",
+          "rep": "Golomoz Lidia",
+          "role": "Founder"
+        },
+        {
+          "name": "SRL „ProHornar”",
+          "reg": "J26/2268/2007 · 31.12.2007",
+          "idno": "22996033",
+          "address": "Lunca, Sântu 188A, Mureș county, Romania",
+          "rep": "Balsoianu Mircea Ovidiu",
+          "role": "Administrator"
+        },
+        {
+          "name": "SRL „ECO INTELIGENT”",
+          "reg": "48360 · 01.05.2017",
+          "idno": "1017602002759",
+          "address": "Bălți, str. Mitropolit Petru Movilă 12",
+          "rep": "Burduja Maxim",
+          "role": "Administrator"
+        },
+        {
+          "name": "SRL „SOBĂ BUNĂ”",
+          "reg": "101960001785 · 21.01.2019",
+          "idno": "",
+          "address": "Chișinău, str. Miorița 1E, ap. 18",
+          "rep": "Burac Tudor",
+          "role": "Director"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,1577 @@
+/* Tailwind v4 + shadcn/ui tokens, mapped onto the ASFOC brand palette.
+   Layer order puts `legacy` (the original stylesheet) above Tailwind's base
+   reset but below utilities, so both styling systems coexist. */
+@layer theme, base, legacy, components, utilities;
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Rainbow-button hues. Kept outside `@layer legacy` so the `@theme` block
+   below resolves them without depending on layer order. These are the only
+   saturated colours in the system and they exist for exactly one control —
+   the hero's "Caută pe hartă" CTA. */
+:root {
+  --color-1: 0 100% 63%;
+  --color-2: 270 100% 63%;
+  --color-3: 210 100% 63%;
+  --color-4: 195 100% 63%;
+  --color-5: 90 100% 63%;
+}
+
+/* Declared outside any layer so both the Tailwind utility below and the
+   `.rainbow-cta` rules in `legacy` can drive it. */
+@keyframes rainbow {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: 200%;
+  }
+}
+
+/* Tailwind v4 has no tailwind.config.js — the animation and the `color-N`
+   utilities are registered here instead. */
+@theme {
+  --color-color-1: hsl(var(--color-1));
+  --color-color-2: hsl(var(--color-2));
+  --color-color-3: hsl(var(--color-3));
+  --color-color-4: hsl(var(--color-4));
+  --color-color-5: hsl(var(--color-5));
+  --animate-rainbow: rainbow var(--speed, 2s) infinite linear;
+}
+
+@theme inline {
+  --color-background: var(--sand);
+  --color-foreground: var(--ink);
+  --color-card: var(--paper);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--paper);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--ember);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--ember-tint);
+  --color-secondary-foreground: var(--ember-dark);
+  --color-muted: #F1F1F3;
+  --color-muted-foreground: #6e7078;
+  --color-accent: var(--ember-tint);
+  --color-accent-foreground: var(--ember-dark);
+  --color-destructive: #b91c1c;
+  --color-destructive-foreground: #ffffff;
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--ember);
+  --color-copper: var(--copper);
+  --font-sans: var(--sans);
+  /* `font-display` is the utility for headline type. There is no serif in the
+     system any more — display and body are one grotesque, split by weight. */
+  --font-display: var(--display);
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+}
+
+@layer legacy {
+:root{
+  --soot:#141518; --soot-2:#1E2025;
+  /* Oxblood, not brick: deep enough to read as a stamped seal rather than a
+     web accent. One hue (~6deg) across the whole site — see --copper below. */
+  /* The pale wash behind step bullets, category chips and the "current" state
+     in form flows. It used to be a rose tint of the ember, which read as a
+     colour decision nobody made; it is now a cool grey from the same family as
+     --sand / --line, so those surfaces stay quiet and the ember glyph on top
+     is the only colour in them. */
+  --ember:#7F1F16; --ember-dark:#5E140E; --ember-tint:#ECECEF;
+  /* Accents are one hue now: copper used to sit ~28deg toward yellow from
+     the ember, which read as orange fighting the nav red. It is now a deep
+     oxide red — same family as --ember, darker value — and the old gold
+     (--copper-soft, #C89C60) is retired for a light oxide red that reads on
+     the dark footer. */
+  --copper:#8C2A1F; --copper-soft:#D9847C;
+  /* European blue, restated as sapphire-navy: deep and near-black in mass, with
+     a single luminous edge tone for rims, lamps and hover glows. Reads as ink
+     rather than as a web-blue accent, which is what keeps it quiet next to the
+     copper. */
+  --blue:#1B3A6B; --blue-deep:#12294D; --blue-lit:#4C7FD4;
+  /* Cool paper grey rather than cream: the old base sat at hue 45 and cast the
+     whole site warm, which is what made the accents read orange. */
+  --sand:#F4F4F5; --paper:#FFFFFF;
+  --ink:#232529; --muted:#6B6D72; --line:#E3E3E6;
+  --hairline:rgba(20,21,24,.12);
+  /* Display and body are the same grotesque; the two tokens stay separate so
+     headline type can be re-pointed later without touching body copy. */
+  --display:var(--font-onest),system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --sans:var(--font-onest),system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --shadow-sm:0 1px 2px rgba(20,21,24,.05);
+  --shadow-md:0 10px 30px rgba(20,21,24,.07),0 2px 6px rgba(20,21,24,.04);
+  --shadow-lg:0 24px 60px rgba(20,21,24,.10);
+  --r:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:clip}
+/* Anchor targets clear the floating nav instead of tucking under it, so
+   jumping to Servicii / the map / news lands with the heading in view. */
+#servicii,#directoriu,#stiri,#membru,#parteneri{scroll-margin-top:104px}
+@media (max-width:1023px){#servicii,#directoriu,#stiri,#membru,#parteneri{scroll-margin-top:64px}}
+body{font-family:var(--sans);color:var(--ink);background:var(--sand);line-height:1.6;-webkit-font-smoothing:antialiased}
+/* Grotesque headlines want weight and tight tracking to carry authority, where
+   the old serif relied on contrast and size. */
+h1,h2,h3{font-family:var(--display);font-weight:660;line-height:1.11;letter-spacing:-.026em;color:var(--soot)}
+
+/* the ember line — a contained fire: hairline rule carrying one glowing ember.
+   Used under the hero's key word; the section kickers repeat the motif. */
+.ember-line{position:relative;display:inline-block}
+.ember-line::after{content:"";position:absolute;left:1%;right:4%;bottom:.04em;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(140,42,31,.85) 22%,rgba(140,42,31,.85))}
+.ember-line::before{content:"";position:absolute;right:2%;bottom:calc(.04em - 2px);width:5px;height:5px;border-radius:50%;
+  background:var(--ember);box-shadow:0 0 8px 2px rgba(127,31,22,.55)}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+button{font-family:inherit}
+ul{list-style:none}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+/* ── Glass surfaces ───────────────────────────────────────────────────
+   The nav pill is the reference material for the whole site: a 5% wash of
+   the page background, one hairline border in --line, a 16px backdrop blur
+   and Tailwind's shadow-lg. No sheen, no saturation boost — those were what
+   made the buttons and the finder tray read as a brighter, different
+   substance floating over the nav.
+   Controls keep their colour through three custom props — fill (--gf),
+   edge (--ge) and glow (--gg) — so a tint can override the base without
+   changing the material. Shared by the legacy `.btn` classes below and the
+   shadcn `<Button>` variants (which reuse `.glass` + the `.glass-*` tints). */
+:root{
+  --nav-fill:rgba(244,244,245,.05);
+  --nav-shadow:0 10px 15px -3px rgba(20,21,24,.1),0 4px 6px -4px rgba(20,21,24,.1);
+}
+.glass,.btn,.chip,.reset-btn{
+  position:relative;isolation:isolate;
+  border:1px solid var(--ge,var(--line));
+  background:var(--gf,var(--nav-fill));
+  -webkit-backdrop-filter:blur(16px);
+  backdrop-filter:blur(16px);
+  box-shadow:var(--nav-shadow),0 8px 22px -12px var(--gg,transparent);
+  transition:transform .15s ease,box-shadow .28s ease,background .28s ease,border-color .28s ease,color .2s ease;
+}
+/* Static panels cut from the same glass, minus the hover lift a control needs. */
+.glass-panel,.glass-field{
+  position:relative;isolation:isolate;
+  border:1px solid var(--line);
+  -webkit-backdrop-filter:blur(16px);
+  backdrop-filter:blur(16px);
+}
+/* Panels carry real opacity of their own. They used to be a 5% wash, which was
+   enough only because the hero footage underneath was bleached out by the veil
+   and desaturated on top of that. The band plays in full colour now, so the
+   glass itself has to do the work — otherwise the finder's label and its
+   placeholder dissolve into whatever is burning behind them. */
+.glass-panel{background:linear-gradient(rgba(255,255,255,.56),rgba(255,255,255,.44));
+  -webkit-backdrop-filter:blur(22px) saturate(140%);backdrop-filter:blur(22px) saturate(140%);
+  box-shadow:var(--nav-shadow)}
+/* Inputs sit *inside* a panel, so they read one step brighter than it — a well
+   cut into the same glass, not a second pane floating on top. The fill is
+   written as a (flat) gradient because shadcn's Input ships `bg-background`
+   and the `bg-transparent` utility that cancels it would also win over any
+   background-color set here. */
+.glass-field{background:linear-gradient(rgba(255,255,255,.62),rgba(255,255,255,.62));
+  box-shadow:inset 0 1px 2px rgba(20,21,24,.06)}
+
+/* Colour-tinted bloom — off at rest, fades in under the cursor. */
+.glass::before,.btn::before,.chip::before,.reset-btn::before{
+  content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;
+  opacity:0;transition:opacity .3s ease;
+  background:radial-gradient(120% 135% at 50% 50%,var(--bloom,rgba(255,255,255,.28)),transparent 78%);
+}
+.glass:hover,.btn:hover,.chip:hover,.reset-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    0 14px 22px -6px rgba(20,21,24,.13),
+    0 4px 8px -4px rgba(20,21,24,.1),
+    0 12px 28px -8px var(--gg,transparent);
+}
+.glass:hover::before,.btn:hover::before,.chip:hover::before,.reset-btn:hover::before{opacity:1}
+.glass:active,.btn:active,.chip:active,.reset-btn:active{transform:translateY(0)}
+
+/* Colour tints — set fill / edge / glow / bloom, keep the glass shell. */
+/* Deep red gradient rather than a translucent wash: at 66% alpha over light
+   glass the ember read as salmon, a different colour from the nav red. */
+.glass-ember{--gf:linear-gradient(180deg,#7F1F16,#5E140E);--ge:rgba(246,206,202,.42);
+  --gg:rgba(94,20,14,.55);--bloom:rgba(150,45,32,.32);color:#fff}
+.glass-ember:hover{--gf:linear-gradient(180deg,#93251A,#6B1710)}
+.glass-blue{--gf:rgba(27,58,107,.62);--ge:rgba(76,127,212,.5);--gg:rgba(18,41,77,.55);--bloom:rgba(76,127,212,.42);color:#fff}
+.glass-blue:hover{--gf:rgba(27,58,107,.82)}
+.glass-soot{--gf:rgba(20,21,24,.58);--ge:rgba(255,255,255,.2);--gg:rgba(20,21,24,.6);--bloom:rgba(90,92,100,.5);color:#fff}
+.glass-soot:hover{--gf:rgba(20,21,24,.78)}
+/* The default control: literally the nav's material, nothing added. */
+.glass-neutral{--gf:var(--nav-fill);--ge:var(--line);--bloom:rgba(140,42,31,.28);color:var(--soot)}
+.glass-neutral:hover{--gf:rgba(255,255,255,.12);--ge:rgba(140,42,31,.45);color:var(--copper)}
+
+/* Hover-only ignition — the button rests as plain nav glass, identical to its
+   siblings, and only kindles a coloured glow under the cursor. Defined after
+   `.glass-neutral` so these win the shared `:hover` custom props.
+   `.glow-ember` is the fire on the map CTA and the finder's search button;
+   `.glow-blue` is the EU limelight for "Devino membru". Neither declares a
+   rest state any more — the sapphire rim and halo the membership CTA used to
+   carry at rest read as an unexplained blue outline, so the blue now lives
+   entirely in the hover, where it is bright enough to actually be seen. */
+.glow-ember:hover{--gf:rgba(127,31,22,.047);--ge:rgba(230,160,152,.35);--gg:rgba(127,31,22,.17);--bloom:rgba(160,50,36,.22);color:var(--ember)}
+/* `.glow-blue` — the EU limelight the membership CTA used to wear — is gone.
+   That button is a `.rainbow-cta` like its two neighbours now, and the sapphire
+   flare it carried (a 34px outer glow plus an inset rim) was the loudest thing
+   in the fold: the three CTAs answered the cursor three different ways. */
+
+/* The hero video veil is gone. It was a horizontal wash (rgb = var(--sand))
+   that muted the footage through the centre where the headline and CTAs sit,
+   plus a stronger phone variant. Nothing overlays the band any more — the clip
+   plays clear at its own colour and levels, and the glass of the panels is what
+   carries the type's legibility. `.hero-desat`, a masked saturate(.3) pane that
+   once sat above the veil, went the same way earlier. */
+
+/* The rotating conic rim halo (`.spin-glow` / `.spin-fire` / `.spin-blue`) is
+   gone with it. It was a blurred conic gradient orbiting behind the two outline
+   CTAs on hover, driven by an interpolable `--glow-angle`; the map CTA never
+   had one, so hovering the row lit two buttons from the edge and one from
+   underneath. The bottom bloom below is now the only hover light in the fold. */
+
+/* ── Bottom bloom ─────────────────────────────────────────────────────
+   The one hover effect the three hero CTAs share: a sweeping band of colour
+   pooling under the capsule. The capsule itself never changes — same glass,
+   same label colour, at rest and under the cursor — so the fold stays calm and
+   the light is the only thing that answers.
+   It lives on ::after because `.glass` already spends ::before on its own hover
+   wash, and behind the element (z-index -2, contained by `isolation:isolate`)
+   so the blur reads as light escaping from under the button. */
+.cta-bloom::after{
+  content:"";position:absolute;bottom:-20%;left:50%;transform:translateX(-50%);
+  z-index:-2;width:60%;height:20%;pointer-events:none;
+  opacity:0;transition:opacity .3s ease;
+  background-size:200%;filter:blur(12.8px);
+  animation:rainbow var(--speed,2s) infinite linear;
+}
+.cta-bloom:hover::after{opacity:1}
+/* One sweep per destination. All three run the same animation at the same
+   speed and width — only the hues differ, so the row reads as one control in
+   three colours rather than three unrelated buttons.
+   Map: the full spectrum. Membership: blues, pale sky through navy and back.
+   Training: fire, walked red → orange → yellow and back down, which is the
+   ember palette the rest of the site already burns. Each ramp carries enough
+   stops that the 200% background actually travels through its range as it
+   scrolls, instead of pulsing between two tones. */
+.bloom-spectrum::after{background:linear-gradient(90deg,hsl(var(--color-1)),hsl(var(--color-5)),hsl(var(--color-3)),hsl(var(--color-4)),hsl(var(--color-2)))}
+.bloom-sky::after{background:linear-gradient(90deg,#CFE1FF,#7FADF2,#4C7FD4,#2B57A6,#1B3A6B,#2B57A6,#4C7FD4,#7FADF2,#CFE1FF)}
+.bloom-fire::after{background:linear-gradient(90deg,#7F1F16,#B0361F,#DC6A28,#F0A63C,#F6D65C,#F0A63C,#DC6A28,#B0361F,#7F1F16)}
+@media(prefers-reduced-motion:reduce){.cta-bloom::after{animation:none}}
+
+/* ── Map CTA ──────────────────────────────────────────────────────────
+   The home hero's "Caută pe hartă". Nothing but the nav's glass, at rest and
+   on hover alike — it used to flip to a soot core inside a sweeping gradient
+   border, which turned it black under the cursor while its neighbours stayed
+   pale. All that is left of the rainbow is the bloom above. */
+.rainbow-cta{
+  position:relative;isolation:isolate;
+  display:inline-flex;align-items:center;justify-content:center;
+  height:44px;padding:0 24px;border-radius:9999px;
+  font-family:var(--sans);font-size:14.5px;font-weight:600;letter-spacing:.01em;
+  color:var(--soot);cursor:pointer;white-space:nowrap;
+  border:1px solid var(--line);
+  background:var(--nav-fill);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  box-shadow:var(--nav-shadow);
+  transition:color .3s ease,border-color .3s ease,box-shadow .28s ease,transform .15s ease;
+}
+/* Two per row on phones, so the capsule gives up padding and half a point of
+   type rather than letting "Devino membru" push its icon out of the pill. */
+@media(max-width:640px){.rainbow-cta{padding:0 14px;font-size:14px}}
+.rainbow-cta:hover{transform:translateY(-1px)}
+.rainbow-cta:active{transform:translateY(0)}
+.rainbow-cta:focus-visible{outline:2px solid var(--ring,var(--ember));outline-offset:2px}
+
+/* ── The fold as a title card ─────────────────────────────────────────
+   The whole glass layer that used to live in here is gone. It existed to hold
+   dark type on clear footage: a raised `--nav-fill`, a matching set of hover
+   fills, a blur on every panel, capsule and field in the fold. The picture is
+   graded now (see HeroVideo) and the type is light, so none of it has anything
+   left to do — and the frosted capsule is the *nav's* material, so wearing it
+   three times across the fold was what made the actions read as chrome rather
+   than as an invitation.
+   The type block sits on `.wrap`, the site's own 1180px measure, so the fold's
+   left edge is the same left edge as the fact card, the services grid and the
+   news row below it. The old hero used `max-w-5xl` (1024px) and lined up with
+   nothing. */
+/* The fold is a `<section>`, so it inherits the global `section{padding:92px 0}`
+   band. It used to cancel that with Tailwind padding utilities; now that the
+   stage and the credit rail own their own spacing it has to be said here, or a
+   92px strip of dead footage opens above the type and below the credit rule. */
+.hero-fold{color:#fff;padding:0}
+
+/* The stage fills the fold and pushes its contents to the foot of the frame.
+   The top padding is only a collision guard against the nav on a short laptop;
+   on any normal screen the picture takes that space.
+
+   ── The fold's vertical rhythm ──
+   Everything below is on one 4px-based scale, set once here rather than as four
+   independent clamps. It used to be 22 / 32.4 / 40.5 / 16 — four numbers from
+   four different edits, none of them related, which is why the block read as
+   "a bit off" even though every element on it was individually fine. The steps
+   now grow monotonically as the eye travels down, so each gap says how big a
+   break it is: the eyebrow is attached to the name, the actions are a beat
+   away, the credit rule is a section away.
+
+     --fold-step-1  eyebrow → name        24px
+     --fold-step-2  name → actions        36px
+     --fold-step-3  actions → credit rule 48px
+
+   They stay proportional on short screens via the shared `vh` term, so a 720px
+   laptop compresses the whole rhythm rather than collapsing one gap. */
+.hero-fold{
+  --fold-step-1:clamp(16px,2.7vh,24px);
+  --fold-step-2:clamp(22px,4vh,36px);
+  --fold-step-3:clamp(28px,5.3vh,48px);
+}
+.hero-stage{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:flex-start;
+  flex:1;justify-content:flex-end;
+  /* `.wrap` carries `margin:0 auto`, and an auto cross-axis margin on a flex
+     item cancels `stretch` — without this the stage collapses to the width of
+     its own text and the whole block drifts inward, off the site's left edge. */
+  width:100%;
+  padding-top:112px;padding-bottom:var(--fold-step-3);
+}
+
+/* Eyebrow: a short accent rule, the descriptor, and the short name — one line
+   carrying what used to be two elements a headline apart. The accent is
+   `--copper-soft`, the light oxide red the palette keeps for dark grounds; the
+   ember itself goes muddy at this size over a graded picture. */
+.hero-eyebrow{
+  display:flex;align-items:center;gap:11px;
+  font-size:11.5px;font-weight:700;letter-spacing:.19em;text-transform:uppercase;
+  color:rgba(255,255,255,.82);
+}
+.hero-eyebrow-rule{
+  display:block;width:clamp(28px,4vw,54px);height:1px;flex:none;
+  background:linear-gradient(90deg,var(--copper-soft),rgba(217,132,124,.15));
+}
+.hero-eyebrow-sep{
+  display:block;width:3px;height:3px;border-radius:50%;flex:none;
+  background:var(--copper-soft);
+}
+
+/* The name, set in a measure rather than across the viewport. Three lines on a
+   desktop, and the size is free to be a headline size because it no longer has
+   to shrink to hold one line. `text-wrap:balance` keeps the three lines even
+   instead of leaving a single orphaned word on the last one. */
+.hero-title{
+  /* 22ch is the measure that lands the 77-character name on three lines at the
+     desktop size — 19ch broke it to four and left "a Hornarilor," stranded as a
+     short second line. */
+  max-width:22ch;
+  margin-top:var(--fold-step-1);
+  font-size:clamp(2rem,4.4vw,3.65rem);
+  line-height:1.06;letter-spacing:-.032em;font-weight:680;
+  color:#fff;text-wrap:balance;
+  text-shadow:0 1px 30px rgba(10,11,13,.5);
+}
+
+/* One primary, two quiet. `nowrap` keeps all three on a single row at every
+   width — the phone rules below shrink the CTA rather than breaking the line
+   (see the note there). */
+.hero-actions{
+  display:flex;flex-wrap:nowrap;align-items:center;gap:14px 26px;
+  margin-top:var(--fold-step-2);
+}
+/* The only saturated object in the frame — and a full capsule again. It spent a
+   while at 4px on the argument that the fold's other rounds made a pill read as
+   another tab; but those pills are all chrome (nav, language, credits) and this
+   is the one thing that is a *button*, so it can wear the site's own button
+   shape without being mistaken for chrome. */
+.hero-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--ember);color:#fff;
+  font-size:15px;font-weight:640;letter-spacing:.005em;
+  padding:15px 28px;border-radius:9999px;
+  white-space:nowrap;
+  box-shadow:0 12px 30px -10px rgba(127,31,22,.75);
+  transition:background .25s ease,box-shadow .25s ease,transform .2s ease;
+}
+.hero-cta:hover{background:#93251A;box-shadow:0 16px 38px -10px rgba(127,31,22,.9);transform:translateY(-1px)}
+.hero-cta:active{transform:translateY(0)}
+.hero-cta-mark{flex:none;transition:transform .25s ease}
+.hero-cta:hover .hero-cta-mark{transform:translateY(-2px)}
+
+/* ── Liquid-metal rim ─────────────────────────────────────────────────
+   A shader canvas showing only at the button's edge. The wrapper is the ring:
+   it carries the radius and `--lm-ring` of padding, the canvas fills it, and
+   the button on top covers everything but that padding. See
+   components/ui/liquid-metal-button.tsx.
+
+   The wrapper deliberately owns no colour, no shadow and no hover of its own —
+   the button inside it still has all of that, including the lift on hover,
+   which is why the ring is on the wrapper's *padding* rather than a border on
+   the button: a border would ride the transform and shear against the canvas. */
+.lm-rim{
+  --lm-ring:2px;
+  position:relative;display:inline-flex;
+  padding:var(--lm-ring);border-radius:9999px;
+  isolation:isolate;
+}
+.lm-rim-shader{
+  position:absolute;inset:0;z-index:0;
+  border-radius:inherit;overflow:hidden;
+  /* The floor under the canvas. A brushed sweep in the same cool greys the
+     shader itself resolves to, so a browser that cannot open a WebGL context —
+     or one that has not drawn a frame yet — degrades to a still metal rim
+     rather than a black one. */
+  background:conic-gradient(from 210deg,
+    #7A808C,#D2D7DE,#858B96,#EDEFF2,#7E848F,#C2C7CF,#7A808C);
+}
+/* The canvas is transparent until the shader reports a drawn frame; see the
+   note by the poll in liquid-metal-button.tsx. Without this the ring flashes
+   opaque black on load, and stays black for the whole visit in any tab that
+   starts in the background. */
+.lm-rim-shader canvas{
+  display:block;width:100%;height:100%;
+  opacity:0;transition:opacity .5s ease}
+.lm-rim-shader[data-live] canvas{opacity:1}
+/* The button sits above the canvas and masks its middle. `.hero-cta` already
+   carries the full pill radius, so the ring reads as an even 2px all the way
+   round rather than pooling at the ends. */
+.lm-rim > .hero-cta{position:relative;z-index:1}
+/* The rim is decoration; it must never be the reason a keyboard user cannot see
+   where they are. Focus goes on the wrapper so the outline traces the outside
+   of the ring rather than cutting through it. */
+.lm-rim:focus-within{outline:2px solid var(--copper-soft);outline-offset:3px}
+.lm-rim > .hero-cta:focus-visible{outline:none}
+@media(max-width:640px){.lm-rim{--lm-ring:1.5px}}
+
+/* Secondary actions as type, not chrome: a hairline that fills in on hover.
+   The rule is on the *label* only — an underline that ran under the pictogram
+   too would turn each link back into a box. */
+.hero-link{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:14.5px;font-weight:560;color:rgba(255,255,255,.9);
+  white-space:nowrap;
+  transition:color .2s ease;
+}
+.hero-link-mark{flex:none;opacity:.78;transition:opacity .2s ease}
+.hero-link-label{
+  position:relative;
+  padding-bottom:3px;
+}
+.hero-link-label::after{
+  content:"";position:absolute;left:0;bottom:0;height:1px;width:100%;
+  background:rgba(255,255,255,.42);
+  transition:background .25s ease;
+}
+.hero-link:hover{color:#fff}
+.hero-link:hover .hero-link-mark{opacity:1}
+.hero-link:hover .hero-link-label::after{background:var(--copper-soft)}
+
+/* ── Credit rail ──────────────────────────────────────────────────────
+   The affiliations, along the foot of the fold. They were a rounded glass pill
+   floating in the middle of the frame, which read as a widget; they are
+   credentials, so they read as credits now — a hairline the full width of the
+   viewport, caption left, bodies right. */
+.hero-credits{
+  position:relative;z-index:1;
+  border-top:1px solid rgba(255,255,255,.16);
+}
+.hero-credits-inner{
+  display:flex;align-items:center;justify-content:center;gap:18px;
+  padding-top:20px;padding-bottom:20px;
+}
+/* No horizontal reservation for the scroll cue any more. The cue used to be
+   pinned to the viewport's bottom-right corner, which put it *inside* this
+   rail, so the rail had to be held back by 48–88px depending on the width to
+   stop the last logo disappearing underneath it — a fix that cost the credits
+   their right edge on exactly the screens where the measure was tightest. The
+   cue now rides above the rule while the fold is on screen (see
+   `.scroll-cue-rail[data-lifted]`), so the logos run the full measure and end
+   on the same right edge as everything else on the page. */
+/* The strip drops its pill entirely in here — no fill, no border, no blur, no
+   shadow. It is a row of logos on a rule, centred on the measure: the caption
+   and the four marks read as one statement rather than as two objects pushed
+   to opposite ends of 1180px. Centred is also the one arrangement that is the
+   same on a phone as on a desktop, so the rail stops needing a separate idea
+   at each width. */
+.hero-fold .member-strip{
+  display:flex;flex:1;justify-content:center;align-items:center;
+  gap:6px;padding:0;margin:0;
+  background:none;border:0;border-radius:0;box-shadow:none;
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+}
+.hero-fold .ms-label{
+  padding:0;margin:0 10px 0 0;border:0;
+  font-size:10.5px;letter-spacing:.15em;color:rgba(255,255,255,.62);
+}
+/* The hit area's own inset, published as a variable so the row can cancel it
+   when it needs its first mark flush with the page edge (see the phone block). */
+.hero-fold .ms-item{--ms-pad-x:9px;padding:6px var(--ms-pad-x)}
+.hero-fold .ms-item:hover{background:rgba(255,255,255,.12)}
+
+/* Optical sizing, not a shared box.
+
+   The three credentials arrive as unrelated artworks: ESCHFOE is a filled
+   square badge carrying its own heavy black keyline, VEUKO is an open portrait
+   plate, ASFOCH is a white seal that needs a dark ground under it. Setting all
+   three to one height is what made the rail look ragged — a solid bordered
+   badge at 26px reads considerably larger than an open portrait mark at the
+   same 26px, and the seal-in-a-chip larger still, because the chip itself is
+   the mark you see.
+
+   So `--ms-mark` is the row's nominal cap height and each artwork is trimmed
+   against it until the three carry the same visual weight. The trims are
+   deliberate, not arbitrary: the filled badge comes down, the open plate goes
+   up, and the chip is sized so the *chip* — not the art inside it — matches the
+   badge beside it.
+
+   Height stays on the <img> rather than as `height:100%` inside a fixed box: a
+   percentage height on a grid item resolves *after* the item's intrinsic width,
+   so ESCHFOE's 314px-wide artwork sized the box to 314px and broke the row onto
+   three lines before any cap applied. */
+.hero-fold{--ms-mark:34px}
+.hero-fold .ms-logo{width:auto;height:var(--ms-mark)}
+.hero-fold .ms-logo img{
+  width:auto;height:var(--ms-mark);max-width:none;max-height:none;
+  object-fit:contain;
+}
+/* ESCHFOE — a solid badge inside a black keyline, so its whole box is ink.
+   At the nominal height it out-weighs both neighbours; 0.85 lands it level. */
+.hero-fold .ms-logo--eschfoe,
+.hero-fold .ms-logo--eschfoe img{height:calc(var(--ms-mark) * .85)}
+/* VEUKO — a portrait plate with air inside the artwork, so it can run past the
+   nominal height without gaining weight. It is also the only tall mark, and
+   matching its *height* to the others would have made it read as the smallest
+   thing in the row. */
+.hero-fold .ms-logo--veuko,
+.hero-fold .ms-logo--veuko img{height:calc(var(--ms-mark) * 1.06)}
+/* ASFOCH — the chip is a *plate*, not a crop. It is what keeps the white
+   artwork legible over the picture, so what the eye measures is the chip, and
+   the chip is what matches ESCHFOE's badge. The ground is softened from the
+   old opaque near-black gradient to a translucent scrim: the fold is already
+   graded dark at its foot, so the chip only has to lift the seal off the
+   footage, not punch a hole in it. */
+.hero-fold .ms-logo--dark{
+  width:calc(var(--ms-mark) * .85);height:calc(var(--ms-mark) * .85);
+  padding:4px;border-radius:8px;
+  background:rgba(10,11,13,.5);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.13);
+}
+/* An explicit height, not `height:100%`. A percentage height on a grid item is
+   resolved *after* the item's intrinsic width, so the 512px seal ignored the
+   chip entirely and rendered at 512px across the corner of the fold. The chip
+   is `--ms-mark * .85` with 4px of padding on each side, so the art inside it
+   is that minus 8. */
+.hero-fold .ms-logo--dark img{
+  width:auto;height:calc(var(--ms-mark) * .85 - 8px);
+}
+/* No plate is added to the other two. `.ms-logo--dark` is the chip that makes
+   ASFOCH's *white* artwork legible, so a blanket light background in the fold
+   erases that logo completely; the other two carry their own ground in the
+   artwork and sit fine on the graded picture. */
+
+/* Phones: the credit rail keeps the caption and the logos, stacked, and the
+   fold's bottom padding clears the fixed tab dock. */
+/* Phones and tablets: the tabs live in a fixed dock at the foot of the screen,
+   so the credit rail has to clear it. The caption takes a line of its own and
+   the three bodies sit in a row beneath it — `flex-direction:column` would put
+   each logo on its own row too, since MemberStrip renders the caption and the
+   three links as flat siblings with nothing wrapping the logos. */
+@media(max-width:1023px){
+  .hero-credits-inner{padding-bottom:88px}
+  .hero-fold .member-strip{flex-wrap:wrap;justify-content:center;gap:4px}
+  /* `.ms-label` is an `inline-flex` box in its pill form, and on small screens
+     the pill clamps it to `max-width:112px` and right-aligns it so the caption
+     wraps to two short lines *beside* the logos. On a full-width rail there is
+     room for the whole line above them, so all of that has to be undone — the
+     max-width especially, or the caption keeps overflowing a 112px box.
+     Centred, so the phone rail is the same arrangement as the desktop one. */
+  .hero-fold .ms-label{
+    flex:0 0 100%;width:100%;max-width:none;display:block;
+    text-align:center;white-space:nowrap;margin:0 0 9px;
+  }
+}
+@media(max-width:640px){
+  .hero-stage{padding-top:92px}
+  .hero-title{
+    max-width:none;letter-spacing:-.026em;
+    /* The 4.4vw term is far below the floor on a phone, so the floor is the
+       only value that matters here — and 32px put the 77-character name on
+       five lines. */
+    font-size:1.7rem;
+  }
+  /* All three actions stay on one row on a phone. The CTA used to take a row of
+     its own at full width, which is the obvious fix for a row that will not
+     fit — but it turned the primary action into a banner and pushed the other
+     two onto a second line, so the foot of the fold grew by two rows on exactly
+     the screens with the least of it to spare. Instead the CTA gives up the
+     width: smaller type, tighter padding, a smaller mark. It is still the only
+     saturated object in the frame, so it keeps its rank without needing 100% of
+     the measure.
+
+     Every value here is viewport-relative rather than stepped at a breakpoint.
+     "Caută un specialist · Devino membru · Instruire" is a lot of Romanian to
+     hold on one line, and the gap between an iPhone SE and a Pro Max is wide
+     enough that any one fixed size either overflows the small screen or wastes
+     the large one. Scaling the whole row together keeps its proportions at
+     every width, and there is no single size where it visibly snaps. The
+     ceilings are the values the row wants; only genuinely narrow screens ever
+     pay.
+
+     The coefficients are set from the widest of the three languages — Russian,
+     not Romanian: "Найти специалиста · Стать членом · Обучение" runs about 8px
+     longer than the Romanian at the same size. They leave that row a few pixels
+     of clearance inside the page's 24px gutter at 320px, the narrowest screen
+     this site targets. Nothing below that is supported; the px floors are only
+     there so it degrades by getting cramped rather than by breaking. Any change
+     to these three labels wants re-checking at 320px in all three locales. */
+  .hero-actions{gap:clamp(5px,1.9vw,12px);margin-top:24px}
+  .hero-cta{
+    font-size:clamp(9.5px,2.9vw,13.5px);
+    padding:clamp(8px,2.6vw,11px) clamp(10px,3.2vw,17px);
+    gap:clamp(4px,1.6vw,7px);
+    box-shadow:0 8px 20px -8px rgba(127,31,22,.75);
+  }
+  .hero-cta-mark{width:clamp(11px,3.6vw,16px);height:clamp(11px,3.6vw,16px)}
+  .hero-link{gap:clamp(3px,1.3vw,5px);font-size:clamp(8.5px,2.6vw,12.5px)}
+  .hero-link-mark{width:clamp(10px,3.3vw,14px);height:clamp(10px,3.3vw,14px)}
+}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--sans);font-weight:600;font-size:14.5px;letter-spacing:.01em;padding:13px 26px;border-radius:9999px;cursor:pointer}
+.btn-primary{--gf:linear-gradient(180deg,#7F1F16,#5E140E);--ge:rgba(246,206,202,.42);
+  --gg:rgba(94,20,14,.55);--bloom:rgba(150,45,32,.32);color:#fff}
+.btn-primary:hover{--gf:linear-gradient(180deg,#93251A,#6B1710)}
+.btn-ghost{--gf:var(--nav-fill);--ge:var(--line);--bloom:rgba(140,42,31,.28);color:var(--soot)}
+.btn-ghost:hover{--gf:rgba(255,255,255,.12);--ge:rgba(140,42,31,.45);color:var(--copper)}
+.btn-dark{--gf:rgba(20,21,24,.58);--ge:rgba(255,255,255,.2);--gg:rgba(20,21,24,.6);--bloom:rgba(90,92,100,.5);color:#fff}
+.btn-dark:hover{--gf:rgba(20,21,24,.82)}
+.ico{stroke:currentColor;stroke-width:1.75;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.util{background:var(--soot-2);color:#c7c9d0;font-size:13.5px}
+.util .wrap{display:flex;align-items:center;justify-content:space-between;height:42px}
+.util a{color:#c7c9d0;display:inline-flex;align-items:center;gap:6px}
+.util a:hover{color:#fff}
+.util .left{display:flex;gap:22px}
+.util .right{display:flex;gap:18px;align-items:center}
+.lang{display:flex;gap:2px;background:rgba(255,255,255,.06);border-radius:8px;padding:3px}
+.lang a{font-size:12.5px;font-weight:600;color:#b7b9c1;padding:4px 9px;border-radius:6px;line-height:1}
+.lang a:hover{color:#fff}
+.lang a.on{background:var(--ember);color:#fff}
+@media(max-width:720px){.util .left{display:none}}
+
+header.nav{position:sticky;top:0;z-index:50;background:rgba(249,249,250,.85);backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
+header.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:74px;gap:20px}
+.logo{display:flex;align-items:center;gap:11px}
+.logo .txt{display:flex;flex-direction:column;line-height:1.05}
+.logo .txt b{font-family:var(--display);font-size:20px;font-weight:700;color:var(--soot);letter-spacing:-.01em}
+.logo .txt span{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+nav.main{display:flex;align-items:center;gap:4px;position:relative}
+nav.main a{font-size:14.5px;font-weight:500;color:#3c4048;padding:9px 13px;border-radius:8px;transition:.15s;position:relative;z-index:1}
+nav.main a:hover{color:var(--ember)}
+nav.main a.active{color:var(--ember)}
+
+/* limelight — ember light tube at the header's top edge, glides to the
+   hovered link and rests on the active one (positioned from Header.tsx) */
+.limelight{position:absolute;top:0;height:100%;opacity:0;pointer-events:none;
+  transition:left .35s cubic-bezier(.3,.9,.35,1),width .35s cubic-bezier(.3,.9,.35,1),opacity .3s ease}
+.limelight.on{opacity:1}
+.limelight::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:60%;height:3px;border-radius:0 0 4px 4px;background:var(--ember);
+  box-shadow:0 1px 8px rgba(127,31,22,.75),0 0 2px rgba(127,31,22,.9)}
+.limelight::after{content:"";position:absolute;top:3px;left:50%;transform:translateX(-50%);
+  width:150%;height:100%;
+  background:radial-gradient(58% 90% at 50% 0%,rgba(127,31,22,.22),rgba(127,31,22,.07) 55%,transparent 75%)}
+@media (prefers-reduced-motion: reduce){.limelight{transition:opacity .3s ease}}
+/* innerlit — a faint light glowing from inside the login button */
+.innerlit{box-shadow:inset 0 0 10px rgba(127,31,22,.13),inset 0 0 2px rgba(127,31,22,.09)}
+.nav-cta{display:flex;align-items:center;gap:10px}
+.burger{display:none;background:none;border:1px solid var(--line);border-radius:9px;padding:9px;cursor:pointer;color:var(--soot)}
+@media(max-width:1000px){nav.main{display:none}.burger{display:inline-flex}}
+@media(max-width:520px){.nav-cta .btn-ghost{display:none}}
+.mobile-menu{border-top:1px solid var(--line);background:rgba(249,249,250,.98)}
+.mobile-menu .wrap{display:flex;flex-direction:column;gap:2px;padding-top:12px;padding-bottom:16px}
+.mobile-menu a{padding:11px 6px;font-size:15px;font-weight:500;color:#3c4048;border-radius:8px}
+.mobile-menu a:hover{color:var(--ember)}
+.mobile-menu .btn{margin-top:10px;justify-content:center}
+
+.hero{position:relative;overflow:hidden;background:
+   radial-gradient(1100px 500px at 82% -10%,rgba(127,31,22,.10),transparent 60%),
+   radial-gradient(800px 420px at 8% 8%,rgba(30,94,168,.07),transparent 55%),
+   linear-gradient(180deg,var(--sand),#fff)}
+.hero .wrap{position:relative;z-index:2;padding:70px 24px 64px;display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:stretch}
+.smoke{position:absolute;inset:0;z-index:1;opacity:.5;pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin-bottom:22px}
+.eyebrow .dot{width:5px;height:5px;border-radius:50%;background:var(--ember);box-shadow:0 0 7px 1.5px rgba(127,31,22,.55)}
+.hero h1{font-size:clamp(42px,5.6vw,68px);margin-bottom:18px}
+.hero h1 em{font-style:normal;color:var(--ember)}
+.hero p.lead{font-size:19px;color:#4a4e57;max-width:520px;margin-bottom:30px}
+.search{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-lg);padding:18px}
+.search .lbl{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:2px 0 10px 6px}
+.search .row{display:grid;grid-template-columns:1fr 1fr auto;gap:10px}
+.field{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:var(--sand)}
+.field:focus-within{border-color:var(--ember);background:#fff}
+.field .ico{color:var(--copper)}
+.field input,.field select{border:0;background:transparent;font-family:var(--sans);font-size:15px;color:var(--ink);width:100%;outline:none}
+.search .btn{width:100%;justify-content:center}
+.popular{margin-top:14px;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{--gf:var(--nav-fill);--ge:var(--line);--bloom:rgba(140,42,31,.28);border-radius:6px;padding:5px 12px;font-size:12.5px;color:#4a4e57;font-weight:500;cursor:pointer}
+.chip:hover{--gf:rgba(255,255,255,.12);--ge:rgba(140,42,31,.45);color:var(--copper)}
+@media(max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:34px}.search .row{grid-template-columns:1fr}}
+
+/* The old dark-header stat card is gone — see `.factbox` below for the card
+   that replaced it on both the home and about pages. */
+.badge-eu{width:34px;height:34px;border-radius:8px;background:var(--blue);display:grid;place-items:center;color:#fff;flex:none}
+
+section{padding:92px 0}
+
+/* ── Home "Despre" band ───────────────────────────────────────────────
+   The specialist finder and the fact card, on one white ground.
+   This band used to be squeezed to ~18–34px on top so its first lines would
+   break the fold and pull the eye down. The fold is a full-screen title card
+   now, so nothing of this band is meant to be visible before the first scroll
+   and that squeeze has no job left — it would just land the finder hard
+   against the top of the screen the moment the visitor scrolls. It gets a
+   proper opening pad instead, sized to the viewport so short laptops don't
+   spend a third of the second screen on air. */
+.about-band{background:#fff;border-bottom:1px solid var(--line);
+  padding:clamp(46px,7vh,84px) 0 clamp(58px,8vh,92px)}
+/* Phones: tighter on both ends, and the wrap loses its side gutters so the
+   finder and the card can use the full width. */
+@media(max-width:640px){
+  .about-band{padding:32px 0 44px}
+  .about-band .wrap{padding:0 14px}
+}
+
+/* ── Specialist finder, off the footage ───────────────────────────────
+   The finder's material is written for video: the tray is white at .56→.44 and
+   its fields are white at .62, which reads as glass only because full-colour
+   footage is showing through. Over this band's #fff ground the whole thing is
+   white on white — tray, fields and all — and nothing but the hairlines would
+   survive.
+   So the relationship inverts rather than the component changing shape. The
+   tray takes the page's own grey, which separates it from the white fact card
+   below it, and the controls go solid white — still wells cut into the tray,
+   just from the other direction. The blurs go with the translucency: there is
+   nothing behind any of this left to blur.
+   Scoped to this band. On /servicii the finder sits on `--sand` and its
+   original recipe still works there, so that instance is untouched. */
+.finder-band .glass-panel{
+  background:var(--sand);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+}
+.finder-band .glass-field{
+  background:linear-gradient(#fff,#fff);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+}
+/* The search button and the popular-service chips: `.glass-neutral` rests at a
+   5% wash, which needs footage behind it to be a surface at all. */
+.finder-band .glass-neutral{--gf:#fff}
+.finder-band .glass-neutral:hover{--gf:#fff;--ge:rgba(140,42,31,.45)}
+.finder-band .glow-ember:hover{--gf:rgba(255,247,246,.95)}
+
+.sec-head{text-align:center;max-width:680px;margin:0 auto 60px}
+.sec-head .kick{position:relative;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);padding-bottom:18px;margin-bottom:22px}
+.sec-head .kick::after{content:"";position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:76px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(140,42,31,.8) 28%,rgba(140,42,31,.8) 72%,transparent)}
+.sec-head .kick::before{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;
+  background:var(--ember);box-shadow:0 0 7px 1.5px rgba(127,31,22,.55)}
+.sec-head h2{font-size:clamp(27px,3.1vw,36px);line-height:1.14;margin-bottom:20px}
+.sec-head p{color:#54585f;font-size:17px;line-height:1.7}
+
+.services{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.svc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.svc{border:1px solid var(--line);border-radius:var(--r);padding:28px 22px;background:transparent;transition:.2s;cursor:pointer}
+.svc:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--hairline);background:#fff}
+.svc .ic{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--copper);margin-bottom:18px;transition:.2s}
+.svc:hover .ic{border-color:var(--copper);color:var(--ember)}
+.svc h3{font-size:19px;font-weight:700;margin-bottom:7px}
+.svc p{font-size:13.5px;color:var(--muted);line-height:1.5}
+@media(max-width:900px){.svc-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.svc-grid{grid-template-columns:1fr}}
+
+.dir-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:stretch}
+.map{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow-md);background:#eef1ee;min-height:440px}
+.map svg{display:block;width:100%;height:100%}
+.map .tag{position:absolute;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-sm);padding:7px 11px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:7px}
+.map .tag .pin{width:9px;height:9px;border-radius:50%;background:var(--ember);box-shadow:0 0 0 4px rgba(127,31,22,.18)}
+.dir-list{display:flex;flex-direction:column;gap:14px}
+.mcard{background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px 18px;display:flex;gap:14px;align-items:center;transition:.18s}
+.mcard:hover{box-shadow:var(--shadow-md);transform:translateX(3px)}
+.avatar{width:52px;height:52px;border-radius:8px;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:20px;color:#fff;background:linear-gradient(135deg,var(--copper),var(--ember))}
+.mcard .info{flex:1;min-width:0}
+.mcard .info .name{display:flex;align-items:center;gap:7px;font-weight:600;font-size:15.5px;color:var(--soot)}
+.verified{color:var(--blue);display:inline-flex}
+.mcard .info .meta{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-top:2px}
+.mcard .chips{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.mcard .chips span{font-size:11px;font-weight:600;color:var(--copper);background:rgba(127,31,22,.08);padding:3px 8px;border-radius:100px}
+.mcard .call{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;color:var(--soot);flex:none}
+.mcard .call:hover{background:var(--ember);color:#fff;border-color:var(--ember)}
+@media(max-width:860px){.dir-grid{grid-template-columns:1fr}.map{min-height:320px}}
+
+/* interactive district map */
+.map-panel{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-md);padding:16px 16px 14px;display:flex;flex-direction:column}
+.map-readout{padding:4px 6px 12px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.map-readout .rn{font-family:var(--display);font-size:22px;font-weight:600;color:var(--soot);line-height:1.15}
+.map-readout .rc{color:var(--ember);font-weight:700;font-size:14px;margin-top:3px}
+.map-wrap{flex:1;display:grid;place-items:center;min-height:0}
+.md-map{width:100%;height:auto;max-height:540px}
+.district{fill:#ECECEE;stroke:#fff;stroke-width:1.1;stroke-linejoin:round;cursor:pointer;transition:fill .15s ease;outline:none}
+.district.has{fill:#E3C4BF}
+.district:hover{fill:var(--copper)}
+.district:focus-visible{stroke:var(--soot);stroke-width:1.8}
+.district.sel{fill:var(--ember)}
+.map-legend{display:flex;gap:16px;flex-wrap:wrap;padding-top:12px;font-size:12.5px;color:var(--muted)}
+.map-legend i.lg{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:6px;vertical-align:-2px;border:1px solid rgba(0,0,0,.06)}
+.map-legend i.has{background:#E3C4BF}
+.map-legend i.none{background:#ECECEE}
+.map-legend i.sel{background:var(--ember)}
+/* Trade filter, at the head of the result column. Same chips the membership
+   form uses, one step down in size — a filter is a refinement of a list, not a
+   question being asked, so it must not out-weigh the member cards under it. */
+.dir-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.pick.sm{font-size:12.5px;padding:7px 13px;min-height:0}
+.reset-btn{--gf:var(--nav-fill);--ge:var(--line);--bloom:rgba(140,42,31,.28);display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-family:var(--sans);font-weight:600;font-size:13.5px;color:var(--soot);border-radius:100px;padding:8px 14px;cursor:pointer;margin-bottom:2px}
+.reset-btn:hover{color:var(--copper)}
+.reset-btn svg{transform:rotate(180deg)}
+.empty{background:#fff;border:1px dashed #d8d5d0;border-radius:8px;padding:30px 24px;text-align:center}
+.empty .ei{width:52px;height:52px;border-radius:50%;background:var(--ember-tint);color:var(--ember);display:grid;place-items:center;margin:0 auto 14px}
+.empty h4{font-family:var(--sans);font-weight:700;font-size:16px;color:var(--soot);margin-bottom:6px}
+.empty p{font-size:13.5px;color:var(--muted);margin-bottom:16px;max-width:280px;margin-left:auto;margin-right:auto}
+.empty .btn{justify-content:center}
+
+.trust{background:var(--soot);color:#e6e7ec}
+.trust .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+.trust .t{display:flex;gap:14px;align-items:flex-start}
+.trust .t .ic{width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,.07);display:grid;place-items:center;color:var(--copper-soft);flex:none}
+.trust .t h3{color:#fff;font-size:16.5px;margin-bottom:4px;font-family:var(--sans);font-weight:600}
+.trust .t p{font-size:13.5px;color:#a9adb8;line-height:1.5}
+@media(max-width:860px){.trust .wrap{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.trust .wrap{grid-template-columns:1fr}}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:s}
+.step{position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:28px 22px}
+.step::before{counter-increment:s;content:counter(s);position:absolute;top:-18px;left:22px;width:38px;height:38px;border-radius:50%;background:var(--paper);color:var(--soot);border:1px solid var(--copper);font-family:var(--display);font-weight:700;font-size:19px;display:grid;place-items:center}
+.step h3{font-size:16.5px;margin:14px 0 7px;font-family:var(--sans);font-weight:600}
+.step p{font-size:13.5px;color:var(--muted)}
+@media(max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.steps{grid-template-columns:1fr}}
+
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.post{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;transition:.2s;cursor:pointer}
+.post:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.post .cover{height:170px;position:relative;background:linear-gradient(135deg,var(--soot),var(--soot-2))}
+.post .cover.c2{background:linear-gradient(135deg,#3F0C07,var(--copper))}
+.post .cover.c3{background:linear-gradient(135deg,#123a66,var(--blue))}
+.post .cover .cat{position:absolute;top:14px;left:14px;background:rgba(255,255,255,.94);color:var(--soot);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:6px 12px;border-radius:3px}
+.post .body{padding:22px}
+.post .date{font-size:12px;color:var(--copper);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px}
+.post h3{font-size:21px;font-weight:700;line-height:1.22;margin-bottom:9px}
+.post p{font-size:14px;color:var(--muted)}
+.post .more{margin-top:14px;font-size:13.5px;font-weight:600;color:var(--ember);display:inline-flex;align-items:center;gap:6px}
+@media(max-width:860px){.news-grid{grid-template-columns:1fr}}
+
+.cta{background:
+   radial-gradient(700px 300px at 85% 20%,rgba(127,31,22,.5),transparent 60%),
+   linear-gradient(135deg,var(--soot),#0d0f13);color:#fff;border-radius:12px;padding:64px 48px;position:relative;overflow:hidden;text-align:center}
+.cta h2{color:#fff;font-size:clamp(26px,3.4vw,38px);margin-bottom:14px}
+.cta p{color:#c2c5cd;font-size:17px;max-width:560px;margin:0 auto 26px}
+.cta .btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+footer{background:var(--soot);color:#a9adb8;padding:64px 0 28px;margin-top:24px;position:relative;overflow:hidden}
+footer .woven-light{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.85}
+footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.65)}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1.1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08)}
+/* Stay Connected + newsletter */
+.foot-stay{max-width:340px}
+.foot-stay-title{color:#fff;font-family:var(--display,var(--sans));font-weight:800;font-size:clamp(30px,3vw,40px);line-height:1.05;letter-spacing:-.01em;margin:0 0 14px}
+.foot-stay-sub{font-size:14px;line-height:1.6;color:#a9adb8;margin:0 0 20px;max-width:300px}
+.foot-news{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:5px 5px 5px 18px;max-width:320px}
+.foot-news:focus-within{border-color:var(--copper-soft)}
+.foot-news input{flex:1;background:transparent;border:0;outline:0;color:#fff;font-size:14px;font-family:var(--sans)}
+.foot-news input::placeholder{color:#7f838d}
+.foot-news button{flex:none;width:38px;height:38px;border-radius:999px;border:0;cursor:pointer;background:#fff;color:var(--soot);display:grid;place-items:center;transition:background .15s,color .15s}
+.foot-news button:hover{background:var(--ember);color:#fff}
+/* Columns */
+.foot-col h4{color:#fff;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;font-family:var(--sans);font-weight:700}
+.foot-col a{display:block;font-size:14px;padding:6px 0;color:#a9adb8;transition:color .15s}
+.foot-col a:hover{color:var(--copper-soft)}
+.foot-line{display:flex;align-items:center;gap:10px}
+.foot-line .ico{flex:none;color:#7f838d;transition:color .15s}
+.foot-line:hover .ico{color:var(--copper-soft)}
+.socials{display:flex;gap:10px;margin-top:8px}
+.socials a{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.07);display:grid;place-items:center;color:#c7c9d0;padding:0}
+.socials a:hover{background:var(--ember);color:#fff}
+/* Light/dark toggle (visual, matches reference design) */
+.foot-theme{display:flex;align-items:center;gap:10px;margin-top:20px;color:#7f838d}
+.theme-switch{width:46px;height:24px;border-radius:999px;background:rgba(255,255,255,.18);position:relative;flex:none}
+.theme-switch .knob{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:22px;font-size:13px;color:#7f838d;flex-wrap:wrap;gap:10px}
+@media(max-width:900px){.foot-grid{grid-template-columns:1fr 1fr;gap:40px 48px}}
+@media(max-width:520px){.foot-grid{grid-template-columns:1fr}}
+
+/* membership application */
+.apply{background:linear-gradient(180deg,var(--sand),#fff);min-height:60vh}
+.apply-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:start;padding-top:56px;padding-bottom:76px}
+.apply-side .kick{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin-bottom:12px}
+.apply-side h1{font-size:clamp(34px,4.4vw,50px);margin-bottom:14px}
+.apply-side .lead{font-size:17px;color:#4a4e57;margin-bottom:28px;max-width:420px}
+.apply-steps{list-style:none;counter-reset:as;display:flex;flex-direction:column;gap:14px}
+.apply-steps li{counter-increment:as;position:relative;padding-left:46px}
+.apply-steps li::before{content:counter(as);position:absolute;left:0;top:1px;width:32px;height:32px;border-radius:9px;background:var(--ember-tint);color:var(--ember);font-family:var(--display);font-weight:700;font-size:15px;display:grid;place-items:center}
+.apply-steps li b{display:block;font-size:14.5px;color:var(--soot)}
+.apply-steps li span{font-size:13px;color:var(--muted)}
+@media(max-width:900px){.apply-grid{grid-template-columns:1fr;gap:32px}}
+
+.form-card{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-lg);padding:30px 32px}
+.form-card.success{text-align:center;padding:56px 40px}
+.form-card.success .ok-ic{width:64px;height:64px;border-radius:50%;background:var(--ember-tint);color:var(--ember);display:grid;place-items:center;margin:0 auto 18px}
+.form-card.success h2{font-size:26px;margin-bottom:10px}
+.form-card.success p{color:var(--muted);max-width:380px;margin:0 auto 24px}
+.fsteps{list-style:none;display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap}
+.fsteps li{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--muted);padding:7px 12px;border-radius:100px;background:var(--sand);border:1px solid var(--line)}
+.fsteps li .n{width:22px;height:22px;border-radius:50%;background:#e2e0dc;color:var(--soot);font-size:12px;display:grid;place-items:center;font-weight:700}
+.fsteps li.cur{color:var(--ember);border-color:rgba(127,31,22,.3);background:var(--ember-tint)}
+.fsteps li.cur .n{background:var(--ember);color:#fff}
+.fsteps li.done{color:var(--copper)}
+.fsteps li.done .n{background:var(--copper);color:#fff}
+.f-grid{display:flex;flex-wrap:wrap;gap:18px}
+.f-field{flex:1 1 100%;display:flex;flex-direction:column;gap:7px;border:0;padding:0;margin:0;min-width:0}
+.f-field.half{flex:1 1 calc(50% - 9px)}
+.f-field label,.f-field legend{font-size:13.5px;font-weight:600;color:var(--soot)}
+.f-field input,.f-field select,.f-field textarea{font-family:var(--sans);font-size:15px;color:var(--ink);background:var(--sand);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-height:46px;outline:none;transition:border-color .15s,background .15s;width:100%}
+.f-field textarea{resize:vertical;min-height:96px}
+.f-field input:focus,.f-field select:focus,.f-field textarea:focus{border-color:var(--ember);background:#fff}
+.f-field [aria-invalid="true"]{border-color:var(--ember)}
+.f-err{font-size:12.5px;font-weight:600;color:var(--ember-dark)}
+.svc-picks{display:flex;flex-wrap:wrap;gap:8px}
+.pick{font-family:var(--sans);font-size:13.5px;font-weight:600;color:#4a4e57;background:var(--sand);border:1px solid var(--line);border-radius:100px;padding:10px 16px;cursor:pointer;transition:.15s;min-height:44px}
+.pick:hover{border-color:var(--copper);color:var(--copper)}
+.pick.on{background:var(--ember);border-color:var(--ember);color:#fff}
+.f-review-title{font-size:14px;font-weight:700;color:var(--soot)}
+.f-review{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:100%}
+.f-review>div{display:flex;justify-content:space-between;gap:16px;padding:11px 16px;font-size:14px}
+.f-review>div:nth-child(odd){background:var(--sand)}
+.f-review dt{color:var(--muted);flex:none}
+.f-review dd{color:var(--soot);font-weight:600;text-align:right;overflow-wrap:anywhere}
+/* Supporting documents. The picker is a normal button driving a visually
+   hidden <input type=file> — the native control cannot be styled and its
+   "no file chosen" label lies as soon as the list below exists. */
+.f-hint{font-size:12.5px;line-height:1.5;color:var(--muted)}
+.f-upload{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px}
+.f-files{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.f-files li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--soot);
+  background:var(--sand);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.f-files li svg{color:var(--copper);flex:none}
+.f-files .fn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.f-files .fs{color:var(--muted);font-size:12px;flex:none}
+.f-files li button{flex:none;width:24px;height:24px;border-radius:50%;border:0;background:none;
+  color:var(--muted);cursor:pointer;font-size:13px;line-height:1}
+.f-files li button:hover{background:var(--ember-tint);color:var(--ember)}
+.f-consent{display:flex;gap:11px;align-items:flex-start;font-size:14px;color:#4a4e57;cursor:pointer}
+.f-consent input{width:19px;height:19px;margin-top:2px;accent-color:var(--ember);flex:none}
+.f-nav{display:flex;justify-content:space-between;align-items:center;margin-top:26px;gap:12px}
+.f-nav .btn[disabled]{opacity:.5;cursor:default;transform:none}
+@media(max-width:560px){.f-field.half{flex-basis:100%}.form-card{padding:24px 20px}}
+
+/* ---- inner pages ---- */
+.page-hero{background:
+   radial-gradient(900px 400px at 85% -20%,rgba(127,31,22,.07),transparent 60%),
+   linear-gradient(180deg,var(--sand),#fff);border-bottom:1px solid var(--line)}
+.page-hero .wrap{padding-top:64px;padding-bottom:56px;max-width:880px;text-align:center}
+/* The kicker is a sign now — rule and ember, no words — and losing that line of
+   type pulled it up under the floating nav pill, which is fixed at 44px and
+   44px tall. Desktop starts the page hero below it instead. Below lg the nav
+   sits in flow, so the original padding still holds. */
+@media(min-width:1024px){.page-hero .wrap{padding-top:112px}}
+.page-hero .kick{position:relative;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);padding-bottom:18px;margin-bottom:16px}
+.page-hero .kick::after{content:"";position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:76px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(140,42,31,.8) 28%,rgba(140,42,31,.8) 72%,transparent)}
+.page-hero .kick::before{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;
+  background:var(--ember);box-shadow:0 0 7px 1.5px rgba(127,31,22,.55)}
+.page-hero h1{font-size:clamp(30px,3.7vw,42px);margin-bottom:18px}
+.page-hero .lead{font-size:18px;color:#4a4e57;max-width:640px;margin:0 auto}
+
+.svc-grid.cols-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.svc-grid.cols-4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.svc-grid.cols-4{grid-template-columns:1fr}}
+.svc.static{cursor:default}
+
+/* About page: the mission reads as one column of prose, with the figures card
+   spanning the full width beneath it. */
+.about-mission{max-width:820px;margin:0 auto 40px}
+.about-mission h2{font-size:clamp(26px,3.2vw,36px);margin-bottom:16px}
+.about-mission p{color:#4a4e57;font-size:16px}
+.about-mission p+p{margin-top:14px}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
+.two-col h2{font-size:clamp(26px,3.2vw,36px);margin-bottom:16px}
+.two-col p{color:#4a4e57;font-size:16px}
+.two-col p+p{margin-top:14px}
+@media(max-width:860px){.two-col{grid-template-columns:1fr}}
+
+.band{background:linear-gradient(135deg,var(--soot),var(--soot-2));color:#e6e7ec;border-radius:12px;padding:40px 44px;display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.band .badge-eu{width:52px;height:52px;border-radius:8px}
+.band h2{color:#fff;font-size:clamp(22px,2.6vw,30px);margin-bottom:10px}
+.band p{color:#b9bdc7;font-size:15px;max-width:640px}
+.band .grow{flex:1;min-width:260px}
+@media(max-width:640px){.band{padding:30px 24px}}
+
+.person{background:#fff;border:1px solid var(--line);border-radius:10px;padding:26px;display:flex;gap:18px;align-items:center;max-width:520px;margin:0 auto}
+.person .avatar{width:64px;height:64px;border-radius:10px;font-size:26px}
+.person .role{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--copper)}
+.person .nm{font-family:var(--display);font-size:21px;font-weight:600;color:var(--soot);margin:2px 0 6px}
+.person p{font-size:13.5px;color:var(--muted);line-height:1.5}
+.board-note{text-align:center;font-size:13.5px;color:var(--muted);margin-top:18px}
+
+.doc-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:28px 30px;display:flex;gap:20px;align-items:flex-start}
+.doc-card .ic{width:52px;height:52px;border-radius:8px;background:var(--ember-tint);color:var(--ember);display:grid;place-items:center;flex:none}
+.doc-card h3{font-size:20px;font-weight:700;margin-bottom:8px}
+.doc-card p{font-size:14.5px;color:var(--muted)}
+.doc-card h4{font-size:15px;font-weight:700;margin-bottom:6px}
+.statute-aims{list-style:disc;padding-left:22px;margin-top:8px;display:flex;flex-direction:column;gap:10px}
+.statute-aims li{font-size:14.5px;line-height:1.6;color:var(--muted)}
+.statute-aims li::marker{color:var(--ember)}
+
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.fact{background:#fff;border:1px solid var(--line);border-radius:8px;padding:20px 22px;text-align:center}
+.fact .fl{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.fact .fv{font-family:var(--display);font-size:18px;font-weight:600;color:var(--soot)}
+@media(max-width:640px){.facts{grid-template-columns:1fr}}
+
+/* news listing + article */
+.news-grid.listing{grid-template-columns:repeat(3,1fr)}
+@media(max-width:960px){.news-grid.listing{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.news-grid.listing{grid-template-columns:1fr}}
+.article{max-width:720px;margin:0 auto;padding:56px 24px 76px}
+.article .a-back{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--copper);margin-bottom:26px}
+.article .a-back:hover{color:var(--ember)}
+.article .a-back svg{transform:rotate(180deg)}
+.article .a-meta{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);margin-bottom:14px;flex-wrap:wrap}
+.article .a-meta .cat{background:var(--ember-tint);color:var(--ember);font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:5px 11px;border-radius:100px}
+.article h1{font-size:clamp(32px,4.4vw,48px);margin-bottom:22px}
+.article .a-body h2{font-weight:700}
+.article .a-body p{font-size:16.5px;color:#3c4048;line-height:1.75;margin-bottom:18px}
+.article .a-body h2{font-size:23px;margin:30px 0 12px}
+.article .a-cover{height:220px;border-radius:10px;margin-bottom:30px;background:linear-gradient(135deg,var(--soot),var(--soot-2));position:relative;overflow:hidden}
+.a-gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:30px}
+.a-gallery a{position:relative;height:260px;border-radius:10px;overflow:hidden;display:block;border:1px solid var(--line)}
+@media(max-width:640px){.a-gallery{grid-template-columns:1fr}}
+.a-embed{position:relative;aspect-ratio:16/9;margin-top:30px}
+.a-embed iframe{width:100%;height:100%;border:0;border-radius:10px}
+.article .a-cover.c2{background:linear-gradient(135deg,#3F0C07,var(--copper))}
+.article .a-cover.c3{background:linear-gradient(135deg,#123a66,var(--blue))}
+
+/* resources */
+.res-list{display:flex;flex-direction:column;gap:12px;max-width:760px;margin:0 auto}
+.res-row{background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px 20px;display:flex;gap:16px;align-items:center}
+.res-row .ic{width:44px;height:44px;border-radius:8px;background:var(--ember-tint);color:var(--ember);display:grid;place-items:center;flex:none}
+.res-row .info{flex:1;min-width:0}
+.res-row .info b{display:block;font-size:15px;color:var(--soot)}
+.res-row .info span{font-size:13px;color:var(--muted)}
+.tag-soon{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--copper);background:rgba(127,31,22,.08);padding:6px 12px;border-radius:100px;flex:none}
+.gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.gal-tile{aspect-ratio:4/3;border-radius:8px;border:1px dashed #d8d5d0;background:var(--sand);display:grid;place-items:center;padding:16px;text-align:center}
+.gal-tile .gi{width:40px;height:40px;border-radius:50%;background:var(--ember-tint);color:var(--ember);display:grid;place-items:center;margin:0 auto 10px}
+.gal-tile span{display:block;font-size:13px;font-weight:600;color:var(--muted)}
+@media(max-width:860px){.gal-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.gal-grid{grid-template-columns:1fr}}
+.gal-note{text-align:center;font-size:13.5px;color:var(--muted);margin-top:18px}
+
+/* contact */
+/* ── Contact — one screen, three boxes ─────────────────────────────────
+   The page used to be a two-column band (details + form) with the legal
+   requisites parked in a separate section a full screen further down, so
+   nothing lined up and the page took three scrolls to read. It is now a
+   single centred fold: a centred header over three equal-height boxes —
+   details · message · requisites — sized to land inside a laptop viewport
+   with no scrolling. Every vertical measure is clamped against `vh` so the
+   fold compresses rather than overflowing on shorter screens. */
+.contact-screen{
+  min-height:100dvh;display:flex;align-items:stretch;
+  background:linear-gradient(180deg,var(--sand),#fff);
+  /* Top pad clears the floating nav pill (fixed at top-11, ~44px tall, so its
+     lower edge sits at ~88px) and nothing more. It used to run to 124px and
+     the fold was centred inside it, which parked ~200px of nothing above the
+     headline and left the three boxes floating in the middle of the screen at
+     barely half its height. */
+  padding:clamp(100px,12vh,118px) 0 clamp(14px,3.4vh,44px);
+}
+/* Full height, and the boxes take every pixel the header does not: the trio is
+   the flex child that grows, so the row is as tall as the fold allows instead
+   of as tall as its own text. Everything inside the boxes is clamped against
+   `vh`, so they fill by growing their contents, not by opening a hole. */
+.contact-inner{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:clamp(16px,3.2vh,32px);
+  width:min(1360px,100%);max-width:none;margin-inline:auto}
+.contact-head{text-align:center;max-width:760px}
+.contact-head .kick{position:relative;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);padding-bottom:clamp(9px,1.9vh,14px);margin-bottom:clamp(8px,1.7vh,12px)}
+.contact-head .kick::after{content:"";position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:76px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(140,42,31,.8) 28%,rgba(140,42,31,.8) 72%,transparent)}
+.contact-head .kick::before{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;
+  background:var(--ember);box-shadow:0 0 7px 1.5px rgba(127,31,22,.55)}
+/* Type is sized against the *shorter* of width and height so the fold holds on
+   a laptop with a short viewport instead of spilling past it. */
+.contact-head h1{font-size:clamp(26px,min(3.6vw,6vh),44px);margin-bottom:clamp(5px,1vh,10px)}
+.contact-head .lead{font-size:clamp(13.5px,min(1.3vw,2.4vh),18px);color:#54585f;line-height:1.5}
+
+/* Three columns, stretched to a common height so their tops and bottoms line
+   up, and the row itself stretched to the bottom of the fold. The middle
+   column is wider because the form carries the most. */
+.contact-trio{flex:1;min-height:0;width:100%;display:grid;grid-template-columns:1fr 1.3fr 1.1fr;
+  gap:clamp(18px,1.7vw,26px);align-items:stretch}
+.c-box{display:flex;flex-direction:column;
+  padding:clamp(13px,2.6vh,26px) clamp(20px,1.9vw,30px) clamp(14px,2.8vh,28px)}
+.c-box-title{font-size:clamp(14.5px,1.9vh,17px);font-weight:700;letter-spacing:.01em;text-align:center;color:var(--soot);
+  padding-bottom:clamp(7px,1.5vh,14px);margin-bottom:clamp(8px,2vh,18px);border-bottom:1px solid var(--line)}
+
+/* Details column */
+/* Spread, not centred. Four rows in a box as tall as the fold left a band of
+   nothing under the header rule and another above the bottom edge, which read
+   as a rendering fault; `space-evenly` hands the same slack to every gap so
+   the column looks composed at any viewport height. Same for the requisites
+   list next to it, which has six. */
+.c-list{display:flex;flex-direction:column;justify-content:space-evenly;gap:clamp(10px,1.8vh,18px);flex:1}
+.c-item{display:flex;gap:clamp(12px,1.4vh,16px);align-items:center;min-width:0}
+.c-item .ic{width:clamp(32px,5.2vh,46px);height:clamp(32px,5.2vh,46px);border-radius:12px;background:var(--ember-tint);color:var(--ember);display:grid;place-items:center;flex:none}
+.c-item b{display:block;margin-bottom:2px;font-size:clamp(10.5px,1.3vh,11.5px);font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.c-item a,.c-item span.v{font-size:clamp(13.5px,2.05vh,16.5px);font-weight:600;color:var(--soot);line-height:1.35;word-break:break-word}
+.c-item a:hover{color:var(--ember)}
+
+/* Requisites column — label over value, so long bank strings never push the
+   box wider than its third of the row. */
+.req-list{display:flex;flex-direction:column;justify-content:space-evenly;gap:clamp(6px,1.4vh,14px);flex:1;margin:0}
+.req-item{min-width:0}
+.req-item dt{margin-bottom:1px;font-size:clamp(10px,1.25vh,11px);font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.req-item dd{margin:0;font-size:clamp(12px,1.85vh,14.5px);font-weight:600;color:var(--soot);line-height:1.35;word-break:break-word}
+
+/* The shared form styles are tuned for the full-page membership flow; inside
+   this fold they run a notch tighter so the middle box matches its neighbours
+   instead of setting the row's height on its own. */
+.contact-trio .f-grid{gap:clamp(9px,2vh,18px)}
+.contact-trio .f-field{gap:6px}
+.contact-trio .f-field label{font-size:clamp(12.5px,1.6vh,14px)}
+.contact-trio .f-field input,.contact-trio .f-field textarea{font-size:clamp(14px,1.9vh,15.5px);padding:clamp(8px,1.5vh,13px) 14px;min-height:clamp(36px,5.8vh,50px);border-radius:10px}
+/* The message box is the one field that can absorb slack, so it takes the
+   height the taller boxes leave over instead of the column ending in dead
+   space above the send button (which `.f-nav`'s `margin-top:auto` pins to the
+   bottom either way). */
+.contact-trio .f-field textarea{min-height:clamp(64px,15vh,200px)}
+.contact-trio .f-nav{margin-top:auto;padding-top:clamp(12px,2.2vh,20px);justify-content:center}
+.contact-trio .f-nav .btn{padding:clamp(10px,1.6vh,14px) clamp(22px,2vw,32px);font-size:clamp(13.5px,1.8vh,15px)}
+
+/* Below lg the nav itself changes shape — the top pill is replaced by a sticky
+   header plus the fixed bottom dock — and three columns get too narrow for the
+   bank strings. The fold gives up and stacks; this is the one case where the
+   page scrolls. Matches TubelightNav's own `lg:` switch. */
+@media(max-width:1023px){
+  .contact-screen{min-height:0;align-items:flex-start;padding:16px 0 40px}
+  .contact-trio{grid-template-columns:1fr;max-width:560px;margin:0 auto}
+  .contact-trio .f-nav{margin-top:16px}
+}
+
+/* International membership badges (ESCHFOE + VEUKO) */
+.member-badges{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:820px;margin:0 auto}
+.member-badge{background:#fff;border:1px solid var(--line);border-radius:10px;padding:24px;display:flex;gap:20px;align-items:center;text-decoration:none;transition:border-color .2s,box-shadow .2s}
+a.member-badge:hover{border-color:var(--ember);box-shadow:0 6px 20px rgba(20,21,24,.06)}
+.mb-logo{width:96px;height:96px;flex:none;display:grid;place-items:center}
+.mb-logo img{max-width:100%;max-height:96px;object-fit:contain}
+.mb-info{min-width:0}
+.mb-role{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--copper);margin-bottom:4px}
+.mb-info b{display:block;font-family:var(--display);font-size:22px;color:var(--soot)}
+.mb-info>span{display:block;font-size:13.5px;color:var(--muted);margin-top:2px;line-height:1.45}
+.mb-link{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:13px;font-weight:600;color:var(--ember)}
+/* Homepage affiliations rail (docked just above the footer): ASFOC · ASFOCH
+   România · ESCHFOE · VEUKO as one compact glass pill — logos only, no labels,
+   packed tight so they read as a single fused set. Each logo rests desaturated
+   and blooms to full colour on hover; the association name lives in the
+   tooltip. Echoes the nav shell but smaller and more integrated. */
+/* ── Scroll cue ───────────────────────────────────────────────────────
+   Corner chevrons instead of a line of text: same glass language as the nav
+   and the logo rail, so it reads as part of the chrome. It is a real button —
+   one click advances a screen — and it stays for the whole visit.
+
+   The rail is what puts it on the site's measure. It is a full-width fixed
+   strip holding a `.wrap`, so the cue's right edge is the measure's right edge
+   — the same edge as the credit logos below and the language capsule above.
+   It used to be `fixed right-7`, i.e. pinned 28px off the viewport, which on a
+   1440 screen left it 126px outside the column the rest of the page lines up
+   on. `justify-end` inside `.wrap` does what a `calc()` on `100vw` would, minus
+   the scrollbar error. */
+.scroll-cue-rail{
+  position:fixed;left:0;right:0;bottom:28px;z-index:60;
+  pointer-events:none;
+  transition:bottom .45s cubic-bezier(.16,1,.3,1);
+}
+.scroll-cue-rail > .wrap{pointer-events:none}
+/* Lifted clear of the hero's credit rail while the fold is under it. The rail
+   is ~88px tall including its rule, so 118px puts the cue a comfortable 30px
+   above the hairline instead of sitting on top of the logos. This is what
+   replaced the `padding-right` reservations `.hero-credits-inner` used to carry
+   to dodge the cue horizontally — the logos now get the full measure. */
+.scroll-cue-rail[data-lifted]{bottom:118px}
+.scroll-cue{display:grid;place-items:center;width:44px;height:44px;
+  border-radius:9999px;cursor:pointer;pointer-events:auto;
+  color:var(--ember);
+  background:var(--nav-fill);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  border:1px solid var(--line);
+  box-shadow:var(--nav-shadow);
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease,
+             color .3s ease,background .3s ease,opacity .4s ease}
+/* Only hides at the very end of the page, where there is nothing left to
+   advance to — otherwise it stays available for the whole visit. */
+.scroll-cue[data-hidden]{opacity:0;pointer-events:none}
+/* Over the home fold's graded picture the cue keeps its red — it just changes
+   which red. `--ember` is a 4.5:1 oxblood built for white paper; on a graded
+   picture it goes muddy and the glyph all but disappears. `--copper-soft` is
+   the palette's own light oxide red, already carrying the fold's eyebrow rule
+   and the nav lamp, so the cue stays unmistakably red on both grounds and
+   matches the two other accents in the frame. */
+.scroll-cue[data-on-dark]{
+  color:var(--copper-soft);background:rgba(255,255,255,.08);
+  border-color:rgba(217,132,124,.42);box-shadow:none}
+.scroll-cue[data-on-dark]:hover{
+  color:#F2B4AC;
+  border-color:rgba(217,132,124,.85);
+  box-shadow:0 0 0 4px rgba(217,132,124,.14)}
+.scroll-cue:hover{transform:translateY(2px);border-color:rgba(127,31,22,.35);
+  box-shadow:0 0 0 4px rgba(127,31,22,.09),0 14px 22px -6px rgba(20,21,24,.13)}
+/* Optical centring, not geometric. The glyph is two 13px chevrons overlapped by
+   5px, so its ink runs 21px tall — but the *mass* of a chevron pair sits above
+   its bounding box's centre, because the lower one is 60% transparent. Grid
+   centring therefore parked the visible arrow low in the 44px disc. 1px up puts
+   the solid chevron on the disc's centre line, which is what the eye measures. */
+.scroll-cue-arrows{display:grid;justify-items:center;line-height:0;
+  transform:translateY(-1px)}
+.scroll-cue-arrows svg:last-child{margin-top:-5px}
+
+.member-strip{display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:2px;margin:0 auto;
+  background:var(--nav-fill);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  border:1px solid var(--line);border-radius:9999px;padding:3px;
+  box-shadow:var(--nav-shadow)}
+/* The caption that names what the three logos are — moved here from the fact
+   card's footer, where it said the same thing about the same two logos one
+   screen further down. Set in the site's small-caps label style and separated
+   from the row by a hairline, so the pill reads as one sentence: caption, then
+   the bodies. */
+.ms-label{display:inline-flex;align-items:center;align-self:stretch;
+  padding:0 13px 0 15px;margin-right:3px;
+  font-size:10.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--muted);white-space:nowrap;
+  border-right:1px solid var(--line)}
+@media(max-width:640px){
+  /* Too narrow for the caption on one line, but stacking it above the logos
+     costs a whole row of fold. It wraps to two short lines beside them
+     instead, keeping the pill a single band. */
+  .ms-label{max-width:112px;padding:0 10px 0 12px;
+    font-size:9px;letter-spacing:.07em;line-height:1.25;
+    white-space:normal;text-align:right}
+}
+.ms-item{position:relative;display:flex;align-items:center;justify-content:center;padding:6px 11px;text-decoration:none;border-radius:9999px;transition:background .25s ease-out,transform .25s ease-out}
+.ms-item:hover{background:rgba(255,255,255,.14);transform:translateY(-1px)}
+/* Full colour at rest — the rail used to sit desaturated until hovered, which
+   read as four disabled chips. Hover is now scale alone. */
+.ms-logo{width:22px;height:22px;flex:none;display:grid;place-items:center;
+  transition:transform .25s ease-out}
+.ms-item:hover .ms-logo{transform:scale(1.08)}
+.ms-logo img{max-width:100%;max-height:100%;object-fit:contain}
+.ms-logo--dark{background:linear-gradient(135deg,#15171C,#23272F);border-radius:6px;padding:3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+@media(max-width:520px){.ms-item{padding:6px 9px}}
+a.member-badge:hover .mb-link{text-decoration:underline}
+@media(max-width:720px){.member-badges{grid-template-columns:1fr}}
+
+/* Downloadable document rows + application-form preview */
+.tag-dl{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--ember);padding:6px 12px;border-radius:100px;flex:none}
+a.res-row.is-link{text-decoration:none;transition:border-color .2s,box-shadow .2s}
+a.res-row.is-link:hover{border-color:var(--ember);box-shadow:0 6px 20px rgba(20,21,24,.06)}
+.doc-preview{display:grid;grid-template-columns:220px 1fr;gap:28px;align-items:center;max-width:760px;margin:34px auto 0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px}
+.doc-preview-img{display:block;border:1px solid var(--line);border-radius:6px;overflow:hidden;line-height:0;box-shadow:0 4px 14px rgba(20,21,24,.06)}
+.doc-preview-img img{width:100%;height:auto;display:block}
+.doc-preview-body h3{font-size:20px;font-weight:700;margin:6px 0 8px;color:var(--soot)}
+.doc-preview-body p{font-size:14.5px;color:var(--muted);margin-bottom:16px}
+@media(max-width:640px){.doc-preview{grid-template-columns:1fr;justify-items:start}.doc-preview-img{max-width:220px}}
+
+/* Real photo gallery */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;margin:0 auto}
+.photo-tile{display:block;border-radius:10px;overflow:hidden;border:1px solid var(--line);aspect-ratio:1/1;background:var(--sand);transition:transform .2s,box-shadow .2s}
+.photo-tile:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(20,21,24,.10)}
+.photo-tile img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:640px){.photo-grid{grid-template-columns:1fr 1fr;gap:12px}}
+
+/* Official record scans gallery */
+.scans-head{max-width:760px;margin:44px auto 0;text-align:center}
+.scans-head h3{font-family:var(--display);font-size:22px;font-weight:600;color:var(--soot)}
+.scans-head p{font-size:14.5px;color:var(--muted);margin-top:6px}
+.scan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:760px;margin:22px auto 0}
+.scan-card{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;text-decoration:none;transition:border-color .2s,box-shadow .2s}
+.scan-card:hover{border-color:var(--ember);box-shadow:0 8px 24px rgba(20,21,24,.08)}
+.scan-thumb{aspect-ratio:3/4;overflow:hidden;background:var(--sand);border-bottom:1px solid var(--line)}
+.scan-thumb img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.scan-label{padding:12px 14px}
+.scan-label span{display:block;font-size:14px;font-weight:600;color:var(--soot)}
+.scan-label em{font-style:normal;font-size:12px;color:var(--ember)}
+@media(max-width:560px){.scan-grid{grid-template-columns:1fr 1fr;gap:12px}}
+
+/* Legal / bank details table */
+
+/* Member companies */
+.company-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:900px;margin:0 auto}
+.company-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px 24px}
+.company-card h3{font-family:var(--display);font-size:18px;font-weight:600;color:var(--soot);margin-bottom:14px}
+.company-card dl{display:flex;flex-direction:column;gap:10px;margin:0}
+.company-card dl>div{display:grid;grid-template-columns:130px 1fr;gap:12px}
+.company-card dt{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.company-card dd{margin:0;font-size:14px;color:var(--soot);word-break:break-word}
+@media(max-width:820px){.company-grid{grid-template-columns:1fr}}
+@media(max-width:420px){.company-card dl>div{grid-template-columns:1fr;gap:2px}}
+
+/* ── Mobile navigation dock ───────────────────────────────────────────
+   Below lg the tab pill leaves the top of the page and docks at the bottom of
+   the viewport, where the thumb already rests. Fixed and centred, lifted clear
+   of the iOS home indicator; the page carries matching bottom padding so the
+   footer can still be scrolled out from under it. */
+.navbar-dock{position:fixed;left:50%;bottom:0;z-index:50;transform:translateX(-50%);
+  padding-bottom:calc(14px + env(safe-area-inset-bottom));pointer-events:none}
+.navbar-dock>*{pointer-events:auto}
+@media(max-width:1023px){body{padding-bottom:calc(86px + env(safe-area-inset-bottom))}}
+
+/* ── The association in numbers ───────────────────────────────────────
+   One card, two sizes: compact and clickable under "Despre asociație" on the
+   home page, full (six figures) on the about page. Paper-glass surface, a
+   copper hairline along the top edge and between the cells, serif numerals —
+   the affiliations sit quietly along the bottom rather than in a heavy black
+   header bar. */
+.factbox{position:relative;display:block;overflow:hidden;border-radius:26px;color:inherit;text-decoration:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.42));
+  -webkit-backdrop-filter:blur(18px) saturate(165%);backdrop-filter:blur(18px) saturate(165%);
+  border:1px solid rgba(255,255,255,.7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 0 0 1px rgba(20,21,24,.05),0 26px 54px -26px rgba(20,21,24,.45);
+  transition:transform .25s ease,box-shadow .25s ease}
+.factbox::after{content:"";position:absolute;left:0;right:0;top:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(140,42,31,.6) 24%,rgba(140,42,31,.6) 76%,transparent)}
+.factbox--link:hover{transform:translateY(-2px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 0 0 1px rgba(140,42,31,.16),0 30px 60px -26px rgba(20,21,24,.5)}
+.factbox-head{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:26px 34px 18px}
+/* Standfirst inside the box — the home page's about section leads with this
+   instead of a section headline, so it gets serif size and generous leading. */
+.factbox-blurb{max-width:62ch;padding:0 34px 30px;font-size:17px;
+  line-height:1.76;letter-spacing:-.005em;color:#43474e}
+/* Seal + wordmark lockup, black on the glass — no accent colour here. */
+.factbox-kick{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--soot)}
+.factbox-more{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);transition:color .2s}
+.factbox--link:hover .factbox-more{color:var(--ember)}
+
+/* Hairlines: every cell draws its own top + left rule and the grid is nudged
+   1px left, so the outer edges fall outside the card's clipped bounds. Column
+   count can then change at any breakpoint without a single nth-child rule. */
+.fact-grid{display:grid;grid-template-columns:repeat(4,1fr);margin-left:-1px}
+.fact-grid--3{grid-template-columns:repeat(3,1fr)}
+.fx-item{padding:30px 26px 32px;border-left:1px solid rgba(140,42,31,.16);border-top:1px solid rgba(140,42,31,.16)}
+/* Figures sit at 600, not 680: at display size the heavier cut read as a
+   marketing headline rather than a record. Size and tabular figures carry the
+   weight of the number now. */
+.fx-n{font-family:var(--display);font-size:clamp(29px,2.8vw,37px);font-weight:600;line-height:1;color:var(--soot);
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.fx-l{margin-top:12px;font-size:13px;line-height:1.45;color:var(--muted)}
+.factbox-foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:18px 32px 19px;
+  border-top:1px solid rgba(140,42,31,.16);background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.4))}
+.fx-foot-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.fx-orgs{display:flex;align-items:center;gap:8px;margin-left:auto}
+.fx-org{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:9999px;
+  border:1px solid rgba(20,21,24,.08);background:rgba(255,255,255,.55);text-decoration:none;
+  transition:border-color .25s,background .25s}
+.fx-org img{width:20px;height:20px;object-fit:contain;filter:grayscale(1) opacity(.7);transition:filter .25s}
+.fx-org span{font-size:12px;font-weight:600;letter-spacing:.02em;color:var(--soot)}
+a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
+.factbox:hover .fx-org img,a.fx-org:hover img{filter:none}
+@media(max-width:860px){.fact-grid,.fact-grid--3{grid-template-columns:repeat(2,1fr)}
+  .factbox-head{padding:22px 22px 14px}.fx-item{padding:24px 20px 26px}
+  .factbox-blurb{padding:0 22px 24px;font-size:16.5px}
+  .factbox-foot{padding:16px 20px}.fx-orgs{margin-left:0}}
+/* Phones: the card has to share the first screen with the hero, so it runs at
+   its tightest — the blurb drops to three lines of body copy and every cell
+   gives up roughly a third of its padding. The figures keep their size; they
+   are the reason to look at the box. */
+@media(max-width:640px){
+  .factbox-head{padding:15px 18px 9px;gap:10px}
+  .factbox-kick{font-size:12px;letter-spacing:.13em}
+  /* Small enough to stay on the kicker's line — wrapped to two it ate as much
+     of the fold as the whole head row is worth. */
+  .factbox-more{font-size:11.5px;text-align:right}
+  /* The gap under the clamped text is a margin, not padding: `overflow:hidden`
+     clips at the padding edge, so a padding-bottom here would let the fourth
+     line show through the space it was meant to leave empty. */
+  .factbox-blurb{padding:0 18px;margin-bottom:15px;font-size:14.5px;line-height:1.55;
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+  .fx-item{padding:14px 16px 15px}
+  .fx-l{margin-top:6px}
+}
+@media(max-width:420px){.fx-n{font-size:30px}.fx-l{font-size:12.5px}}
+
+/* ── Unified rounded-glass surfaces ───────────────────────────────────
+   Every content box across the site adopts the nav / logo-rail language:
+   a soft-rounded frosted-glass panel — translucent fill, hairline edge,
+   backdrop blur and a top sheen — in place of the old flat white cards.
+   Placed last in the layer so it re-skins each card by source order;
+   tinted feature boxes (.cta, .band) keep their colour, just rounder. */
+.search,.mcard,.map-panel,.empty,.step,.post,.form-card,.person,
+.doc-card,.fact,.res-row,.c-box,.member-badge,.doc-preview,.scan-card,
+.company-card,.svc{
+  background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,.34));
+  -webkit-backdrop-filter:blur(18px) saturate(165%);
+  backdrop-filter:blur(18px) saturate(165%);
+  border:1px solid rgba(255,255,255,.65);
+  border-radius:24px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 0 0 1px rgba(20,21,24,.05),0 22px 48px -22px rgba(20,21,24,.42);
+}
+/* Map + image/gallery tiles join the round family (kept opaque — they hold
+   imagery, not text). */
+.map,.doc-preview-img,.a-cover,.a-embed iframe,.a-gallery a{border-radius:22px}
+.photo-tile,.gal-tile{border-radius:20px}
+/* Interactive cards keep their lift but stay frosted (not solid) on hover. */
+.svc:hover{background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,255,255,.55))}
+/* Tinted feature boxes: colour preserved, corners rounded to match, with a
+   faint glass rim up top. */
+.cta,.band{border-radius:26px;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 24px 50px -24px rgba(20,21,24,.55)}
+/* The one remaining flat button (service picker) → glass, keeping its ember
+   "selected" state. */
+.pick{--gf:var(--nav-fill);--ge:var(--line);
+  position:relative;isolation:isolate;color:#4a4e57;
+  background:var(--gf);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  border:1px solid var(--ge);
+  box-shadow:var(--nav-shadow)}
+.pick:hover{--gf:rgba(255,255,255,.12);--ge:rgba(140,42,31,.45);color:var(--copper)}
+.pick.on{background:var(--ember);border-color:var(--ember);color:#fff}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+}
+
+/* ---- admin panel ----------------------------------------------------------
+   Deliberately plainer than the public site: no glass, no graded hero, no
+   motion. This is a tool one person uses to get a job done, and every effect
+   that reads as craft on the home page reads as friction here. It borrows the
+   palette and the type, nothing else. */
+.admin-shell{min-height:100dvh;background:var(--sand);padding:48px 24px}
+.admin-shell-center{display:grid;place-items:center;padding:24px}
+.admin-wrap{max-width:900px;margin:0 auto}
+.admin-head{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;
+  flex-wrap:wrap;margin-bottom:32px}
+.admin-head h1{font-family:var(--display);font-size:30px;font-weight:600;color:var(--soot);
+  margin:10px 0 6px}
+.admin-head .lead{color:var(--muted);font-size:15px}
+
+.admin-login{width:100%;max-width:400px;background:#fff;border:1px solid var(--line);
+  border-radius:14px;box-shadow:var(--shadow-lg);padding:34px 32px;
+  display:flex;flex-direction:column;gap:16px}
+.admin-login-mark{width:52px;height:52px;border-radius:50%;background:var(--ember-tint);
+  color:var(--ember);display:grid;place-items:center}
+.admin-login h1{font-family:var(--display);font-size:23px;font-weight:600;color:var(--soot)}
+.admin-login-lead{font-size:14px;color:var(--muted);margin-top:-10px}
+.admin-login .btn{justify-content:center;margin-top:4px}
+.admin-setup{font-size:12.5px;line-height:1.6;color:var(--muted);
+  background:var(--sand);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.admin-setup code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;
+  color:var(--soot)}
+.admin-setup code.block{display:block;margin-top:8px;word-break:break-all}
+
+.admin-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.admin-tile{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 22px 20px;
+  box-shadow:var(--shadow-sm)}
+.admin-tile .ic{width:42px;height:42px;border-radius:10px;background:var(--ember-tint);
+  color:var(--ember);display:grid;place-items:center;margin-bottom:14px}
+.admin-tile h2{font-family:var(--sans);font-size:16.5px;font-weight:700;color:var(--soot);
+  margin-bottom:5px}
+.admin-tile p{font-size:13.5px;color:var(--muted);line-height:1.5}
+.admin-tile-meta{display:inline-block;margin-top:12px;font-size:11.5px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--copper)}
+.admin-tile{display:block;text-decoration:none;transition:transform .15s ease,box-shadow .2s ease,border-color .2s ease}
+.admin-tile:hover{transform:translateY(-2px);border-color:rgba(127,31,22,.28);box-shadow:var(--shadow-md)}
+.admin-back{display:inline-block;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none}
+.admin-back:hover{color:var(--ember)}
+.admin-head-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.admin-wrap-narrow{max-width:640px}
+
+.admin-empty{background:#fff;border:1px dashed #d8d5d0;border-radius:14px;padding:40px 28px;
+  text-align:center;color:var(--muted);font-size:14.5px;display:flex;flex-direction:column;
+  align-items:center;gap:16px}
+
+.admin-rows{list-style:none;display:flex;flex-direction:column;gap:10px}
+.admin-row{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.admin-row-main{min-width:0;display:flex;flex-direction:column;gap:3px}
+.admin-row-main b{font-size:15.5px;color:var(--soot)}
+.admin-row-meta{font-size:12.5px;color:var(--muted)}
+.admin-row-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.admin-row-chips span{font-size:11px;font-weight:600;color:var(--copper);
+  background:rgba(127,31,22,.08);padding:3px 8px;border-radius:100px}
+.admin-row-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.admin-row-actions .btn{height:34px;padding:0 14px;font-size:13.5px}
+
+.admin-section{margin-bottom:30px}
+.admin-section-title{font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.admin-cards{display:flex;flex-direction:column;gap:14px}
+.admin-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+  box-shadow:var(--shadow-sm)}
+.admin-card.is-unread{border-color:rgba(127,31,22,.32)}
+.admin-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;
+  margin-bottom:14px}
+.admin-card-head b{display:block;font-size:16px;color:var(--soot)}
+.admin-card-head .admin-row-meta{display:block;margin-top:2px}
+.admin-pill{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 10px;border-radius:100px;white-space:nowrap}
+.admin-pill.is-pending{background:var(--ember-tint);color:var(--ember)}
+.admin-pill.is-approved{background:rgba(24,110,66,.1);color:#186E42}
+.admin-pill.is-rejected{background:rgba(20,21,24,.07);color:var(--muted)}
+
+.admin-dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:13.5px}
+.admin-dl>div{display:contents}
+.admin-dl dt{color:var(--muted)}
+.admin-dl dd{color:var(--soot);overflow-wrap:anywhere}
+.admin-subject{font-weight:600;color:var(--soot);font-size:14.5px;margin-bottom:6px}
+.admin-message{font-size:14px;color:#4a4e57;line-height:1.6;white-space:pre-wrap}
+
+.admin-docs{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px}
+.admin-docs-label{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted)}
+.admin-doc{font-size:13px;font-weight:600;color:var(--copper);background:var(--sand);
+  border:1px solid var(--line);border-radius:100px;padding:5px 12px;text-decoration:none}
+.admin-doc:hover{border-color:var(--copper)}
+.admin-card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.admin-card-actions .btn{height:36px;padding:0 16px;font-size:13.5px}
+
+.admin-form{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 26px 22px;
+  box-shadow:var(--shadow-sm)}
+.f-translated{flex:1 1 100%;display:flex;flex-direction:column;gap:10px}
+.admin-translations summary{font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;
+  padding:6px 0}
+.admin-translations summary:hover{color:var(--ember)}
+.admin-translations .f-grid{padding-top:8px}
+.admin-checks{display:flex;flex-direction:column;gap:8px}
+.admin-current-image{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.admin-current-image img{width:96px;height:64px;object-fit:cover;border-radius:8px;
+  border:1px solid var(--line)}
+.btn-danger{color:var(--ember-dark);border-color:rgba(127,31,22,.25);background:transparent}
+.btn-danger:hover{background:var(--ember);border-color:var(--ember);color:#fff}
+.admin-notice{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px 26px;
+  box-shadow:var(--shadow-sm);font-size:14px;color:#4a4e57;line-height:1.6}
+.admin-notice.is-error{border-color:rgba(127,31,22,.3)}
+.admin-notice b{display:block;color:var(--soot);font-size:15px;margin-bottom:8px}
+.admin-notice p{margin-bottom:10px}
+.admin-notice code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
+  background:var(--sand);border:1px solid var(--line);border-radius:5px;padding:1px 5px;
+  color:var(--soot)}
+.admin-notice code.block{display:block;padding:12px 14px;margin:6px 0 12px;line-height:1.7;
+  word-break:break-all}
+.admin-steps{padding-left:20px;display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.admin-steps li{padding-left:4px}
+
+.admin-fb{display:flex;gap:16px;align-items:flex-start}
+.admin-fb-thumb{width:110px;height:110px;object-fit:cover;border-radius:10px;flex:none;
+  border:1px solid var(--line)}
+.admin-fb-body{min-width:0;display:flex;flex-direction:column;gap:3px}
+.admin-fb-body b{font-size:15.5px;color:var(--soot)}
+.admin-fb-text{font-size:13.5px;color:#4a4e57;line-height:1.55;margin-top:6px;white-space:pre-wrap;
+  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}

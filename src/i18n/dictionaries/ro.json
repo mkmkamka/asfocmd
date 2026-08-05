@@ -1,0 +1,784 @@
+{
+  "meta": {
+    "title": "ASFOCMD — Asociația Națională a Hornarilor",
+    "description": "Coșari și constructori autorizați din Republica Moldova. Găsește un specialist verificat pentru curățarea, verificarea și construcția coșurilor de fum, sobelor și șemineelor."
+  },
+  "nav": {
+    "home": "Acasă",
+    "about": "Despre",
+    "services": "Servicii",
+    "directory": "Găsește un coșar",
+    "training": "Instruire",
+    "news": "Știri",
+    "contact": "Contact",
+    "login": "Autentificare",
+    "becomeMember": "Înregistrează-te"
+  },
+  "top": {
+    "phone": "+373 79 447 686",
+    "email": "asfocmd@gmail.com",
+    "veuko": "Membru VEUKO"
+  },
+  "scrollHint": "Derulați pentru a explora",
+  "home": {
+    "hero": {
+      "eyebrow": "Asociație patronală",
+      "titleLine1": "Asociația Națională a Hornarilor, Constructorilor de Coșuri de Fum și Șeminee",
+      "titlePre": "Case în ",
+      "titleEm": "siguranța ta",
+      "titlePost": ".",
+      "lead": "Asociația Națională a Hornarilor, Constructorilor de Coșuri de Fum și Șeminee",
+      "searchLabel": "Găsește un specialist lângă tine",
+      "locationPlaceholder": "Localitate (ex: Chișinău)",
+      "serviceAll": "Toate serviciile",
+      "services": [
+        "Curățare coș",
+        "Construcție coș",
+        "Sobe",
+        "Șeminee",
+        "Ventilații"
+      ],
+      "searchBtn": "Caută",
+      "popularLabel": "Populare:",
+      "popular": [
+        "Curățare coș de fum",
+        "Verificare tehnică",
+        "Construcție șemineu"
+      ]
+    },
+    "stats": {
+      "veukoLabel": "Membru al confederației",
+      "veukoName": "VEUKO Europa",
+      "bothLabel": "Membru cu drepturi depline în",
+      "totalCaption": "Cifre cumulate în ambele confederații europene",
+      "aboutCta": "Află mai multe despre asociație",
+      "kick": "ASFOCMD",
+      "blurb": "Din 2017, ASFOCMD reunește hornarii și constructorii de coșuri de fum din Republica Moldova. Atestăm meșteri, ținem registrul public al specialiștilor și aducem meseria la standard european — pentru ca fiecare casă încălzită cu foc să fie o casă sigură.",
+      "items": [
+        {
+          "n": "230+",
+          "l": "Membri autorizați"
+        },
+        {
+          "n": "35",
+          "l": "Localități acoperite"
+        },
+        {
+          "n": "2017",
+          "l": "Anul fondării"
+        },
+        {
+          "n": "100%",
+          "l": "Verificați & certificați"
+        }
+      ],
+      "itemsExtra": [
+        {
+          "n": "2",
+          "l": "Confederații europene"
+        },
+        {
+          "n": "2018",
+          "l": "Parteneriat cu ASFOCH România"
+        }
+      ]
+    },
+    "services": {
+      "kick": "Departamente",
+      "title": "Servicii oferite de membrii noștri",
+      "subtitle": "Fiecare membru ASFOCMD este instruit după standardele europene și verificat pentru calitatea și siguranța lucrărilor.",
+      "items": [
+        {
+          "title": "Coșari",
+          "desc": "Curățarea și verificarea tehnică periodică a coșurilor de fum."
+        },
+        {
+          "title": "Sobe",
+          "desc": "Construcție și reparație de sobe după normele europene."
+        },
+        {
+          "title": "Șeminee",
+          "desc": "Proiectare și montaj de șeminee clasice și moderne."
+        },
+        {
+          "title": "Coșuri de fum",
+          "desc": "Construcție de coșuri noi, ceramice și metalice, la standard."
+        },
+        {
+          "title": "Hote & Ventilații",
+          "desc": "Sisteme de ventilație și evacuare pentru locuințe și HoReCa."
+        }
+      ]
+    },
+    "directory": {
+      "kick": "Directoriu verificat",
+      "title": "Găsește un coșar autorizat",
+      "subtitle": "Caută pe hartă specialiști certificați ASFOCMD din toată Moldova — cu date de contact verificate.",
+      "cities": [
+        {
+          "name": "Chișinău",
+          "count": "68"
+        },
+        {
+          "name": "Bălți",
+          "count": "24"
+        },
+        {
+          "name": "Cahul",
+          "count": "11"
+        },
+        {
+          "name": "Orhei",
+          "count": "15"
+        },
+        {
+          "name": "Comrat",
+          "count": "9"
+        }
+      ],
+      "members": [
+        {
+          "initials": "IR",
+          "name": "Ion Rusu",
+          "city": "Chișinău, sect. Centru",
+          "tags": [
+            "Curățare coș",
+            "Verificare"
+          ]
+        },
+        {
+          "initials": "VC",
+          "name": "Vasile Croitoru",
+          "city": "Bălți",
+          "tags": [
+            "Construcție coș",
+            "Șeminee"
+          ]
+        },
+        {
+          "initials": "MP",
+          "name": "Mihai Popescu",
+          "city": "Orhei",
+          "tags": [
+            "Sobe",
+            "Ventilații"
+          ]
+        }
+      ],
+      "allMoldova": "Toată Moldova",
+      "specialists": "specialiști",
+      "mapHint": "Alege un raion pe hartă pentru a vedea specialiștii disponibili.",
+      "emptyTitle": "Niciun membru încă în acest raion",
+      "emptyDesc": "Fii primul coșar autorizat ASFOCMD din zona ta.",
+      "reset": "Vezi toată țara",
+      "becomeMember": "Înregistrează-te",
+      "legend": {
+        "has": "Cu specialiști",
+        "none": "Fără membri încă",
+        "sel": "Selectat"
+      },
+      "verified": "Verificat",
+      "viewAll": "Vezi toți cei 230 de membri"
+    },
+    "trust": {
+      "items": [
+        {
+          "title": "Membri verificați",
+          "desc": "Fiecare specialist este validat de secretariat și consiliul asociației."
+        },
+        {
+          "title": "Standarde europene",
+          "desc": "Instruire conform normelor europene de siguranță la foc."
+        },
+        {
+          "title": "Lucrări sigure",
+          "desc": "Prevenirea incendiilor și intoxicațiilor prin verificări periodice."
+        },
+        {
+          "title": "Rețea europeană",
+          "desc": "Membru al confederației VEUKO, alături de asociații din toată Europa."
+        }
+      ]
+    },
+    "memberships": {
+      "kick": "Rețea europeană",
+      "title": "Parteneri și afilieri europene",
+      "subtitle": "ASFOCMD reprezintă coșarii și constructorii de sobe din Moldova în principalele organizații europene de profil și colaborează îndeaproape cu ASFOCH România, asociația-soră din regiune.",
+      "visit": "Vizitează site-ul",
+      "memberLabel": "Membru cu drepturi depline",
+      "items": [
+        {
+          "logo": "/brand/eschfoe-logo.png",
+          "name": "ESCHFOE",
+          "full": "Federația Europeană a Maeștrilor Coșari — membru cu drepturi egale",
+          "href": "https://www.eschfoe.com/en/associations#heading-id-5420157"
+        },
+        {
+          "logo": "/brand/veuko-logo.svg",
+          "name": "VEUKO",
+          "full": "Uniunea Europeană a asociațiilor constructorilor de sobe de teracotă",
+          "href": "https://www.veuko.com/en/members/asfocmd-nationaler-verband-der-schornsteinfeger-schornsteinbauer-und-kachelofenbauer"
+        }
+      ],
+      "asfoc": {
+        "name": "ASFOCMD",
+        "desc": "Asociația Națională a Hornarilor — 230+ membri autorizați, fondată în 2017",
+        "cta": "Despre asociație"
+      },
+      "asfoch": {
+        "name": "ASFOCH România",
+        "desc": "Asociația-soră din România — hornari, constructori de coșuri de fum și șeminee",
+        "href": "https://www.asfoch.ro/"
+      }
+    },
+    "membership": {
+      "kick": "Înregistrează-te",
+      "title": "Alătură-te asociației în 4 pași",
+      "subtitle": "Un proces simplu și transparent de la înscriere până la listarea în directoriul public.",
+      "steps": [
+        {
+          "title": "Completează formularul",
+          "desc": "Aplici online cu datele și experiența ta profesională."
+        },
+        {
+          "title": "Verificare secretariat",
+          "desc": "Verificăm documentele și calificările depuse."
+        },
+        {
+          "title": "Analiză consiliu",
+          "desc": "Consiliul asociației analizează și aprobă cererea."
+        },
+        {
+          "title": "Devii membru",
+          "desc": "Primești certificatul și apari în directoriul public."
+        }
+      ],
+      "cta": "Începe înscrierea"
+    },
+    "membershipForm": {
+      "title": "Cerere de aderare",
+      "subtitle": "Completează formularul — secretariatul ASFOCMD îți va analiza dosarul și te va contacta.",
+      "steps": [
+        "Date personale",
+        "Activitate profesională",
+        "Motivație și documente",
+        "Confirmare"
+      ],
+      "fullName": "Nume complet",
+      "fullNamePh": "ex: Ion Rusu",
+      "phone": "Telefon",
+      "phonePh": "ex: +373 79 000 000",
+      "email": "Email",
+      "emailPh": "ex: nume@exemplu.md",
+      "district": "Raion / municipiu",
+      "districtPh": "Alege raionul",
+      "locality": "Localitate",
+      "localityPh": "ex: or. Strășeni",
+      "services": "Servicii prestate",
+      "experience": "Ani de experiență",
+      "about": "Despre activitatea ta (opțional)",
+      "aboutPh": "Calificări, cursuri absolvite, lucrări reprezentative…",
+      "consent": "Confirm că datele sunt corecte și accept statutul ASFOCMD.",
+      "back": "Înapoi",
+      "next": "Continuă",
+      "becomeCta": "Devii membru.",
+      "submit": "Trimite cererea",
+      "sending": "Se trimite…",
+      "review": "Verifică datele înainte de trimitere",
+      "successTitle": "Cererea a fost trimisă!",
+      "successDesc": "Secretariatul ASFOCMD va analiza dosarul și te va contacta în cel mult 10 zile lucrătoare.",
+      "backHome": "Înapoi la pagina principală",
+      "errRequired": "Câmp obligatoriu",
+      "errEmail": "Adresă de email invalidă",
+      "errPhone": "Număr de telefon invalid",
+      "errServices": "Alege cel puțin un serviciu",
+      "errConsent": "Bifează acordul pentru a continua",
+      "errSubmit": "Trimiterea a eșuat. Verifică conexiunea și încearcă din nou.",
+      "entity": "Reprezint o persoană juridică (firmă)?",
+      "isCompany": "Da, depun cererea în numele unei firme",
+      "companyName": "Denumirea persoanei juridice",
+      "companyNamePh": "ex: Hornar-Expert Prim SRL",
+      "companyIdno": "IDNO / cod fiscal",
+      "companyIdnoPh": "ex: 1017620001842",
+      "companyAddress": "Adresa juridică (dacă diferă de cea de mai sus)",
+      "companyAddressPh": "ex: mun. Chișinău, bd. Decebal 76, of. 601",
+      "companyEmail": "E-mail oficial de comunicare (dacă diferă)",
+      "companyEmailPh": "ex: office@firma.md",
+      "companyDesc": "Scurtă descriere a firmei",
+      "companyDescPh": "Domeniu de activitate, ani de activitate, echipă…",
+      "domainsLabel": "Domeniile de interes",
+      "domains": [
+        "Curățare coș",
+        "Construcție coș",
+        "Sobe",
+        "Șeminee",
+        "Ventilații",
+        "Producție / import coșuri de fum și sobe",
+        "Hote: curățare, vânzare, montaj",
+        "AC și panouri fotovoltaice: curățare și igienizare"
+      ],
+      "heardFrom": "De unde ai auzit de ASFOCMD?",
+      "heardFromPh": "ex: de la un coleg, Facebook, un curs de instruire…",
+      "advantage": "Care crezi că este principalul avantaj de a fi membru ASFOCMD?",
+      "advantagePh": "…",
+      "attraction": "Ce te-a atras să devii membru ASFOCMD?",
+      "attractionPh": "…",
+      "docs": "Documente justificative",
+      "docsHint": "Copie după certificatul de înregistrare / IDNO și copie după buletinul de identitate al solicitantului. PDF, JPG, PNG sau WebP — cel mult 10 fișiere, până la 8 MB fiecare.",
+      "docsAdd": "Adaugă fișiere",
+      "docsRemove": "Elimină",
+      "docsChosen": "de fișiere atașate",
+      "optional": "(opțional)",
+      "consentGdpr": "Sunt de acord cu prelucrarea datelor cu caracter personal (politica GDPR).",
+      "consentStatut": "Am luat cunoștință de prevederile Statutului asociației, ale Codului de Conduită, Etic și Profesional, precum și de condițiile de școlarizare internă ASFOCMD în vigoare la data prezentei cereri, și mă angajez să le respect întocmai.",
+      "declaration": "Prin prezentul formular solicit înscrierea ca membru cu drepturi depline în Asociația Națională a Hornarilor, Constructorilor de Coșuri de Fum și Șeminee — ASFOCMD, și aștept instrucțiunile ulterioare.",
+      "errDocs": "Atașează cel puțin un document",
+      "errDocsType": "Format nepermis — acceptăm PDF, JPG, PNG sau WebP",
+      "errDocsSize": "Fișier prea mare — maximum 8 MB",
+      "errDocsCount": "Cel mult 10 fișiere",
+      "errCheck": "Bifează pentru a continua",
+      "docsChosenOne": "fișier atașat",
+      "docsChosenFew": "fișiere atașate"
+    },
+    "news": {
+      "kick": "Știri & Evenimente",
+      "title": "Din activitatea asociației",
+      "items": [
+        {
+          "cat": "Instruire",
+          "date": "12 iunie 2026",
+          "title": "Curs de formare la standard european",
+          "excerpt": "Sesiune practică pentru construcția sobelor conform normelor UE."
+        },
+        {
+          "cat": "Asociație",
+          "date": "28 mai 2026",
+          "title": "Adunarea generală anuală 2026",
+          "excerpt": "Bilanțul activității și obiectivele pentru anul următor."
+        },
+        {
+          "cat": "Internațional",
+          "date": "15 aprilie 2026",
+          "title": "Participare la congresul VEUKO",
+          "excerpt": "Delegația ASFOCMD la întâlnirea europeană a hornarilor."
+        }
+      ],
+      "more": "Citește mai mult"
+    },
+    "cta": {
+      "title": "Ai nevoie de un coșar autorizat?",
+      "subtitle": "Găsește rapid un specialist verificat din localitatea ta sau contactează asociația pentru îndrumare.",
+      "primary": "Caută un specialist",
+      "secondary": "Contactează-ne"
+    }
+  },
+  "footer": {
+    "about": "Asociația Națională a Hornarilor, Constructorilor de Coșuri de fum și Șeminee din Republica Moldova.",
+    "colAssoc": {
+      "title": "Asociația",
+      "links": [
+        "Despre ASFOCMD",
+        "Statut",
+        "Conducere",
+        "Legislație",
+        "VEUKO Europa"
+      ]
+    },
+    "colServices": {
+      "title": "Servicii",
+      "links": [
+        "Găsește un coșar",
+        "Înregistrează-te",
+        "Instruire",
+        "Resurse & formulare",
+        "Galerie"
+      ]
+    },
+    "colContact": {
+      "title": "Contact",
+      "address": "Chișinău, Republica Moldova"
+    },
+    "quickTitle": "Linkuri utile",
+    "followTitle": "Urmărește-ne",
+    "newsletter": {
+      "title": "Rămâi conectat",
+      "subtitle": "Abonează-te la newsletter pentru noutăți, instruiri și resurse.",
+      "placeholder": "Adresa ta de email",
+      "cta": "Abonează-te"
+    },
+    "rights": "© 2026 ASFOCMD. Toate drepturile rezervate.",
+    "concept": "Concept de design — machetă, nu site-ul oficial."
+  },
+  "pages": {
+    "about": {
+      "kick": "Despre asociație",
+      "title": "Meserie veche, standarde noi",
+      "lead": "Asociația Coșarilor din Moldova (ASFOCMD) reunește specialiștii în curățarea și verificarea coșurilor de fum, promovând siguranța la foc și profesionalizarea meseriei de coșar.",
+      "mission": {
+        "title": "Misiunea noastră",
+        "p1": "Lucrăm pentru ca fiecare locuință din Moldova încălzită cu sobă, șemineu sau cazan să aibă un coș de fum sigur, verificat de un specialist atestat. Un coș curat înseamnă mai puține incendii, mai puține intoxicații cu monoxid de carbon și căldură mai eficientă.",
+        "p2": "Asociația atestă meșteri, organizează instruiri la standard european și reprezintă interesele breslei în dialogul cu autoritățile și cu partenerii europeni."
+      },
+      "directions": {
+        "title": "Ce facem",
+        "items": [
+          {
+            "title": "Atestarea meșterilor",
+            "desc": "Verificăm pregătirea și experiența coșarilor și menținem registrul public al membrilor autorizați."
+          },
+          {
+            "title": "Instruire continuă",
+            "desc": "Cursuri practice de curățare, verificare și construcție a sobelor, aliniate normelor europene."
+          },
+          {
+            "title": "Prevenirea incendiilor",
+            "desc": "Campanii de informare despre întreținerea coșurilor și riscurile monoxidului de carbon."
+          },
+          {
+            "title": "Reprezentare",
+            "desc": "Vocea breslei în raport cu autoritățile naționale și cu federația europeană VEUKO."
+          }
+        ]
+      },
+      "veuko": {
+        "title": "Membru al federației europene VEUKO",
+        "p": "ASFOCMD este membră a VEUKO, federația europeană a maeștrilor coșari, alături de asociațiile naționale din peste douăzeci de țări. Apartenența ne oferă acces la standarde, materiale de instruire și schimb de experiență la nivel european.",
+        "cta": "Vizitează veuko.eu"
+      },
+      "memberships": {
+        "kick": "Recunoaștere internațională",
+        "title": "Membru al organizațiilor europene de profil",
+        "subtitle": "ASFOCMD face parte, cu drepturi depline, din rețeaua europeană a coșarilor și constructorilor de sobe, alături de asociațiile naționale din întreaga Europă.",
+        "visit": "Vizitează site-ul",
+        "items": [
+          {
+            "logo": "/brand/eschfoe-logo.png",
+            "name": "ESCHFOE",
+            "full": "Federația Europeană a Maeștrilor Coșari",
+            "role": "Membru cu drepturi egale",
+            "href": "https://www.eschfoe.com/en/associations#heading-id-5420157"
+          },
+          {
+            "logo": "/brand/veuko-logo.svg",
+            "name": "VEUKO",
+            "full": "Uniunea Europeană a asociațiilor constructorilor de sobe de teracotă",
+            "role": "Membru",
+            "href": "https://www.veuko.com/en/members/asfocmd-nationaler-verband-der-schornsteinfeger-schornsteinbauer-und-kachelofenbauer"
+          }
+        ]
+      },
+      "leadership": {
+        "title": "Conducerea",
+        "subtitle": "Asociația este condusă de un președinte și un consiliu ales de adunarea generală a membrilor.",
+        "presidentName": "Alexei Golomoz",
+        "presidentRole": "Președinte",
+        "presidentBio": "Maestru coșar și fondator al asociației, reprezintă ASFOCMD în federația europeană VEUKO.",
+        "boardNote": "Componența completă a consiliului va fi publicată aici."
+      },
+      "statute": {
+        "title": "Statutul asociației",
+        "p": "Statutul ASFOCMD stabilește scopul, drepturile și obligațiile membrilor, precum și modul de organizare a asociației.",
+        "purposeTitle": "Scopul asociației (art. 2.1)",
+        "purposeIntro": "ASFOCMD are scopul de a:",
+        "aims": [
+          "reprezenta, promova, susține și proteja interesele economice, tehnice și juridice ale membrilor săi în raport cu autoritățile publice, organizațiile guvernamentale sau nonguvernamentale, cu persoanele fizice sau juridice ori alte autorități; precum și promovarea unei imagini favorabile a ASFOCMD și membrilor săi pe plan național și internațional;",
+          "crea cadrul organizatoric pentru membrii asociației în vederea realizării conceptelor, măsurilor și acțiunilor care să conducă la dezvoltarea, perfecționarea și creșterea contribuției specialiștilor asociației la îmbunătățirea activităților privind proiectarea, execuția, exploatarea, întreținerea și repararea coșurilor de fum, a instalațiilor de ventilare, sobelor și șemineelor în R. Moldova;",
+          "asigura membrii săi cu informații utile, în vederea facilitării relațiilor dintre aceștia, precum și cu alte organizații, acorda servicii de consultanță și asistență în domeniu; promova o concurență loială în activitatea economică și în relațiile dintre membrii lor, care să asigure condiții egale fiecăruia;",
+          "reprezenta membrii săi în organizațiile internaționale de profil."
+        ],
+        "soon": "Document disponibil în curând",
+        "viewFull": "Vezi statutul complet",
+        "viewFullHref": "https://drive.google.com/open?id=10iteD05ck19APUnDAe6u709zYqtiOrcr",
+        "href": "/docs/statut-asfocmd.pdf",
+        "download": "Descarcă statutul (PDF)"
+      }
+    },
+    "training": {
+      "kick": "Instruire & atestare",
+      "title": "Formare la standard european",
+      "lead": "Organizăm cursuri practice pentru coșari, sobari și instalatori — de la bazele meseriei până la verificarea sistemelor moderne de încălzire.",
+      "intro": {
+        "title": "Cum se desfășoară",
+        "p": "Instruirile combină teoria cu lucrul practic pe machete și instalații reale, sub îndrumarea formatorilor cu experiență internațională. Grupele sunt mici, iar la final participanții susțin o probă practică."
+      },
+      "modules": {
+        "title": "Module de curs",
+        "items": [
+          {
+            "title": "Curățarea și verificarea coșurilor",
+            "desc": "Tehnici de curățare, scule profesionale, evaluarea tirajului și a stării coșului."
+          },
+          {
+            "title": "Construcția și reabilitarea sobelor",
+            "desc": "Dimensionare, materiale, zidire și punere în funcțiune conform normelor UE."
+          },
+          {
+            "title": "Siguranța la foc și CO",
+            "desc": "Prevenirea incendiilor de coș, detectarea monoxidului de carbon, intervenții corecte."
+          },
+          {
+            "title": "Documente și relația cu clientul",
+            "desc": "Actul de verificare, evidența lucrărilor, comunicarea cu beneficiarul și cu autoritățile."
+          }
+        ]
+      },
+      "facts": [
+        {
+          "label": "Durată",
+          "value": "2–5 zile / modul"
+        },
+        {
+          "label": "Certificat",
+          "value": "Recunoscut de asociație"
+        },
+        {
+          "label": "Limba",
+          "value": "Română / rusă"
+        }
+      ],
+      "upcoming": {
+        "title": "Sesiuni viitoare",
+        "p": "Calendarul sesiunilor este anunțat pe pagina de știri și direct membrilor. Membrii ASFOCMD au prioritate la înscriere.",
+        "cta": "Vreau să particip"
+      },
+      "recent": {
+        "title": "Instruiri și cursuri",
+        "subtitle": "Cursuri, sesiuni de instruire și atestări din activitatea asociației.",
+        "back": "Toate instruirile"
+      }
+    },
+    "news": {
+      "kick": "Știri & evenimente",
+      "title": "Din activitatea asociației",
+      "lead": "Noutăți despre instruiri, campanii de prevenire și viața breslei.",
+      "back": "Toate știrile",
+      "published": "Publicat"
+    },
+    "resources": {
+      "kick": "Resurse",
+      "title": "Documente & galerie",
+      "lead": "Formulare, documente utile și imagini din activitatea asociației.",
+      "docs": {
+        "title": "Documente",
+        "subtitle": "Descarcă documentele oficiale ale asociației.",
+        "soon": "În curând",
+        "download": "Descarcă",
+        "previewTitle": "Cererea de aderare",
+        "previewDesc": "Formularul de înscriere în calitate de membru afiliat ASFOCMD.",
+        "scansTitle": "Acte oficiale",
+        "scansSubtitle": "Statutul și certificatele de înregistrare ale asociației.",
+        "scansHint": "Click pentru mărire",
+        "scans": [
+          {
+            "img": "/docs/statut-scans/statut.jpg",
+            "label": "Statutul ASFOCMD"
+          },
+          {
+            "img": "/docs/statut-scans/decizie-inregistrare.jpg",
+            "label": "Decizia de înregistrare"
+          },
+          {
+            "img": "/docs/statut-scans/certificat-inregistrare.jpg",
+            "label": "Certificat de înregistrare"
+          }
+        ],
+        "items": [
+          {
+            "title": "Statutul ASFOCMD",
+            "desc": "Documentul de bază al asociației",
+            "meta": "PDF",
+            "href": "/docs/statut-asfocmd.pdf"
+          },
+          {
+            "title": "Cerere de aderare",
+            "desc": "Formular pentru noii membri",
+            "meta": "PDF",
+            "href": "/docs/cerere-aderare.pdf"
+          },
+          {
+            "title": "Ghid: întreținerea coșului de fum",
+            "desc": "Recomandări pentru proprietari",
+            "meta": "PDF"
+          },
+          {
+            "title": "Model act de verificare",
+            "desc": "Document eliberat după curățare/verificare",
+            "meta": "PDF"
+          },
+          {
+            "title": "Legislație relevantă",
+            "desc": "Norme privind exploatarea sobelor și coșurilor",
+            "meta": "Link"
+          }
+        ]
+      },
+      "gallery": {
+        "title": "Galerie foto",
+        "subtitle": "Imagini din activitatea asociației.",
+        "note": "Mai multe fotografii vor fi adăugate în curând.",
+        "photos": [
+          {
+            "img": "/gallery/foto-1.jpg",
+            "caption": "Din activitatea ASFOCMD"
+          },
+          {
+            "img": "/gallery/foto-2.jpg",
+            "caption": "Din activitatea ASFOCMD"
+          }
+        ]
+      }
+    },
+    "contact": {
+      "kick": "Contact",
+      "title": "Scrie-ne sau sună-ne",
+      "lead": "Pentru programări, întrebări despre aderare sau colaborări, echipa asociației îți stă la dispoziție.",
+      "cards": {
+        "phone": "Telefon",
+        "email": "E-mail",
+        "address": "Adresă",
+        "hours": "Program",
+        "hoursValue": "Luni–Vineri, 9:00–17:00"
+      },
+      "org": {
+        "title": "Rechizite",
+        "subtitle": "Datele oficiale ale asociației.",
+        "rows": [
+          {
+            "label": "Denumire",
+            "value": "Asociația Patronală Națională a Hornarilor, Constructorilor de Coșuri de fum, Ventilare și Șeminee — ASFOCMD"
+          },
+          {
+            "label": "Președinte",
+            "value": "Alexei Golomoz"
+          },
+          {
+            "label": "Adresă",
+            "value": "bul. Decebal 76, of. 601, mun. Chișinău, Republica Moldova"
+          },
+          {
+            "label": "Telefon",
+            "value": "+373 79 447 686"
+          },
+          {
+            "label": "Tel./fax",
+            "value": "+373 22 890 940"
+          },
+          {
+            "label": "E-mail",
+            "value": "asfocmd@gmail.com"
+          },
+          {
+            "label": "Cod fiscal (IDNO)",
+            "value": "1017620001842"
+          },
+          {
+            "label": "IBAN",
+            "value": "MD47MO2224ASV17334677100"
+          },
+          {
+            "label": "Banca",
+            "value": "BC Mobiasbanca — Groupe Société Générale SA, Chișinău"
+          },
+          {
+            "label": "BIC/SWIFT",
+            "value": "MOBBMD22"
+          }
+        ]
+      },
+      "form": {
+        "title": "Trimite un mesaj",
+        "name": "Nume",
+        "namePh": "Numele tău",
+        "email": "E-mail",
+        "emailPh": "adresa@exemplu.md",
+        "subject": "Subiect",
+        "subjectPh": "Despre ce este mesajul?",
+        "message": "Mesaj",
+        "messagePh": "Scrie mesajul tău aici…",
+        "send": "Trimite mesajul",
+        "sending": "Se trimite…",
+        "successTitle": "Mesaj trimis!",
+        "successDesc": "Îți mulțumim. Revenim cu un răspuns în cel mai scurt timp.",
+        "again": "Trimite alt mesaj",
+        "errRequired": "Câmp obligatoriu",
+        "errEmail": "Adresă de e-mail invalidă",
+        "errSubmit": "Nu am putut trimite mesajul. Încearcă din nou."
+      }
+    },
+    "members": {
+      "kick": "Membri",
+      "title": "Companiile membre ASFOCMD",
+      "subtitle": "Întreprinderi autorizate care activează în domeniul coșurilor de fum, ventilării, sobelor și șemineelor.",
+      "fieldReg": "Nr. înregistrare",
+      "fieldIdno": "Cod fiscal (IDNO)",
+      "fieldAddress": "Sediu",
+      "fieldRep": "Reprezentant legal",
+      "companies": [
+        {
+          "name": "SRL „Hornar-Expert”",
+          "reg": "257312 · 15.10.2012",
+          "idno": "1012600007515",
+          "address": "mun. Chișinău, str. Dumitru Caraciobanu 14",
+          "rep": "Golomoz Alexei",
+          "role": "Administrator"
+        },
+        {
+          "name": "SRL „Hornar-Expert Prim”",
+          "reg": "316933 · 10.08.2015",
+          "idno": "1015600026382",
+          "address": "mun. Chișinău, str. Dumitru Caraciobanu 14",
+          "rep": "Burac Tudor",
+          "role": "Vice-director"
+        },
+        {
+          "name": "SRL „Geomap-Plus”",
+          "reg": "21378 · 25.06.2008",
+          "idno": "1008600031964",
+          "address": "mun. Chișinău, or. Vatra, str. Mihail Frunze 3",
+          "rep": "Blăniță Igor",
+          "role": "Director"
+        },
+        {
+          "name": "SRL „Smoc”",
+          "reg": "344741 · 10.06.1998",
+          "idno": "1003600000327",
+          "address": "mun. Chișinău, str. A. Hîjdeu 6/3",
+          "rep": "Șevcenco Alexandr",
+          "role": "Administrator"
+        },
+        {
+          "name": "SRL „Hornar-Expert Gaz”",
+          "reg": "343905 · 13.10.2016",
+          "idno": "1016600032588",
+          "address": "mun. Chișinău, str. Dumitru Caraciobanu 14",
+          "rep": "Golomoz Lidia",
+          "role": "Fondator"
+        },
+        {
+          "name": "SRL „ProHornar”",
+          "reg": "J26/2268/2007 · 31.12.2007",
+          "idno": "22996033",
+          "address": "loc. Lunca, sat Sântu 188A, jud. Mureș, România",
+          "rep": "Balsoianu Mircea Ovidiu",
+          "role": "Administrator"
+        },
+        {
+          "name": "SRL „ECO INTELIGENT”",
+          "reg": "48360 · 01.05.2017",
+          "idno": "1017602002759",
+          "address": "mun. Bălți, str. Mitropolit Petru Movilă 12",
+          "rep": "Burduja Maxim",
+          "role": "Administrator"
+        },
+        {
+          "name": "SRL „SOBĂ BUNĂ”",
+          "reg": "101960001785 · 21.01.2019",
+          "idno": "",
+          "address": "mun. Chișinău, str. Miorița 1E, ap. 18",
+          "rep": "Burac Tudor",
+          "role": "Director"
+        }
+      ]
+    }
+  }
+}

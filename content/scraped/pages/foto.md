@@ -1,0 +1,20 @@
+---
+title: "FOTO"
+date: 2017-12-31
+source_url: https://www.asfoc.md/p/foto.html
+images:
+  - https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiJOiD1yx9ZXy4g6oGaGyhQOXbAf-AttxhJ4YUL9F5WwNnlFCBUqMEaN84t4vsd8aDBYlc7VAHZvtNQHITzeHEfljRaIc5ly8LDiq_K1Qyf9paYFDCxdOk2R6VNMPRgpTX0nO1MyR3N-eo/s640/21687690_1479156282131637_3114874345331227339_n.jpg
+  - https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj8uJeBkBygXoUU4wRjQRJKXDXi85UGDZJJ5fGDXhZOnkvqzJ7whKWeikkQ9-t8uIfn-Tx6WNyPa3vfpBUKsKQrmfWgIu-xjuGdZVRJtxKv1eWPYxKYan1hqGzDlJbvtdltrYQ6dgny3cY/s320/25396045_1556227364424528_4983990185871360069_n.jpg
+embeds: []
+---
+[
+
+![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiJOiD1yx9ZXy4g6oGaGyhQOXbAf-AttxhJ4YUL9F5WwNnlFCBUqMEaN84t4vsd8aDBYlc7VAHZvtNQHITzeHEfljRaIc5ly8LDiq_K1Qyf9paYFDCxdOk2R6VNMPRgpTX0nO1MyR3N-eo/s640/21687690_1479156282131637_3114874345331227339_n.jpg)
+
+](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiJOiD1yx9ZXy4g6oGaGyhQOXbAf-AttxhJ4YUL9F5WwNnlFCBUqMEaN84t4vsd8aDBYlc7VAHZvtNQHITzeHEfljRaIc5ly8LDiq_K1Qyf9paYFDCxdOk2R6VNMPRgpTX0nO1MyR3N-eo/s1600/21687690_1479156282131637_3114874345331227339_n.jpg)
+
+[
+
+![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj8uJeBkBygXoUU4wRjQRJKXDXi85UGDZJJ5fGDXhZOnkvqzJ7whKWeikkQ9-t8uIfn-Tx6WNyPa3vfpBUKsKQrmfWgIu-xjuGdZVRJtxKv1eWPYxKYan1hqGzDlJbvtdltrYQ6dgny3cY/s320/25396045_1556227364424528_4983990185871360069_n.jpg)
+
+](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj8uJeBkBygXoUU4wRjQRJKXDXi85UGDZJJ5fGDXhZOnkvqzJ7whKWeikkQ9-t8uIfn-Tx6WNyPa3vfpBUKsKQrmfWgIu-xjuGdZVRJtxKv1eWPYxKYan1hqGzDlJbvtdltrYQ6dgny3cY/s1600/25396045_1556227364424528_4983990185871360069_n.jpg)
