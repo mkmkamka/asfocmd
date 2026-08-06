@@ -397,26 +397,23 @@ ul{list-style:none}
    is the one thing that is a *button*, so it can wear the site's own button
    shape without being mistaken for chrome. */
 .hero-cta{
-  display:inline-flex;align-items:center;gap:9px;
+  display:inline-flex;align-items:center;
   background:var(--ember);color:#fff;
-  /* Down from 15px/15-28, and then the *box* down again from 11/21 while the
-     type stayed at 13.5. Those are two separate knobs and they were being
-     turned together: shrinking the label as well makes the primary action
-     quieter, which is not what a button that is too bulky needs. The type holds
-     its size, the padding gives up 3px top and bottom and 4px each side, so the
-     capsule loses 6px of height without the words losing any weight. It is
-     still the only saturated object in the fold, so it keeps its rank on colour
-     rather than on bulk. */
-  font-size:13.5px;font-weight:640;letter-spacing:.005em;
-  padding:8px 17px;border-radius:9999px;
+  /* The type matches `.hero-link` exactly now — the button used to run a
+     size smaller than the two quiet actions above it, which read as the
+     primary action shrinking rather than standing out. The capsule is what
+     carries the emphasis; the words don't need to. Padding is cut down
+     around that fixed type instead: a slim capsule hugging the label, not a
+     bulky box that pushes its text off the column the other two lanes
+     start from. */
+  font-size:14.5px;font-weight:640;letter-spacing:.005em;
+  padding:6px 14px;border-radius:9999px;
   white-space:nowrap;
   box-shadow:0 12px 30px -10px rgba(127,31,22,.75);
   transition:background .25s ease,box-shadow .25s ease,transform .2s ease;
 }
 .hero-cta:hover{background:#93251A;box-shadow:0 16px 38px -10px rgba(127,31,22,.9);transform:translateY(-1px)}
 .hero-cta:active{transform:translateY(0)}
-.hero-cta-mark{flex:none;transition:transform .25s ease}
-.hero-cta:hover .hero-cta-mark{transform:translateY(-2px)}
 
 /* ── Liquid-metal rim ─────────────────────────────────────────────────
    A shader canvas showing only at the button's edge. The wrapper is the ring:
@@ -701,8 +698,7 @@ ul{list-style:none}
      phone is set by the auto margins in the block above, which float it to
      the middle of the fold. A number here would pin it back to the name. */
   .hero-actions{gap:10px}
-  .hero-cta{font-size:13px;padding:9px 18px;gap:8px}
-  .hero-cta-mark{width:15px;height:15px}
+  .hero-cta{font-size:13.5px;padding:6px 13px}
   .hero-link{gap:7px;font-size:13.5px}
   .hero-link-mark{width:14px;height:14px}
 }
@@ -1109,8 +1105,12 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
    linear-gradient(180deg,var(--sand),#fff);border-bottom:1px solid var(--line)}
 /* Tightened to the same rhythm the contact fold proved out: a header that
    sits close to its lead-in and close to the top of the screen reads as
-   composed, not as a page that hasn't started yet. */
-.page-hero .wrap{padding-top:40px;padding-bottom:26px;max-width:880px;text-align:center}
+   composed, not as a page that hasn't started yet. The first pass only
+   closed the top-clearance gap; the kicker and the type itself were still
+   running at their old, roomier size, which is what kept reading as "low"
+   next to contact even once the raw offsets matched — contact's whole head
+   is a smaller, denser block, not just one sitting higher up. */
+.page-hero .wrap{padding-top:22px;padding-bottom:16px;max-width:880px;text-align:center}
 /* The kicker is a sign now — rule and ember, no words — and losing that line of
    type pulled it up under the floating nav pill, which is fixed at 44px and
    44px tall. Desktop starts the page hero just below it — the same clearance
@@ -1119,13 +1119,17 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
    worth of dead air on top. Below lg the nav sits in flow, so the original
    padding still holds. */
 @media(min-width:1024px){.page-hero .wrap{padding-top:96px}}
-.page-hero .kick{position:relative;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);padding-bottom:18px;margin-bottom:16px}
+.page-hero .kick{position:relative;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);padding-bottom:11px;margin-bottom:10px}
 .page-hero .kick::after{content:"";position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:76px;height:1px;
   background:linear-gradient(90deg,transparent,rgba(140,42,31,.8) 28%,rgba(140,42,31,.8) 72%,transparent)}
 .page-hero .kick::before{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;
   background:var(--ember);box-shadow:0 0 7px 1.5px rgba(127,31,22,.55)}
-.page-hero h1{font-size:clamp(30px,3.7vw,42px);margin-bottom:18px}
-.page-hero .lead{font-size:18px;color:#4a4e57;max-width:640px;margin:0 auto}
+/* Same order of size as contact's own head (`clamp(26px,…,44px)` /
+   `clamp(13.5px,…,18px)`) — smaller floor on the phone, same rough ceiling
+   on a wide screen, instead of a flat 18px lead that never gave anything
+   back on a short viewport. */
+.page-hero h1{font-size:clamp(24px,3.2vw,36px);margin-bottom:11px}
+.page-hero .lead{font-size:clamp(14px,1.5vw,16.5px);line-height:1.55;color:#4a4e57;max-width:640px;margin:0 auto}
 
 .svc-grid.cols-4{grid-template-columns:repeat(4,1fr)}
 @media(max-width:900px){.svc-grid.cols-4{grid-template-columns:repeat(2,1fr)}}

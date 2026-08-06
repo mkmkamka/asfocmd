@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
-import { GraduationCap, Map, UserPlus } from "lucide-react";
+import { GraduationCap, UserPlus } from "lucide-react";
 import { HeroVideo } from "@/components/ui/hero-video";
 import { LiquidMetalLink } from "@/components/ui/liquid-metal-button";
 import type { Dictionary } from "@/i18n/get-dictionary";
@@ -117,18 +117,14 @@ export function AsfocHero({
               most likely next click once someone already knows the
               association exists.
 
-              Each action carries its own mark, leading: a membership card for
-              joining, a cap for the courses, a folded map for the directory.
-              Three words with no marks made the stack read as body copy that
-              happened to be underlined; the pictograms are what tell you at a
-              glance that these are doors out of the fold. The mark sits
-              *before* the label on all three (the CTA's trailing arrow was
-              the only glyph in the row, which put the emphasis on "away"
-              rather than on what you get).
-
-              The map is a *map*, not a dropped pin. A pin marks one place; what
-              this button opens is a national directory you browse by district,
-              so the folded map is what it actually does. */}
+              The two quiet actions carry their own mark, leading: a
+              membership card for joining, a cap for the courses. The CTA
+              carries none — it is already a filled capsule, not a line of
+              type, so a third pictogram would be repeating a distinction it
+              has already made another way. Dropping it also lets the
+              capsule's own left edge sit close to the same column the two
+              marks above it start from, instead of being pushed further
+              right by an icon's width. */}
           <motion.div className="hero-actions" variants={rise}>
             <Link className="hero-link" href={`${base}/membru`}>
               <UserPlus className="hero-link-mark" size={16} aria-hidden />
@@ -147,7 +143,6 @@ export function AsfocHero({
               className="hero-cta"
               href={`${base}/servicii#directoriu`}
             >
-              <Map className="hero-cta-mark" size={17} aria-hidden />
               {cta.primary}
             </LiquidMetalLink>
           </motion.div>
