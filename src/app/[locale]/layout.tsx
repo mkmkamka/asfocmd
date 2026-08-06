@@ -5,6 +5,7 @@ import { locales, isLocale, defaultLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { notFound } from "next/navigation";
 import ScrollHint from "@/components/ScrollHint";
+import KeyboardScroll from "@/components/KeyboardScroll";
 
 /* One family in two roles — the Apple / Linear register rather than a display
    serif over a body sans. Onest is a modern neutral grotesque with native
@@ -52,6 +53,7 @@ export default async function LocaleLayout({
       <body>
         {children}
         <ScrollHint text={dict.scrollHint} />
+        <KeyboardScroll />
       </body>
     </html>
   );

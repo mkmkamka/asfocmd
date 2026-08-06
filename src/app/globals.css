@@ -299,10 +299,10 @@ ul{list-style:none}
    left edge is the same left edge as the fact card, the services grid and the
    news row below it. The old hero used `max-w-5xl` (1024px) and lined up with
    nothing. */
-/* The fold is a `<section>`, so it inherits the global `section{padding:92px 0}`
+/* The fold is a `<section>`, so it inherits the global `section{padding}`
    band. It used to cancel that with Tailwind padding utilities; now that the
    stage and the credit rail own their own spacing it has to be said here, or a
-   92px strip of dead footage opens above the type and below the credit rule. */
+   strip of dead footage opens above the type and below the credit rule. */
 .hero-fold{color:#fff;padding:0}
 
 /* The stage fills the fold and pushes its contents to the foot of the frame.
@@ -385,11 +385,10 @@ ul{list-style:none}
   text-shadow:0 1px 30px rgba(10,11,13,.5);
 }
 
-/* One primary, two quiet. `nowrap` keeps all three on a single row at every
-   width — the phone rules below shrink the CTA rather than breaking the line
-   (see the note there). */
+/* Three lanes, stacked — one destination per row rather than three sharing
+   one. Left-aligned, same edge as the eyebrow and the name above them. */
 .hero-actions{
-  display:flex;flex-wrap:nowrap;align-items:center;gap:14px 26px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:14px;
   margin-top:var(--fold-step-2);
 }
 /* The only saturated object in the frame — and a full capsule again. It spent a
@@ -692,62 +691,20 @@ ul{list-style:none}
        five lines. */
     font-size:1.7rem;
   }
-  /* All three actions stay on one row on a phone. The CTA used to take a row of
-     its own at full width, which is the obvious fix for a row that will not
-     fit — but it turned the primary action into a banner and pushed the other
-     two onto a second line, so the foot of the fold grew by two rows on exactly
-     the screens with the least of it to spare. Instead the CTA gives up the
-     width: smaller type, tighter padding, a smaller mark. It is still the only
-     saturated object in the frame, so it keeps its rank without needing 100% of
-     the measure.
+  /* Three stacked lanes rather than one row that has to fit "Devino membru ·
+     Instruire · Caută un specialist" — Russian runs longest of the three
+     languages and used to force the whole row down to near-illegible type on
+     a narrow phone. Stacked, every lane holds its label at a size that reads,
+     regardless of which language is longest.
 
-     Every value here is viewport-relative rather than stepped at a breakpoint.
-     "Caută un specialist · Devino membru · Instruire" is a lot of Romanian to
-     hold on one line, and the gap between an iPhone SE and a Pro Max is wide
-     enough that any one fixed size either overflows the small screen or wastes
-     the large one. Scaling the whole row together keeps its proportions at
-     every width, and there is no single size where it visibly snaps. The
-     ceilings are the values the row wants; only genuinely narrow screens ever
-     pay.
-
-     The coefficients are set from the widest of the three languages — Russian,
-     not Romanian: "Найти специалиста · Стать членом · Обучение" runs about 8px
-     longer than the Romanian at the same size. They leave that row a few pixels
-     of clearance inside the page's 24px gutter at 320px, the narrowest screen
-     this site targets. Nothing below that is supported; the px floors are only
-     there so it degrades by getting cramped rather than by breaking. Any change
-     to these three labels wants re-checking at 320px in all three locales.
-
-     Note there is no `margin-top` here: the row's vertical position on a phone
-     is set by the auto margins in the block above, which float it to the middle
-     of the fold. A number here would pin it back to the name. */
-  .hero-actions{gap:clamp(5px,1.9vw,12px)}
-  .hero-cta{
-    font-size:clamp(9.5px,2.9vw,13.5px);
-    /* The box loses a step; the type keeps its clamp. Same split as the desktop
-       rule above — a button that is too bulky for the row wants less padding,
-       not smaller words. */
-    padding:clamp(6px,2vw,8px) clamp(9px,2.7vw,14px);
-    gap:clamp(4px,1.6vw,7px);
-    box-shadow:0 8px 20px -8px rgba(127,31,22,.75);
-  }
-  .hero-cta-mark{width:clamp(11px,3.6vw,16px);height:clamp(11px,3.6vw,16px)}
-  .hero-link{gap:clamp(3px,1.3vw,5px);font-size:clamp(8.5px,2.6vw,12.5px)}
-  .hero-link-mark{width:clamp(10px,3.3vw,14px);height:clamp(10px,3.3vw,14px)}
-}
-
-/* Below ~360px every clamp above is already sitting on its floor, so the row
-   has no give left and "Найти специалиста · Стать членом · Обучение" runs to
-   the edge of the screen with no gutter at all. The two secondary pictograms
-   are what goes: they and their gaps are ~27px of the row, which is exactly
-   the overrun, and they are the least load-bearing thing in it — the CTA keeps
-   its map mark, so the row still reads as actions rather than as a line of
-   underlined body copy. Both labels keep their underline and their hit area,
-   and the marks were `aria-hidden` decoration, so nothing is lost to a screen
-   reader either. */
-@media(max-width:360px){
-  .hero-link-mark{display:none}
-  .hero-link{gap:0}
+     Note there is no `margin-top` here: the block's vertical position on a
+     phone is set by the auto margins in the block above, which float it to
+     the middle of the fold. A number here would pin it back to the name. */
+  .hero-actions{gap:10px}
+  .hero-cta{font-size:13px;padding:9px 18px;gap:8px}
+  .hero-cta-mark{width:15px;height:15px}
+  .hero-link{gap:7px;font-size:13.5px}
+  .hero-link-mark{width:14px;height:14px}
 }
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--sans);font-weight:600;font-size:14.5px;letter-spacing:.01em;padding:13px 26px;border-radius:9999px;cursor:pointer}
@@ -835,7 +792,9 @@ nav.main a.active{color:var(--ember)}
    that replaced it on both the home and about pages. */
 .badge-eu{width:34px;height:34px;border-radius:8px;background:var(--blue);display:grid;place-items:center;color:#fff;flex:none}
 
-section{padding:92px 0}
+/* Tightened from 92px — the contact fold proved a page reads calmer with
+   less dead air between bands, not more. */
+section{padding:64px 0}
 
 /* ── Home "Despre" band ───────────────────────────────────────────────
    The specialist finder and the fact card, on one white ground.
@@ -1076,8 +1035,13 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
 @media(max-width:520px){.foot-grid{grid-template-columns:1fr}}
 
 /* membership application */
-.apply{background:linear-gradient(180deg,var(--sand),#fff);min-height:60vh}
-.apply-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:start;padding-top:56px;padding-bottom:76px}
+/* `.apply` is a `<section>`, so cancelling the global padding here and
+   spending it in `.apply-grid` instead avoids the two stacking — it used to
+   be 92px of section padding plus another 56px from the grid before the
+   heading, which was the tightened-page work's worst offender. */
+.apply{background:linear-gradient(180deg,var(--sand),#fff);min-height:60vh;padding:0}
+.apply-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:start;padding-top:32px;padding-bottom:64px}
+@media(min-width:1024px){.apply-grid{padding-top:96px}}
 .apply-side .kick{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin-bottom:12px}
 .apply-side h1{font-size:clamp(34px,4.4vw,50px);margin-bottom:14px}
 .apply-side .lead{font-size:17px;color:#4a4e57;margin-bottom:28px;max-width:420px}
@@ -1143,12 +1107,18 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
 .page-hero{background:
    radial-gradient(900px 400px at 85% -20%,rgba(127,31,22,.07),transparent 60%),
    linear-gradient(180deg,var(--sand),#fff);border-bottom:1px solid var(--line)}
-.page-hero .wrap{padding-top:64px;padding-bottom:56px;max-width:880px;text-align:center}
+/* Tightened to the same rhythm the contact fold proved out: a header that
+   sits close to its lead-in and close to the top of the screen reads as
+   composed, not as a page that hasn't started yet. */
+.page-hero .wrap{padding-top:40px;padding-bottom:26px;max-width:880px;text-align:center}
 /* The kicker is a sign now — rule and ember, no words — and losing that line of
    type pulled it up under the floating nav pill, which is fixed at 44px and
-   44px tall. Desktop starts the page hero below it instead. Below lg the nav
-   sits in flow, so the original padding still holds. */
-@media(min-width:1024px){.page-hero .wrap{padding-top:112px}}
+   44px tall. Desktop starts the page hero just below it — the same clearance
+   the contact fold clamps to (`clamp(100px,12vh,118px)`) — instead of the
+   112px the section used to carry, which was clearance plus a full section's
+   worth of dead air on top. Below lg the nav sits in flow, so the original
+   padding still holds. */
+@media(min-width:1024px){.page-hero .wrap{padding-top:96px}}
 .page-hero .kick{position:relative;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);padding-bottom:18px;margin-bottom:16px}
 .page-hero .kick::after{content:"";position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:76px;height:1px;
   background:linear-gradient(90deg,transparent,rgba(140,42,31,.8) 28%,rgba(140,42,31,.8) 72%,transparent)}
@@ -1208,7 +1178,11 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
 .news-grid.listing{grid-template-columns:repeat(3,1fr)}
 @media(max-width:960px){.news-grid.listing{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.news-grid.listing{grid-template-columns:1fr}}
-.article{max-width:720px;margin:0 auto;padding:56px 24px 76px}
+/* Same tightened top clearance as `.page-hero` — 56px flat sat under the
+   floating nav pill's own ~88px clearance on desktop, close enough to risk
+   the "← Înapoi" link tucking under it. */
+.article{max-width:720px;margin:0 auto;padding:32px 24px 64px}
+@media(min-width:1024px){.article{padding-top:96px}}
 .article .a-back{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--copper);margin-bottom:26px}
 .article .a-back:hover{color:var(--ember)}
 .article .a-back svg{transform:rotate(180deg)}

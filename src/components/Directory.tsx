@@ -58,7 +58,7 @@ export default function Directory({
 
   return (
     <div className="dir-grid" id="map-focus">
-      <div className="map-panel">
+      <div className="map-panel" id="map-panel-focus">
         <div className="map-readout">
           <div className="rn">{readoutName}</div>
           <div className="rc">

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
+import { scrollToAdjacentSection } from "@/lib/scroll-sections";
 
 /**
  * "Scroll to explore" cue, pinned to the bottom-right corner.
@@ -87,29 +88,10 @@ export default function ScrollHint({ text }: { text: string }) {
      Scrolling by 86% of the viewport was arbitrary: it landed mid-band as
      often as not, so the control that promises "there is more below" delivered
      you to the middle of a sentence. Every band on every page is a <section>,
-     so the next one down is a thing that can be found and aimed at. The offset
-     clears the floating nav rail, and it matches the `scroll-margin-top` the
-     anchored sections already carry. */
+     so the next one down is a thing that can be found and aimed at — the same
+     logic the ↓ / ↑ keyboard handler uses, in `lib/scroll-sections`. */
   const advance = useCallback(() => {
-    const NAV_CLEARANCE = 92;
-    const bands = Array.from(
-      document.querySelectorAll<HTMLElement>("section, footer"),
-    ).filter((el) => el.offsetParent !== null || el.tagName === "FOOTER");
-
-    // The threshold has to clear the nav, not the top of the viewport. After
-    // one press the section you just landed on is sitting at exactly
-    // NAV_CLEARANCE, so a smaller slack picks it again and the second press
-    // goes nowhere — measured, not guessed.
-    const next = bands.find(
-      (el) => el.getBoundingClientRect().top > NAV_CLEARANCE + 8,
-    );
-
-    window.scrollTo({
-      top: next
-        ? next.getBoundingClientRect().top + window.scrollY - NAV_CLEARANCE
-        : document.documentElement.scrollHeight,
-      behavior: "smooth",
-    });
+    scrollToAdjacentSection("down");
   }, []);
 
   return (

@@ -111,32 +111,25 @@ export function AsfocHero({
             {hero.titleLine1}
           </motion.h1>
 
-          {/* One primary, two quiet. All three destinations stay — the eye just
-              gets an order now.
+          {/* Three lanes, not a row: each destination gets its own line, and
+              the order now reads as a sequence rather than a rank — join,
+              then train, and the specialist search closes the block as the
+              most likely next click once someone already knows the
+              association exists.
 
-              Each action carries its own mark, leading: a folded map for the
-              directory, a membership card for joining, a cap for the courses.
-              Three words with no marks made the row read as body copy that
+              Each action carries its own mark, leading: a membership card for
+              joining, a cap for the courses, a folded map for the directory.
+              Three words with no marks made the stack read as body copy that
               happened to be underlined; the pictograms are what tell you at a
-              glance that these are the three doors out of the fold. The mark
-              sits *before* the label on all three (the CTA's trailing arrow was
-              the only glyph in the row, which put the emphasis on "away" rather
-              than on what you get).
+              glance that these are doors out of the fold. The mark sits
+              *before* the label on all three (the CTA's trailing arrow was
+              the only glyph in the row, which put the emphasis on "away"
+              rather than on what you get).
 
               The map is a *map*, not a dropped pin. A pin marks one place; what
               this button opens is a national directory you browse by district,
               so the folded map is what it actually does. */}
           <motion.div className="hero-actions" variants={rise}>
-            {/* The one saturated object in the frame, now wearing a 2px
-                liquid-metal rim. The fill, the type and every responsive rule
-                still come from `.hero-cta`; the wrapper only adds the edge. */}
-            <LiquidMetalLink
-              className="hero-cta"
-              href={`${base}/servicii#directoriu`}
-            >
-              <Map className="hero-cta-mark" size={17} aria-hidden />
-              {cta.primary}
-            </LiquidMetalLink>
             <Link className="hero-link" href={`${base}/membru`}>
               <UserPlus className="hero-link-mark" size={16} aria-hidden />
               <span className="hero-link-label">{becomeMember}</span>
@@ -145,6 +138,18 @@ export function AsfocHero({
               <GraduationCap className="hero-link-mark" size={16} aria-hidden />
               <span className="hero-link-label">{training}</span>
             </Link>
+            {/* The one saturated object in the frame, now wearing a 2px
+                liquid-metal rim. The fill, the type and every responsive rule
+                still come from `.hero-cta`; the wrapper only adds the edge.
+                Last in the stack: the primary action closes the sequence
+                instead of opening it. */}
+            <LiquidMetalLink
+              className="hero-cta"
+              href={`${base}/servicii#directoriu`}
+            >
+              <Map className="hero-cta-mark" size={17} aria-hidden />
+              {cta.primary}
+            </LiquidMetalLink>
           </motion.div>
         </motion.div>
 
