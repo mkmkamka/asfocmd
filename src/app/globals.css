@@ -397,19 +397,20 @@ ul{list-style:none}
    is the one thing that is a *button*, so it can wear the site's own button
    shape without being mistaken for chrome. */
 .hero-cta{
-  display:inline-flex;align-items:center;
+  display:inline-flex;align-items:center;gap:7px;
   background:var(--ember);color:#fff;
-  /* Text only, no mark — the capsule is already the saturated object in the
-     row, which is its own way of standing out from the two quiet links
-     above it. The type matches `.hero-link` exactly (it used to run a size
-     smaller, which read as the primary action shrinking rather than
-     standing out).
-     Padding is deliberately uneven: a stadium shape can carry only 4px on
+  /* Mark back, same 16px size as the two above it. Text-only left the
+     capsule looking lopsided rather than aligned — the left padding is
+     tight by design (see below), and with nothing but a short word sitting
+     right up against it, the pill read as a chunk of empty red on the
+     right rather than a balanced button. The icon fills exactly that
+     visual weight instead of the padding having to.
+     Padding stays uneven on purpose: a stadium shape can carry only 4px on
      its rounded end before the curve starts eating into the content, so the
-     left side gets exactly that and no more — which is what lands the
-     capsule's own edge on the same column the two links above it start
-     from. The right side keeps the fuller pad a pill needs so "un
-     specialist" doesn't run into the curve on its own end. */
+     left side gets exactly that and no more — which is what lands the mark
+     on the same column the two marks above it start from. The right side
+     keeps the fuller pad a pill needs so "un specialist" doesn't run into
+     the curve on its own end. */
   font-size:14.5px;font-weight:640;letter-spacing:.005em;
   padding:7px 20px 7px 4px;border-radius:9999px;
   white-space:nowrap;
@@ -418,6 +419,8 @@ ul{list-style:none}
 }
 .hero-cta:hover{background:#93251A;box-shadow:0 16px 38px -10px rgba(127,31,22,.9);transform:translateY(-1px)}
 .hero-cta:active{transform:translateY(0)}
+.hero-cta-mark{flex:none;transition:transform .25s ease}
+.hero-cta:hover .hero-cta-mark{transform:translateY(-2px)}
 
 /* ── Liquid-metal rim ─────────────────────────────────────────────────
    A shader canvas showing only at the button's edge. The wrapper is the ring:
@@ -703,6 +706,7 @@ ul{list-style:none}
      the middle of the fold. A number here would pin it back to the name. */
   .hero-actions{gap:10px}
   .hero-cta{font-size:13.5px;padding:7px 18px 7px 4px}
+  .hero-cta-mark{width:14px;height:14px}
   .hero-link{gap:7px;font-size:13.5px}
   .hero-link-mark{width:14px;height:14px}
 }
