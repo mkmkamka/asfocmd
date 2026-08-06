@@ -325,12 +325,16 @@ ul{list-style:none}
    They stay proportional on short screens via the shared `vh` term, so a 720px
    laptop compresses the whole rhythm rather than collapsing one gap. */
 .hero-fold{
-  /* Opened from 2.7/4/5.3vh. The block read as cramped against the credits
-     rule because its own internal gaps were tighter than the space around it,
-     so the three parts looked like one dense object rather than three. */
-  --fold-step-1:clamp(18px,3.4vh,30px);
-  --fold-step-2:clamp(28px,5.2vh,46px);
-  --fold-step-3:clamp(34px,6.4vh,58px);
+  /* Opened twice now — first from 2.7/4/5.3vh, then again to these. The block
+     kept reading as cramped in the lower-left corner because its own internal
+     gaps were tighter than the space around it, so the three parts looked like
+     one dense object rather than three. The last step is the one that matters
+     most: it is the distance between the actions and the credit rule, i.e. how
+     far the whole block stands off the floor of the fold. At 6.4vh the block
+     was sitting *on* the rule; at 9.5vh it stands on it. */
+  --fold-step-1:clamp(20px,3.8vh,34px);
+  --fold-step-2:clamp(34px,6.4vh,58px);
+  --fold-step-3:clamp(48px,9.5vh,88px);
 }
 .hero-stage{
   position:relative;z-index:1;
@@ -396,10 +400,16 @@ ul{list-style:none}
 .hero-cta{
   display:inline-flex;align-items:center;gap:9px;
   background:var(--ember);color:#fff;
-  /* Down from 15px/15-28. It is still the only saturated object in the fold,
-     so it keeps its rank on colour rather than on bulk. */
+  /* Down from 15px/15-28, and then the *box* down again from 11/21 while the
+     type stayed at 13.5. Those are two separate knobs and they were being
+     turned together: shrinking the label as well makes the primary action
+     quieter, which is not what a button that is too bulky needs. The type holds
+     its size, the padding gives up 3px top and bottom and 4px each side, so the
+     capsule loses 6px of height without the words losing any weight. It is
+     still the only saturated object in the fold, so it keeps its rank on colour
+     rather than on bulk. */
   font-size:13.5px;font-weight:640;letter-spacing:.005em;
-  padding:11px 21px;border-radius:9999px;
+  padding:8px 17px;border-radius:9999px;
   white-space:nowrap;
   box-shadow:0 12px 30px -10px rgba(127,31,22,.75);
   transition:background .25s ease,box-shadow .25s ease,transform .2s ease;
@@ -506,17 +516,32 @@ ul{list-style:none}
    to opposite ends of 1180px. Centred is also the one arrangement that is the
    same on a phone as on a desktop, so the rail stops needing a separate idea
    at each width. */
+/* Three columns, not a centred row. A centred row centres *caption + marks*
+   together, so the marks end up half a caption to the right of the page's
+   centre line — which is why the logos never looked centred even though the
+   rail was `justify-content:center`. The middle column holds the marks and is
+   the only one sized to its content, so it lands on the measure's centre line
+   whatever language the caption is in; the caption sits in the left column,
+   pushed up against it. The empty right column is what keeps the middle one
+   centred rather than merely "after the caption". */
 .hero-fold .member-strip{
-  display:flex;flex:1;justify-content:center;align-items:center;
-  gap:6px;padding:0;margin:0;
+  display:grid;flex:1;
+  grid-template-columns:1fr auto 1fr;align-items:center;
+  gap:0;padding:0;margin:0;
   background:none;border:0;border-radius:0;box-shadow:none;
   -webkit-backdrop-filter:none;backdrop-filter:none;
 }
+.hero-fold .ms-marks{
+  grid-column:2;
+  display:flex;align-items:center;gap:6px;
+}
 .hero-fold .ms-label{
-  padding:0;margin:0 10px 0 0;border:0;
-  /* Smaller and dimmer than the logos it introduces — it is a label, and at
-     10.5px/.62 it was competing with the marks instead of naming them. */
-  font-size:9px;letter-spacing:.14em;color:rgba(255,255,255,.5);
+  grid-column:1;justify-self:end;
+  padding:0;margin:0 14px 0 0;border:0;
+  /* Smaller and dimmer again — 10.5/.62, then 9/.5, now 8/.44. It names four
+     marks that are recognisable on their own, so its whole job is to be read
+     second. At 9px it was still setting the height of the rail. */
+  font-size:8px;letter-spacing:.15em;color:rgba(255,255,255,.44);
 }
 /* The hit area's own inset, published as a variable so the row can cancel it
    when it needs its first mark flush with the page edge (see the phone block). */
@@ -603,21 +628,57 @@ ul{list-style:none}
      sits on a magazine, and the footage runs on underneath it with nothing on
      top. `justify-content:flex-start` is the whole move — the stage stops
      pushing its contents to the foot of the frame and lets them start near the
-     top instead. */
+     top instead.
+
+     That fixed the empty top and created an empty bottom: name and actions sat
+     as one dense block in the upper third with ~300px of untouched picture
+     between them and the credit rule. The fold now runs as three anchored
+     zones instead of one stack — name at the top, actions on the middle of the
+     screen, credits on the rule at the foot — and the picture is the even
+     breathing space between them rather than one hole underneath them. */
   .hero-stage{justify-content:flex-start;padding-bottom:0}
+  /* `auto` on both sides, not a measured `margin-top`. The free space left
+     under the name is what varies — three lines of Romanian, four of Russian, a
+     390px screen or a 932px one — so any fixed number lands the actions in a
+     different place in each of those cases. Auto margins split whatever is left
+     in half, which puts the row on the optical middle of the fold in all of
+     them, and collapse to nothing on a screen too short to have any. */
+  .hero-actions{margin-top:auto;margin-bottom:auto}
+  /* The floor auto margins cannot provide: with no free space to split they
+     both go to zero and the actions would touch the last line of the name. */
+  .hero-title{margin-bottom:26px}
   .hero-credits-inner{padding-bottom:84px;padding-top:10px}
-  .hero-fold .member-strip{flex-wrap:wrap;justify-content:center;gap:4px}
-  /* `.ms-label` is an `inline-flex` box in its pill form, and on small screens
-     the pill clamps it to `max-width:112px` and right-aligns it so the caption
-     wraps to two short lines *beside* the logos. On a full-width rail there is
-     room for the whole line above them, so all of that has to be undone — the
-     max-width especially, or the caption keeps overflowing a 112px box.
-     Centred, so the phone rail is the same arrangement as the desktop one. */
-  /* The caption goes on phones. "Membru cu drepturi depline în" is a whole
-     line of type to introduce four marks that are recognisable on their own,
-     and that line was a third of the block's height. The marks keep their
-     tooltips and aria-labels, so nothing is lost to a screen reader. */
-  .hero-fold .ms-label{display:none}
+  /* The caption comes back on phones, stacked above the marks rather than
+     beside them, and much smaller than the line that was dropped. It was
+     removed because at 9px on its own row it took a third of the rail's height
+     to introduce four marks that are recognisable without it; at 7px it is a
+     credit line under a picture, which is what it always was. Above rather
+     than beside because the Russian and English strings run longer than the
+     Romanian, and on one row at 375px they squeeze the marks off centre — the
+     exact problem the desktop grid exists to prevent.
+
+     The desktop's three columns collapse to one: the marks stop being the
+     middle column and the label stops being right-aligned in a left one, so
+     both have to be re-stated here rather than merely re-flowed.
+
+     `.ms-label` is an `inline-flex` box in its pill form, and below 640px the
+     pill clamps it to `max-width:112px` and right-aligns it to wrap in two
+     short lines. None of that applies on a full-width rail, and the max-width
+     especially has to go or the caption keeps overflowing a 112px box. */
+  .hero-fold .member-strip{
+    grid-template-columns:1fr;justify-items:center;gap:7px;
+  }
+  .hero-fold .ms-marks{grid-column:1;gap:4px}
+  .hero-fold .ms-label{
+    grid-column:1;justify-self:center;
+    max-width:none;margin:0;
+    font-size:7px;letter-spacing:.13em;line-height:1;
+    white-space:nowrap;text-align:center;
+  }
+  /* The marks come down with the caption. The rail is a footnote on a phone,
+     and 34px marks over a 7px caption made the caption look like a mistake. */
+  .hero-fold{--ms-mark:27px}
+  .hero-fold .ms-item{--ms-pad-x:7px;padding:5px var(--ms-pad-x)}
 }
 @media(max-width:640px){
   /* Clears the top of the screen and puts the eyebrow just above the first
@@ -655,17 +716,38 @@ ul{list-style:none}
      of clearance inside the page's 24px gutter at 320px, the narrowest screen
      this site targets. Nothing below that is supported; the px floors are only
      there so it degrades by getting cramped rather than by breaking. Any change
-     to these three labels wants re-checking at 320px in all three locales. */
-  .hero-actions{gap:clamp(5px,1.9vw,12px);margin-top:24px}
+     to these three labels wants re-checking at 320px in all three locales.
+
+     Note there is no `margin-top` here: the row's vertical position on a phone
+     is set by the auto margins in the block above, which float it to the middle
+     of the fold. A number here would pin it back to the name. */
+  .hero-actions{gap:clamp(5px,1.9vw,12px)}
   .hero-cta{
     font-size:clamp(9.5px,2.9vw,13.5px);
-    padding:clamp(8px,2.6vw,11px) clamp(10px,3.2vw,17px);
+    /* The box loses a step; the type keeps its clamp. Same split as the desktop
+       rule above — a button that is too bulky for the row wants less padding,
+       not smaller words. */
+    padding:clamp(6px,2vw,8px) clamp(9px,2.7vw,14px);
     gap:clamp(4px,1.6vw,7px);
     box-shadow:0 8px 20px -8px rgba(127,31,22,.75);
   }
   .hero-cta-mark{width:clamp(11px,3.6vw,16px);height:clamp(11px,3.6vw,16px)}
   .hero-link{gap:clamp(3px,1.3vw,5px);font-size:clamp(8.5px,2.6vw,12.5px)}
   .hero-link-mark{width:clamp(10px,3.3vw,14px);height:clamp(10px,3.3vw,14px)}
+}
+
+/* Below ~360px every clamp above is already sitting on its floor, so the row
+   has no give left and "Найти специалиста · Стать членом · Обучение" runs to
+   the edge of the screen with no gutter at all. The two secondary pictograms
+   are what goes: they and their gaps are ~27px of the row, which is exactly
+   the overrun, and they are the least load-bearing thing in it — the CTA keeps
+   its map mark, so the row still reads as actions rather than as a line of
+   underlined body copy. Both labels keep their underline and their hit area,
+   and the marks were `aria-hidden` decoration, so nothing is lost to a screen
+   reader either. */
+@media(max-width:360px){
+  .hero-link-mark{display:none}
+  .hero-link{gap:0}
 }
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--sans);font-weight:600;font-size:14.5px;letter-spacing:.01em;padding:13px 26px;border-radius:9999px;cursor:pointer}
@@ -799,6 +881,59 @@ section{padding:92px 0}
 .finder-band .glass-neutral{--gf:#fff}
 .finder-band .glass-neutral:hover{--gf:#fff;--ge:rgba(140,42,31,.45)}
 .finder-band .glow-ember:hover{--gf:rgba(255,247,246,.95)}
+
+/* ── "Already applied?" strip ─────────────────────────────────────────
+   Third surface in the about band, under the finder and the fact card. It is
+   deliberately the quietest of the three: no white pane of its own, just the
+   page's own grey inside a hairline, because it speaks to the small minority
+   of visitors who have an application in flight and must not compete with the
+   finder for the ones who don't.
+
+   The whole strip is the link — an anchor wrapping copy and a button-shaped
+   affordance, not a paragraph with a button in it — so the hit area on a phone
+   is the band rather than 100px of text at the end of it. `.status-strip-cta`
+   is therefore styled as a button but is not one; nothing inside is
+   focusable, so there is a single tab stop. */
+.status-strip{
+  display:flex;align-items:center;gap:28px;
+  background:var(--sand);border:1px solid var(--line);border-radius:12px;
+  padding:22px 26px;
+  text-decoration:none;
+  transition:border-color .2s ease,box-shadow .2s ease,background .2s ease;
+}
+.status-strip:hover{
+  background:#fff;border-color:rgba(140,42,31,.4);
+  box-shadow:0 6px 20px rgba(20,21,24,.06);
+}
+.status-strip-body{display:flex;flex-direction:column;gap:5px;min-width:0}
+.status-strip-kick{
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--copper);
+}
+.status-strip-body b{font-size:17px;font-weight:700;color:var(--soot)}
+.status-strip-desc{font-size:14.5px;line-height:1.5;color:var(--muted)}
+/* `margin-left:auto` rather than `flex:1` on the body: the copy keeps its
+   natural measure and the affordance is pinned to the right edge, so the two
+   don't drift apart on a wide screen. */
+.status-strip-cta{
+  display:inline-flex;align-items:center;gap:8px;flex:none;margin-left:auto;
+  font-size:14px;font-weight:640;color:var(--copper);
+  padding:11px 20px;border-radius:9999px;
+  border:1px solid rgba(140,42,31,.32);background:#fff;
+  transition:background .2s ease,color .2s ease,border-color .2s ease;
+}
+.status-strip-cta svg{transition:transform .25s ease}
+.status-strip:hover .status-strip-cta{
+  background:var(--ember);border-color:var(--ember);color:#fff;
+}
+.status-strip:hover .status-strip-cta svg{transform:translateX(3px)}
+/* Phones: the row stacks and the affordance goes full width — at 375px the
+   copy and a pinned button on one line leave the button about 90px, which is
+   narrower than its own label in Russian. */
+@media(max-width:720px){
+  .status-strip{flex-direction:column;align-items:flex-start;gap:16px;padding:20px}
+  .status-strip-cta{margin-left:0;width:100%;justify-content:center}
+}
 
 .sec-head{text-align:center;max-width:680px;margin:0 auto 60px}
 .sec-head .kick{position:relative;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);padding-bottom:18px;margin-bottom:22px}
@@ -1297,6 +1432,10 @@ a.member-badge:hover{border-color:var(--ember);box-shadow:0 6px 20px rgba(20,21,
     font-size:9px;letter-spacing:.07em;line-height:1.25;
     white-space:normal;text-align:right}
 }
+/* The marks travel as one group so a rail can centre them independently of the
+   caption — see MemberStrip. In the pill form the wrapper is transparent and
+   just passes the row through. */
+.ms-marks{display:inline-flex;flex-wrap:wrap;align-items:center;gap:2px}
 .ms-item{position:relative;display:flex;align-items:center;justify-content:center;padding:6px 11px;text-decoration:none;border-radius:9999px;transition:background .25s ease-out,transform .25s ease-out}
 .ms-item:hover{background:rgba(255,255,255,.14);transform:translateY(-1px)}
 /* Full colour at rest — the rail used to sit desaturated until hovered, which

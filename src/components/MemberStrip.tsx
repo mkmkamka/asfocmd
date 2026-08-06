@@ -29,41 +29,49 @@ export default function MemberStrip({
   return (
     <div className="member-strip">
       <span className="ms-label">{label}</span>
-      {memberships.items.map((it, i) => (
+      {/* The marks are wrapped rather than left as flat siblings of the caption.
+          As siblings, the caption is just another item in the row, so centring
+          the row centres *caption + marks* — which pushes the marks themselves
+          off to the right of the page's centre line by half the caption's
+          width. Wrapped, the group is one box the rail can centre on its own,
+          and the caption is set beside it (see `.ms-marks` in globals.css). */}
+      <span className="ms-marks">
+        {memberships.items.map((it, i) => (
+          <a
+            className="ms-item"
+            key={i}
+            href={it.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={it.full}
+            aria-label={it.name}
+          >
+            {/* Each mark gets its own hook. The three artworks are a filled
+                square badge, an open portrait plate and a white seal, so they
+                cannot share one height and read as the same size — see the
+                per-logo trims in globals.css. The name is identical in all three
+                locales, so it is safe to key off. */}
+            <span className={`ms-logo ms-logo--${it.name.toLowerCase()}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={it.logo} alt={it.name} />
+            </span>
+          </a>
+        ))}
+        {/* ASFOCH România — its official logo is white artwork, hence the dark chip. */}
         <a
           className="ms-item"
-          key={i}
-          href={it.href}
+          href={memberships.asfoch.href}
           target="_blank"
           rel="noopener noreferrer"
-          title={it.full}
-          aria-label={it.name}
+          title={memberships.asfoch.desc}
+          aria-label={memberships.asfoch.name}
         >
-          {/* Each mark gets its own hook. The three artworks are a filled
-              square badge, an open portrait plate and a white seal, so they
-              cannot share one height and read as the same size — see the
-              per-logo trims in globals.css. The name is identical in all three
-              locales, so it is safe to key off. */}
-          <span className={`ms-logo ms-logo--${it.name.toLowerCase()}`}>
+          <span className="ms-logo ms-logo--dark">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={it.logo} alt={it.name} />
+            <img src="/brand/asfoch-ro-logo.png" alt={memberships.asfoch.name} />
           </span>
         </a>
-      ))}
-      {/* ASFOCH România — its official logo is white artwork, hence the dark chip. */}
-      <a
-        className="ms-item"
-        href={memberships.asfoch.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        title={memberships.asfoch.desc}
-        aria-label={memberships.asfoch.name}
-      >
-        <span className="ms-logo ms-logo--dark">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/asfoch-ro-logo.png" alt={memberships.asfoch.name} />
-        </span>
-      </a>
+      </span>
     </div>
   );
 }
