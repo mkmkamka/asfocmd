@@ -115,8 +115,19 @@ export function LiquidMetalLink({
           u_rotation: 0,
           u_originX: 0.5,
           u_originY: 0.5,
-          u_offsetX: 0.1,
-          u_offsetY: -0.1,
+          /* Centred, not `0.1 / -0.1`. `cover` scales the pattern up until it
+             fills the canvas and crops the overflow — for a wide/short pill
+             that overflow is nearly all horizontal, so a fixed rightward
+             offsetX crops asymmetrically: more comes off the left than the
+             right. That was survivable on the wider icon+label button this
+             was tuned against; on the slimmer text-only capsule the same
+             0.1 is a bigger fraction of the (now smaller) crop margin, and
+             the left cap's arc gets cropped into the shape's flat interior —
+             which reads as the rim just not moving over there. Zero keeps
+             the crop even on both ends regardless of how narrow the capsule
+             gets. */
+          u_offsetX: 0,
+          u_offsetY: 0,
           u_worldWidth: 100,
           u_worldHeight: 100,
         },

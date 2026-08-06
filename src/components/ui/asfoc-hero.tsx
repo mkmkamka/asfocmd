@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
-import { GraduationCap, Map, UserPlus } from "lucide-react";
+import { GraduationCap, UserPlus } from "lucide-react";
 import { HeroVideo } from "@/components/ui/hero-video";
 import { LiquidMetalLink } from "@/components/ui/liquid-metal-button";
 import type { Dictionary } from "@/i18n/get-dictionary";
@@ -117,13 +117,15 @@ export function AsfocHero({
               most likely next click once someone already knows the
               association exists.
 
-              Each action carries its own mark, same size across all three —
-              a membership card for joining, a cap for the courses, a folded
-              map for the directory — sitting on the same left column. The
-              capsule's own padding is uneven on purpose (tight on the left,
-              roomier on the right around the longer label) so the mark lands
-              at the same x as the two above it instead of sitting wherever a
-              symmetric pill happens to put it. */}
+              The two quiet actions carry their own mark, same size, sitting
+              on the same left column — a membership card for joining, a cap
+              for the courses. The CTA is text only: it is already the
+              saturated capsule in the row, so it doesn't need a third mark
+              to say "this one is different" a second way. Its own padding
+              is uneven on purpose (tight on the left, roomier on the right
+              around the longer label) so the capsule's edge lands on the
+              same column the two marks above it start from, instead of
+              sitting wherever a symmetric pill happens to put it. */}
           <motion.div className="hero-actions" variants={rise}>
             <Link className="hero-link" href={`${base}/membru`}>
               <UserPlus className="hero-link-mark" size={16} aria-hidden />
@@ -142,7 +144,6 @@ export function AsfocHero({
               className="hero-cta"
               href={`${base}/servicii#directoriu`}
             >
-              <Map className="hero-cta-mark" size={16} aria-hidden />
               {cta.primary}
             </LiquidMetalLink>
           </motion.div>

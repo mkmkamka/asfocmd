@@ -397,18 +397,19 @@ ul{list-style:none}
    is the one thing that is a *button*, so it can wear the site's own button
    shape without being mistaken for chrome. */
 .hero-cta{
-  display:inline-flex;align-items:center;gap:7px;
+  display:inline-flex;align-items:center;
   background:var(--ember);color:#fff;
-  /* The type matches `.hero-link` exactly now — the button used to run a
-     size smaller than the two quiet actions above it, which read as the
-     primary action shrinking rather than standing out. The capsule is what
-     carries the emphasis; the words don't need to.
-     Padding is deliberately uneven: a stadium shape can carry only 6-7px on
+  /* Text only, no mark — the capsule is already the saturated object in the
+     row, which is its own way of standing out from the two quiet links
+     above it. The type matches `.hero-link` exactly (it used to run a size
+     smaller, which read as the primary action shrinking rather than
+     standing out).
+     Padding is deliberately uneven: a stadium shape can carry only 4px on
      its rounded end before the curve starts eating into the content, so the
-     left side gets exactly that and no more — which is what actually lands
-     the mark on the same column the two marks above it start from. The
-     right side keeps the fuller pad a pill needs so "un specialist" doesn't
-     run into the curve on its own end. */
+     left side gets exactly that and no more — which is what lands the
+     capsule's own edge on the same column the two links above it start
+     from. The right side keeps the fuller pad a pill needs so "un
+     specialist" doesn't run into the curve on its own end. */
   font-size:14.5px;font-weight:640;letter-spacing:.005em;
   padding:7px 20px 7px 4px;border-radius:9999px;
   white-space:nowrap;
@@ -417,8 +418,6 @@ ul{list-style:none}
 }
 .hero-cta:hover{background:#93251A;box-shadow:0 16px 38px -10px rgba(127,31,22,.9);transform:translateY(-1px)}
 .hero-cta:active{transform:translateY(0)}
-.hero-cta-mark{flex:none;transition:transform .25s ease}
-.hero-cta:hover .hero-cta-mark{transform:translateY(-2px)}
 
 /* ── Liquid-metal rim ─────────────────────────────────────────────────
    A shader canvas showing only at the button's edge. The wrapper is the ring:
@@ -704,7 +703,6 @@ ul{list-style:none}
      the middle of the fold. A number here would pin it back to the name. */
   .hero-actions{gap:10px}
   .hero-cta{font-size:13.5px;padding:7px 18px 7px 4px}
-  .hero-cta-mark{width:14px;height:14px}
   .hero-link{gap:7px;font-size:13.5px}
   .hero-link-mark{width:14px;height:14px}
 }
@@ -1116,15 +1114,22 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
    running at their old, roomier size, which is what kept reading as "low"
    next to contact even once the raw offsets matched — contact's whole head
    is a smaller, denser block, not just one sitting higher up. */
-.page-hero .wrap{padding-top:22px;padding-bottom:16px;max-width:880px;text-align:center}
+/* Same top padding as `.contact-screen`, value for value — not just a close
+   approximation — so the rule-and-dot kicker lands at the exact same height
+   on every page that carries it. Two flat numbers instead of one clamp: the
+   kicker is the first thing in `.wrap` on both, so matching the container's
+   own top padding is what matches the sign's height, and unlike contact's
+   fold this page still scrolls, so it doesn't need `vh` to compress a
+   fold's worth of content into one screen. */
+.page-hero .wrap{padding-top:16px;padding-bottom:16px;max-width:880px;text-align:center}
 /* The kicker is a sign now — rule and ember, no words — and losing that line of
    type pulled it up under the floating nav pill, which is fixed at 44px and
-   44px tall. Desktop starts the page hero just below it — the same clearance
-   the contact fold clamps to (`clamp(100px,12vh,118px)`) — instead of the
+   44px tall. Desktop starts the page hero just below it, at the exact value
+   `.contact-screen` clamps to (`clamp(100px,12vh,118px)`) — instead of the
    112px the section used to carry, which was clearance plus a full section's
-   worth of dead air on top. Below lg the nav sits in flow, so the original
-   padding still holds. */
-@media(min-width:1024px){.page-hero .wrap{padding-top:96px}}
+   worth of dead air on top. Below lg the nav sits in flow, so the tighter
+   16px base holds, same as contact's own mobile padding. */
+@media(min-width:1024px){.page-hero .wrap{padding-top:clamp(100px,12vh,118px)}}
 .page-hero .kick{position:relative;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);padding-bottom:11px;margin-bottom:10px}
 .page-hero .kick::after{content:"";position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:76px;height:1px;
   background:linear-gradient(90deg,transparent,rgba(140,42,31,.8) 28%,rgba(140,42,31,.8) 72%,transparent)}
