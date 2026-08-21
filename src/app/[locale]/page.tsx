@@ -69,13 +69,12 @@ export default async function Home({
     <>
       <TubelightNav locale={locale} dict={dict} />
 
-      {/* HERO — ambient video band + search + the two confederation cards */}
+      {/* HERO — graded video band, the seal-and-name lockup, and the credit
+          rail. The three actions that used to sit along its foot are now the
+          pictogram rail in the top-right corner of the chrome (see
+          ActionRail), which is why nothing is passed in for them here. */}
       <AsfocHero
-        base={base}
         hero={t.hero}
-        cta={t.cta}
-        becomeMember={dict.nav.becomeMember}
-        training={dict.nav.training}
         clips={clips}
         membersSlot={
           <MemberStrip label={t.stats.bothLabel} memberships={t.memberships} />

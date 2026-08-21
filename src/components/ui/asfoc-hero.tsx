@@ -1,11 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
-import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
-import { GraduationCap, Map, UserPlus } from "lucide-react";
+import Logo from "@/components/Logo";
 import { HeroVideo } from "@/components/ui/hero-video";
-import { LiquidMetalLink } from "@/components/ui/liquid-metal-button";
 import type { Dictionary } from "@/i18n/get-dictionary";
 
 type HomeDict = Dictionary["home"];
@@ -20,30 +18,36 @@ type HomeDict = Dictionary["home"];
    so the eye had nowhere to go, and the dark type needed a white halo behind
    every glyph to survive the picture.
 
-   This is the other way round. The footage is graded (see HeroVideo), the type
-   is light, and the whole block is set low and left against the site's own
-   1180px measure — the same left edge as the fact card, the services grid and
-   the news row below, which the old `max-w-5xl` hero never lined up with. The
-   top two thirds of the frame are left to the picture.
+   Then it was the other way round: type low and left against the site's 1180px
+   measure, one saturated CTA and two quiet links along the foot. That fixed the
+   ranking and the alignment and left one thing unsaid — the association's own
+   mark was a 30px chip in the corner, smaller than any single word of its name.
 
-   Nothing in here is glass any more. The frosted capsule is the site's nav
-   material, and wearing it three times across the fold is what made the actions
-   read as chrome; the one saturated object left is the primary CTA. */
+   This is the third arrangement, and the seal is the subject of it. Mark and
+   name are one lockup in the middle of the frame, at a size that reads as an
+   institution's crest rather than as a favicon: the seal roughly as tall as the
+   three lines of name beside it, sharing a baseline block with them.
+
+   Two things left the fold to make room, and neither of them left the site:
+
+   - The three actions are now the pictogram rail in the top-right corner (see
+     ActionRail), which rides on every page. They were a labelled row here *and*
+     two tabs in the nav rail directly above, so the fold was stating the same
+     destinations twice within one screen.
+   - The "Caută pe hartă" button with the liquid-metal rim is gone as a button.
+     The rim survives as the material the map pictogram wears on hover — the
+     effect now belongs to the mark it always described.
+
+   The credit rail along the foot is untouched. Nothing in the fold is glass any
+   more: that is the site's nav material, and wearing it inside the frame is
+   what made the old actions read as chrome. */
 
 export function AsfocHero({
-  base,
   hero,
-  cta,
-  becomeMember,
-  training,
   clips,
   membersSlot,
 }: {
-  base: string;
   hero: HomeDict["hero"];
-  cta: HomeDict["cta"];
-  becomeMember: string;
-  training: string;
   /** The hero story, in order — see HeroVideo. */
   clips: string[];
   /** Affiliations, set into the credit rail along the foot of the fold.
@@ -52,12 +56,12 @@ export function AsfocHero({
 }) {
   const reduce = useReducedMotion();
 
-  /* One orchestrated entrance rather than four independent delays: the rule
-     draws, the name rises, the actions follow, the credits settle last. Reduced
-     motion collapses the whole sequence to a plain fade. */
+  /* One orchestrated entrance rather than three independent delays: the seal
+     settles, the name rises behind it, the credits last. Reduced motion
+     collapses the whole sequence to a plain fade. */
   const stage = {
     hidden: {},
-    show: { transition: { staggerChildren: reduce ? 0 : 0.09, delayChildren: 0.15 } },
+    show: { transition: { staggerChildren: reduce ? 0 : 0.11, delayChildren: 0.15 } },
   };
   const rise = {
     hidden: { opacity: 0, y: reduce ? 0 : 22 },
@@ -67,12 +71,23 @@ export function AsfocHero({
       transition: { duration: reduce ? 0.3 : 0.72, ease: [0.16, 1, 0.3, 1] as const },
     },
   };
+  /* The seal arrives by settling rather than rising — a stamp, pressed onto the
+     frame. It is the one element in the fold that is an object rather than
+     type, so it is the one that gets its own gesture. */
+  const press = {
+    hidden: { opacity: 0, scale: reduce ? 1 : 0.92 },
+    show: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: reduce ? 0.3 : 0.85, ease: [0.16, 1, 0.3, 1] as const },
+    },
+  };
 
   return (
     <main>
-      {/* Below `lg` the nav is a *sticky* 64px row in normal flow (identity
-          capsule + language switcher — see TubelightNav), which would otherwise
-          push a full-height fold 64px past the bottom of the screen and clip the
+      {/* Below `lg` the nav is a *sticky* 64px row in normal flow (language
+          switcher + action rail — see TubelightNav), which would otherwise push
+          a full-height fold 64px past the bottom of the screen and clip the
           credit rail. The row has no surface of its own, just two floating
           capsules, so the fold is pulled back up under it and the footage runs
           behind them exactly as it runs behind the desktop pill. */}
@@ -82,70 +97,48 @@ export function AsfocHero({
           className="inset-y-0 left-1/2 w-screen -translate-x-1/2"
         />
 
-        {/* The stage pushes its contents to the foot of the frame. `pt-28`
-            only guarantees the block never collides with the nav on a short
-            laptop; on any normal screen the picture takes that space. */}
+        {/* The stage centres its contents in the frame. The paddings are not
+            symmetric: the credit rail below carries real visual weight and the
+            floating chrome above carries almost none, so an optically centred
+            lockup sits a touch high of the geometric middle. */}
         <motion.div
           className="hero-stage wrap"
           variants={stage}
           initial="hidden"
           animate="show"
         >
-          {/* Eyebrow and short name on one line. They used to be two elements a
-              headline apart — a copper kicker above the title and an ember
-              `ASFOCMD` mark below it — which stated the same identity twice in
-              the same 200px of fold. One label, one rule, one accent. */}
-          <motion.div className="hero-eyebrow" variants={rise}>
-            <span className="hero-eyebrow-rule" aria-hidden />
-            {hero.eyebrow}
-            <span className="hero-eyebrow-sep" aria-hidden />
-            ASFOCMD
-          </motion.div>
+          <div className="hero-lockup">
+            {/* White knockout, no plate. The black line-art seal is what the
+                nav chip wears on a bright page; at this size over graded
+                footage it would need a white disc behind it, and a 160px white
+                disc in the middle of the frame is a hole, not a crest. */}
+            <motion.span className="hero-seal" variants={press}>
+              <Logo size={512} tone="footer" />
+            </motion.span>
 
-          {/* The association's full name, still the headline — but set in a
-              measure instead of across the viewport. Holding it on one line
-              forced it down to min(2.55vw,42px), which is 32px on a 1280 screen:
-              the longest string on the page was also among the smallest type on
-              it. In three lines it can take its real size. */}
-          <motion.h1 className="hero-title" variants={rise}>
-            {hero.titleLine1}
-          </motion.h1>
+            <motion.div className="hero-lockup-text" variants={rise}>
+              {/* Eyebrow and short name on one line. They used to be two
+                  elements a headline apart — a copper kicker above the title
+                  and an ember `ASFOCMD` mark below it — which stated the same
+                  identity twice in the same 200px of fold. One label, one rule,
+                  one accent. */}
+              <div className="hero-eyebrow">
+                <span className="hero-eyebrow-rule" aria-hidden />
+                {hero.eyebrow}
+                <span className="hero-eyebrow-sep" aria-hidden />
+                ASFOCMD
+              </div>
 
-          {/* One primary, two quiet. All three destinations stay — the eye just
-              gets an order now.
-
-              Each action carries its own mark, leading: a folded map for the
-              directory, a membership card for joining, a cap for the courses.
-              Three words with no marks made the row read as body copy that
-              happened to be underlined; the pictograms are what tell you at a
-              glance that these are the three doors out of the fold. The mark
-              sits *before* the label on all three (the CTA's trailing arrow was
-              the only glyph in the row, which put the emphasis on "away" rather
-              than on what you get).
-
-              The map is a *map*, not a dropped pin. A pin marks one place; what
-              this button opens is a national directory you browse by district,
-              so the folded map is what it actually does. */}
-          <motion.div className="hero-actions" variants={rise}>
-            {/* The one saturated object in the frame, now wearing a 2px
-                liquid-metal rim. The fill, the type and every responsive rule
-                still come from `.hero-cta`; the wrapper only adds the edge. */}
-            <LiquidMetalLink
-              className="hero-cta"
-              href={`${base}/servicii#directoriu`}
-            >
-              <Map className="hero-cta-mark" size={17} aria-hidden />
-              {cta.primary}
-            </LiquidMetalLink>
-            <Link className="hero-link" href={`${base}/membru`}>
-              <UserPlus className="hero-link-mark" size={16} aria-hidden />
-              <span className="hero-link-label">{becomeMember}</span>
-            </Link>
-            <Link className="hero-link" href={`${base}/instruire`}>
-              <GraduationCap className="hero-link-mark" size={16} aria-hidden />
-              <span className="hero-link-label">{training}</span>
-            </Link>
-          </motion.div>
+              {/* The association's full name, still the headline — but set in a
+                  measure instead of across the viewport. Holding it on one line
+                  forced it down to min(2.55vw,42px), which is 32px on a 1280
+                  screen: the longest string on the page was also among the
+                  smallest type on it. In three lines it can take its real size,
+                  and three lines is also what stands the text column at the
+                  same height as the seal beside it. */}
+              <h1 className="hero-title">{hero.titleLine1}</h1>
+            </motion.div>
+          </div>
         </motion.div>
 
         {/* Credit rail. The logos used to float in a rounded glass pill in the

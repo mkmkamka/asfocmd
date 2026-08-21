@@ -8,14 +8,13 @@ import {
   House,
   Info,
   Wrench,
-  GraduationCap,
   Newspaper,
   Mail,
-  UserPlus,
 } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
+import ActionRail from "./ActionRail";
 import { scrollPageToTop } from "@/lib/nav";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/get-dictionary";
@@ -73,37 +72,32 @@ export default function TubelightNav({
   const base = `/${locale}`;
   const nav = dict.nav;
 
-  // Desktop rail: words only, no exceptions. Instruire used to carry a faint
-  // pictogram as the one promoted destination, which made it the only tab in
-  // the rail that was a different *shape* from its neighbours — the promotion
-  // read as a rendering inconsistency rather than as emphasis. Seven plain
-  // labels, one lamp.
-  //
-  // Membership is the last tab: it is the conversion action, and it opens the
-  // same /membru page the hero's "Înregistrează-te" link does.
-  const desktopItems = [
-    { name: nav.home, url: base },
-    { name: nav.about, url: `${base}/despre` },
-    { name: nav.services, url: `${base}/servicii` },
-    { name: nav.training, url: `${base}/instruire` },
-    { name: nav.news, url: `${base}/stiri` },
-    { name: nav.contact, url: `${base}/contact` },
-    { name: nav.memberArea, url: `${base}/membri` },
-    { name: nav.becomeMember, url: `${base}/membru` },
-  ];
+  /* Desktop rail: words only, no exceptions. Instruire used to carry a faint
+     pictogram as the one promoted destination, which made it the only tab in
+     the rail that was a different *shape* from its neighbours — the promotion
+     read as a rendering inconsistency rather than as emphasis. Plain labels,
+     one lamp.
 
-  // Bottom bar: no room for words, so every tab needs its own mark. Seven 44px
-  // tabs plus the pill's padding is 316px, which still clears a 320px screen.
-  const mobileItems = [
+     Six tabs, not eight. Instruire and Înregistrează-te have left: they are the
+     second and third marks in the action rail in the top-right corner, which
+     rides on every page, and a rail that states its own destinations twice is
+     a rail that has stopped ranking them. Servicii stays — the rail's map mark
+     opens the district directory at `#directoriu`, which is a place inside the
+     services page rather than the page itself. */
+  const items = [
     { name: nav.home, url: base, icon: House },
     { name: nav.about, url: `${base}/despre`, icon: Info },
     { name: nav.services, url: `${base}/servicii`, icon: Wrench },
-    { name: nav.training, url: `${base}/instruire`, icon: GraduationCap },
     { name: nav.news, url: `${base}/stiri`, icon: Newspaper },
     { name: nav.contact, url: `${base}/contact`, icon: Mail },
     { name: nav.memberArea, url: `${base}/membri`, icon: ShieldCheck },
-    { name: nav.becomeMember, url: `${base}/membru`, icon: UserPlus },
   ];
+
+  /* The desktop rail draws labels and ignores the marks; the phone's bottom
+     dock draws the marks and has no room for labels. One list, because two
+     hand-kept lists of the same six destinations is one edit away from
+     disagreeing with each other. */
+  const desktopItems = items.map(({ name, url }) => ({ name, url }));
 
   const overHero = useOverHero();
   const pathname = usePathname();
@@ -142,31 +136,59 @@ export default function TubelightNav({
     </span>
   );
 
+  /* On the home page the identity is the 160px seal in the middle of the fold,
+     so the chip in the corner would be the same mark twice within one screen —
+     the small one right above the big one. Everywhere else there is no seal on
+     the page until the footer, so the chip stays and keeps its click-to-home
+     job. This is the one place the chrome differs by route, and it differs
+     because the page underneath it does. */
+  const isHome = pathname === base;
+
   return (
     <>
-      {/* Desktop — three floating islands over the page: the seal on the left,
-          the transparent tubelight pill in the middle, language on the right.
-          The outer wrapper ignores pointer events so the page stays clickable
-          between islands.
+      {/* Desktop — three floating islands over the page: language on the left,
+          the transparent tubelight pill in the middle, the action rail on the
+          right. The outer wrapper ignores pointer events so the page stays
+          clickable between islands.
+
+          Language and actions have swapped corners. The rail's three marks are
+          the site's three conversions, and they now sit where the eye finishes
+          a left-to-right pass; the language control — picked once per visit and
+          then never again — takes the corner they vacated. On the home page the
+          left island is the language capsule alone; on every other page the
+          seal leads it.
 
           The islands used to hang off the *viewport* edges (`px-5`), 134px
           outside the 1180px measure everything else on the site sits on. Two
           grids running at once is what made the page feel unaligned however
-          carefully each individual band was set: the seal, the headline and the
-          credit rail all started at different x. The inner `.wrap` puts the
-          chrome on the site's own measure, so the seal now shares a left edge
-          with the hero title, the fact card and the services grid, and the
-          language capsule shares a right edge with the credit logos. */}
+          carefully each individual band was set. The inner `.wrap` puts the
+          chrome on the site's own measure, so the action rail shares a right
+          edge with the credit logos below it. */}
       <div className="pointer-events-none fixed inset-x-0 top-11 z-50 hidden lg:block">
         <div className="wrap flex items-center justify-between gap-3">
-          <Link
-            href={base}
-            aria-label="ASFOCMD"
-            onClick={homeClick}
-            className={`${capsule(overHero.top)} w-11 justify-center`}
-          >
-            {seal(30, overHero.top)}
-          </Link>
+          <div className="flex items-center gap-2.5">
+            {!isHome && (
+              <Link
+                href={base}
+                aria-label="ASFOCMD"
+                onClick={homeClick}
+                className={`${capsule(overHero.top)} w-11 justify-center`}
+              >
+                {seal(30, overHero.top)}
+              </Link>
+            )}
+            {/* 40px, not 44. One two-letter code and a caret is the smallest
+                thing in the rail and should look it — see LanguageSwitcher. It
+                is the one island that is a utility rather than identity or
+                navigation, so it is the one that gives up height. */}
+            <div className={`${capsule(overHero.top, "h-10")} px-1`}>
+              <LanguageSwitcher
+                current={locale}
+                variant="light"
+                onDark={overHero.top}
+              />
+            </div>
+          </div>
 
           {/* In flow on lg (no room to center absolutely), truly centered on
               xl+. The absolute positioning resolves against the *fixed* parent,
@@ -180,43 +202,42 @@ export default function TubelightNav({
             />
           </div>
 
-          {/* 40px, not 44. Three two-letter codes in 36px chips left so much
-              dead ground inside the capsule that the control read as the
-              largest thing in the rail while being the least important — see
-              LanguageSwitcher. It is the one island that is a utility rather
-              than identity or navigation, so it is the one that gives up
-              height. */}
-          <div className={`${capsule(overHero.top, "h-10")} px-1`}>
-            <LanguageSwitcher
-              current={locale}
-              variant="light"
-              onDark={overHero.top}
-            />
+          {/* Full 44px: these are actions, and they answer the nav pill across
+              the measure rather than a utility. */}
+          <div className={`${capsule(overHero.top)} px-1`}>
+            <ActionRail locale={locale} dict={dict} onDark={overHero.top} />
           </div>
         </div>
       </div>
 
-      {/* Mobile / tablet — identity and language stay at the top (they are
-          reference, not navigation), and the tabs move to the bottom of the
-          viewport, inside thumb reach. Same measure as the desktop rail: on a
-          phone `.wrap` is a plain 24px gutter, which is the gutter the hero
-          type below it uses. */}
+      {/* Mobile / tablet — language and the action rail stay at the top (they
+          are reference and conversion, not navigation), and the tabs move to
+          the bottom of the viewport, inside thumb reach. Same measure as the
+          desktop rail: on a phone `.wrap` is a plain 24px gutter, which is the
+          gutter the hero lockup below it uses. */}
       <div className="sticky top-0 z-50 py-2.5 lg:hidden">
         <div className="wrap flex items-center justify-between gap-2">
-          <Link
-            href={base}
-            aria-label="ASFOCMD"
-            onClick={homeClick}
-            className={`${capsule(overHero.top)} w-11 justify-center`}
-          >
-            {seal(28, overHero.top)}
-          </Link>
-          <div className={`${capsule(overHero.top, "h-10")} px-1`}>
-            <LanguageSwitcher
-              current={locale}
-              variant="light"
-              onDark={overHero.top}
-            />
+          <div className="flex items-center gap-2">
+            {!isHome && (
+              <Link
+                href={base}
+                aria-label="ASFOCMD"
+                onClick={homeClick}
+                className={`${capsule(overHero.top)} w-11 justify-center`}
+              >
+                {seal(28, overHero.top)}
+              </Link>
+            )}
+            <div className={`${capsule(overHero.top, "h-10")} px-1`}>
+              <LanguageSwitcher
+                current={locale}
+                variant="light"
+                onDark={overHero.top}
+              />
+            </div>
+          </div>
+          <div className={`${capsule(overHero.top)} px-1`}>
+            <ActionRail locale={locale} dict={dict} onDark={overHero.top} />
           </div>
         </div>
       </div>
@@ -227,7 +248,7 @@ export default function TubelightNav({
           the foot of the picture rises past it, long before the top rail does. */}
       <div className="navbar-dock lg:hidden">
         <NavBar
-          items={mobileItems}
+          items={items}
           iconOnly
           lampId="lamp-mobile"
           onDark={overHero.bottom}

@@ -305,51 +305,65 @@ ul{list-style:none}
    92px strip of dead footage opens above the type and below the credit rule. */
 .hero-fold{color:#fff;padding:0}
 
-/* The stage fills the fold and pushes its contents to the foot of the frame.
-   The top padding is only a collision guard against the nav on a short laptop;
-   on any normal screen the picture takes that space.
+/* The stage centres its contents in the frame.
 
    ── The fold's vertical rhythm ──
-   Everything below is on one 4px-based scale, set once here rather than as four
-   independent clamps. It used to be 22 / 32.4 / 40.5 / 16 — four numbers from
-   four different edits, none of them related, which is why the block read as
-   "a bit off" even though every element on it was individually fine. The steps
-   now grow monotonically as the eye travels down, so each gap says how big a
-   break it is: the eyebrow is attached to the name, the actions are a beat
-   away, the credit rule is a section away.
+   Two gaps left, on one 4px-based scale set here rather than as independent
+   clamps. It used to be three: the third measured the distance from the actions
+   row down to the credit rule, and the actions row is now the pictogram rail in
+   the corner (see `.act-rail`).
 
-     --fold-step-1  eyebrow → name        24px
-     --fold-step-2  name → actions        36px
-     --fold-step-3  actions → credit rule 48px
+     --fold-step-1  eyebrow → name          24px
+     --fold-step-2  lockup → credit rule    48px
 
    They stay proportional on short screens via the shared `vh` term, so a 720px
-   laptop compresses the whole rhythm rather than collapsing one gap. */
+   laptop compresses the rhythm rather than collapsing one gap. */
 .hero-fold{
-  /* Opened twice now — first from 2.7/4/5.3vh, then again to these. The block
-     kept reading as cramped in the lower-left corner because its own internal
-     gaps were tighter than the space around it, so the three parts looked like
-     one dense object rather than three. The last step is the one that matters
-     most: it is the distance between the actions and the credit rule, i.e. how
-     far the whole block stands off the floor of the fold. At 6.4vh the block
-     was sitting *on* the rule; at 9.5vh it stands on it. */
-  --fold-step-1:clamp(20px,3.8vh,34px);
-  --fold-step-2:clamp(34px,6.4vh,58px);
-  --fold-step-3:clamp(48px,9.5vh,88px);
+  --fold-step-1:clamp(14px,2.6vh,24px);
+  --fold-step-2:clamp(48px,9.5vh,88px);
 }
 .hero-stage{
   position:relative;z-index:1;
-  display:flex;flex-direction:column;align-items:flex-start;
-  flex:1;justify-content:flex-end;
-  /* The group used to end flush against the credits rule. Standing it off the
-     bottom is what stops the lower-left corner reading as crowded — the fold
-     has height to spare and the block was spending none of it. */
-  padding-bottom:clamp(24px,6vh,64px);
+  display:flex;flex-direction:column;align-items:center;
+  flex:1;justify-content:center;
   /* `.wrap` carries `margin:0 auto`, and an auto cross-axis margin on a flex
      item cancels `stretch` — without this the stage collapses to the width of
-     its own text and the whole block drifts inward, off the site's left edge. */
+     its own text and the whole block drifts inward, off the site's measure. */
   width:100%;
-  padding-top:112px;padding-bottom:var(--fold-step-3);
+  /* Not symmetric, and not meant to be. The credit rail below the stage carries
+     real visual weight and the floating chrome above it carries almost none, so
+     a lockup on the geometric centre reads low; the heavier top padding is what
+     puts it on the *optical* centre instead. */
+  padding-top:118px;padding-bottom:var(--fold-step-2);
 }
+
+/* ── The lockup ───────────────────────────────────────────────────────
+   Mark and name as one object in the middle of the frame. The seal used to be
+   a 30px chip in the top-left corner — smaller than any single word of the name
+   it belongs to — and the fold's subject was the footage. The seal is the
+   subject now.
+
+   Seal left, text right, the group centred: the name runs to three lines and
+   centring *it* as well would leave the lockup with two competing axes and a
+   ragged left edge against the seal. The text column keeps a hard left edge,
+   which is the edge the seal is standing on. */
+.hero-lockup{
+  display:flex;align-items:center;justify-content:center;
+  gap:clamp(20px,3vw,44px);
+}
+.hero-seal{
+  display:block;flex:none;
+  /* Roughly the height of the three-line name beside it. Below this the crest
+     stops reading as engraved — the seal's outer ring of type is real type, and
+     it needs the size to survive the picture behind it. */
+  width:clamp(96px,12.5vw,172px);
+  /* The artwork is a white knockout on transparent (see Logo `tone="footer"`),
+     so it has no ground of its own and needs the same shadow the type carries
+     to hold its edge over a bright frame of footage. */
+  filter:drop-shadow(0 2px 26px rgba(10,11,13,.55));
+}
+.hero-seal img{width:100%;height:auto}
+.hero-lockup-text{display:flex;flex-direction:column;align-items:flex-start}
 
 /* Eyebrow: a short accent rule, the descriptor, and the short name — one line
    carrying what used to be two elements a headline apart. The accent is
@@ -374,10 +388,17 @@ ul{list-style:none}
    to shrink to hold one line. `text-wrap:balance` keeps the three lines even
    instead of leaving a single orphaned word on the last one. */
 .hero-title{
-  /* 22ch is the measure that lands the 77-character name on three lines at the
-     desktop size — 19ch broke it to four and left "a Hornarilor," stranded as a
-     short second line. */
-  max-width:22ch;
+  /* 21ch. The name no longer has the whole measure to itself — the seal takes
+     the left third of the lockup — but it cannot give up much of its own or it
+     buys a fourth line: measured across the column, 19ch and below set the
+     77-character Romanian name in four, 20ch is the first that holds three, and
+     21ch keeps a character of slack over that edge. Three is the count the
+     seal's height is matched to.
+
+     `ch` and not px on purpose: the unit scales with the font, so the line
+     count is the same at 1024px as at 1600px rather than something that has to
+     be re-checked at every step of the clamp. */
+  max-width:21ch;
   margin-top:var(--fold-step-1);
   font-size:clamp(2rem,4.4vw,3.65rem);
   line-height:1.06;letter-spacing:-.032em;font-weight:680;
@@ -385,107 +406,33 @@ ul{list-style:none}
   text-shadow:0 1px 30px rgba(10,11,13,.5);
 }
 
-/* One primary, two quiet. `nowrap` keeps all three on a single row at every
-   width — the phone rules below shrink the CTA rather than breaking the line
-   (see the note there). */
-.hero-actions{
-  display:flex;flex-wrap:nowrap;align-items:center;gap:14px 26px;
-  margin-top:var(--fold-step-2);
-}
-/* The only saturated object in the frame — and a full capsule again. It spent a
-   while at 4px on the argument that the fold's other rounds made a pill read as
-   another tab; but those pills are all chrome (nav, language, credits) and this
-   is the one thing that is a *button*, so it can wear the site's own button
-   shape without being mistaken for chrome. */
-.hero-cta{
-  display:inline-flex;align-items:center;gap:9px;
-  background:var(--ember);color:#fff;
-  /* Down from 15px/15-28, and then the *box* down again from 11/21 while the
-     type stayed at 13.5. Those are two separate knobs and they were being
-     turned together: shrinking the label as well makes the primary action
-     quieter, which is not what a button that is too bulky needs. The type holds
-     its size, the padding gives up 3px top and bottom and 4px each side, so the
-     capsule loses 6px of height without the words losing any weight. It is
-     still the only saturated object in the fold, so it keeps its rank on colour
-     rather than on bulk. */
-  font-size:13.5px;font-weight:640;letter-spacing:.005em;
-  padding:8px 17px;border-radius:9999px;
-  white-space:nowrap;
-  box-shadow:0 12px 30px -10px rgba(127,31,22,.75);
-  transition:background .25s ease,box-shadow .25s ease,transform .2s ease;
-}
-.hero-cta:hover{background:#93251A;box-shadow:0 16px 38px -10px rgba(127,31,22,.9);transform:translateY(-1px)}
-.hero-cta:active{transform:translateY(0)}
-.hero-cta-mark{flex:none;transition:transform .25s ease}
-.hero-cta:hover .hero-cta-mark{transform:translateY(-2px)}
-
 /* ── Liquid-metal rim ─────────────────────────────────────────────────
-   A shader canvas showing only at the button's edge. The wrapper is the ring:
-   it carries the radius and `--lm-ring` of padding, the canvas fills it, and
-   the button on top covers everything but that padding. See
-   components/ui/liquid-metal-button.tsx.
+   A shader canvas showing only at a control's edge: the host carries the radius
+   and `--lm-ring` of padding, the canvas fills it, and whatever sits on top
+   covers everything but that padding. See components/ui/liquid-metal-ring.tsx.
 
-   The wrapper deliberately owns no colour, no shadow and no hover of its own —
-   the button inside it still has all of that, including the lift on hover,
-   which is why the ring is on the wrapper's *padding* rather than a border on
-   the button: a border would ride the transform and shear against the canvas. */
-.lm-rim{
-  --lm-ring:2px;
-  position:relative;display:inline-flex;
-  padding:var(--lm-ring);border-radius:9999px;
-  isolation:isolate;
-}
+   It used to rim the hero's "Caută pe hartă" button. That button is gone — its
+   destination is the map mark in the action rail now — and the rim went with
+   it, to the same mark, where it shows only under the pointer. Everything below
+   is the material; `.act-slot` is what wears it. */
 .lm-rim-shader{
   position:absolute;inset:0;z-index:0;
   border-radius:inherit;overflow:hidden;
   /* The floor under the canvas. A brushed sweep in the same cool greys the
      shader itself resolves to, so a browser that cannot open a WebGL context —
-     or one that has not drawn a frame yet — degrades to a still metal rim
-     rather than a black one. */
+     or one that has not drawn a frame yet, which on a deferred mount is every
+     first hover — degrades to a still metal rim rather than a black one. */
   background:conic-gradient(from 210deg,
     #7A808C,#D2D7DE,#858B96,#EDEFF2,#7E848F,#C2C7CF,#7A808C);
 }
 /* The canvas is transparent until the shader reports a drawn frame; see the
-   note by the poll in liquid-metal-button.tsx. Without this the ring flashes
-   opaque black on load, and stays black for the whole visit in any tab that
-   starts in the background. */
+   note by the poll in liquid-metal-ring.tsx. Without this the ring flashes
+   opaque black on arming, and stays black for the whole visit in any tab that
+   armed it while hidden. */
 .lm-rim-shader canvas{
   display:block;width:100%;height:100%;
   opacity:0;transition:opacity .5s ease}
 .lm-rim-shader[data-live] canvas{opacity:1}
-/* The button sits above the canvas and masks its middle. `.hero-cta` already
-   carries the full pill radius, so the ring reads as an even 2px all the way
-   round rather than pooling at the ends. */
-.lm-rim > .hero-cta{position:relative;z-index:1}
-/* The rim is decoration; it must never be the reason a keyboard user cannot see
-   where they are. Focus goes on the wrapper so the outline traces the outside
-   of the ring rather than cutting through it. */
-.lm-rim:focus-within{outline:2px solid var(--copper-soft);outline-offset:3px}
-.lm-rim > .hero-cta:focus-visible{outline:none}
-@media(max-width:640px){.lm-rim{--lm-ring:1.5px}}
-
-/* Secondary actions as type, not chrome: a hairline that fills in on hover.
-   The rule is on the *label* only — an underline that ran under the pictogram
-   too would turn each link back into a box. */
-.hero-link{
-  display:inline-flex;align-items:center;gap:7px;
-  font-size:14.5px;font-weight:560;color:rgba(255,255,255,.9);
-  white-space:nowrap;
-  transition:color .2s ease;
-}
-.hero-link-mark{flex:none;opacity:.78;transition:opacity .2s ease}
-.hero-link-label{
-  position:relative;
-  padding-bottom:3px;
-}
-.hero-link-label::after{
-  content:"";position:absolute;left:0;bottom:0;height:1px;width:100%;
-  background:rgba(255,255,255,.42);
-  transition:background .25s ease;
-}
-.hero-link:hover{color:#fff}
-.hero-link:hover .hero-link-mark{opacity:1}
-.hero-link:hover .hero-link-label::after{background:var(--copper-soft)}
 
 /* ── Credit rail ──────────────────────────────────────────────────────
    The affiliations, along the foot of the fold. They were a rounded glass pill
@@ -619,34 +566,23 @@ ul{list-style:none}
 @media(max-width:1023px){
   /* ── The phone fold is its own design, not the desktop one squeezed ──
 
-     Measured before changing anything: the top 366px of an 812px screen — 45%
-     of the picture — was empty, then 220px of content, then a 183px slab of
+     Measured before any of this: the top 366px of an 812px screen — 45% of the
+     picture — was empty, then 220px of content, then a 183px slab of
      affiliations jammed against the dock. Bottom-heavy, and the emptiest part
      of the frame was the part the eye reaches first.
 
-     So the phone inverts the desktop: the copy sits high, the way a cover line
-     sits on a magazine, and the footage runs on underneath it with nothing on
-     top. `justify-content:flex-start` is the whole move — the stage stops
-     pushing its contents to the foot of the frame and lets them start near the
-     top instead.
+     The fix then was to run the fold as three anchored zones — name high, the
+     actions row floated to the middle by auto margins, credits on the rule at
+     the foot. There is one object in the fold now, not three, so anchoring has
+     nothing left to do: the lockup takes the centre the stage already gives it,
+     and the picture is the even breathing space above and below it. What the
+     phone still needs is a shorter stage, because the credit rail down here is
+     taller (caption stacked over the marks) and the tab dock is under it.
 
-     That fixed the empty top and created an empty bottom: name and actions sat
-     as one dense block in the upper third with ~300px of untouched picture
-     between them and the credit rule. The fold now runs as three anchored
-     zones instead of one stack — name at the top, actions on the middle of the
-     screen, credits on the rule at the foot — and the picture is the even
-     breathing space between them rather than one hole underneath them. */
-  .hero-stage{justify-content:flex-start;padding-bottom:0}
-  /* `auto` on both sides, not a measured `margin-top`. The free space left
-     under the name is what varies — three lines of Romanian, four of Russian, a
-     390px screen or a 932px one — so any fixed number lands the actions in a
-     different place in each of those cases. Auto margins split whatever is left
-     in half, which puts the row on the optical middle of the fold in all of
-     them, and collapse to nothing on a screen too short to have any. */
-  .hero-actions{margin-top:auto;margin-bottom:auto}
-  /* The floor auto margins cannot provide: with no free space to split they
-     both go to zero and the actions would touch the last line of the name. */
-  .hero-title{margin-bottom:26px}
+     One thing is inherited rather than restated: the stage stays centred. The
+     `justify-content:flex-start` that used to live here would now push a single
+     centred object up against the language capsule. */
+  .hero-stage{padding-top:96px;padding-bottom:8px}
   .hero-credits-inner{padding-bottom:84px;padding-top:10px}
   /* The caption comes back on phones, stacked above the marks rather than
      beside them, and much smaller than the line that was dropped. It was
@@ -681,73 +617,27 @@ ul{list-style:none}
   .hero-fold .ms-item{--ms-pad-x:7px;padding:5px var(--ms-pad-x)}
 }
 @media(max-width:640px){
-  /* Clears the top of the screen and puts the eyebrow just above the first
-     third — high enough to be the first thing read, low enough that the
-     picture still opens the frame. */
-  .hero-stage{padding-top:clamp(96px,17vh,150px)}
+  /* Seal over name, both centred. Side by side, a 96px seal and a five-line
+     name leave the text about 190px of column on a 375px screen, which breaks
+     "Constructorilor" across two lines; stacked, the name gets the full gutter
+     and the seal gets to stay a crest rather than shrinking to a bullet.
+
+     Stacked is also why the text centres here and only here. On the desktop the
+     column has a hard left edge because that edge is what the seal stands on;
+     with the seal above rather than beside it, a left-aligned block under a
+     centred mark reads as a mistake. */
+  .hero-stage{padding-top:clamp(76px,13vh,120px)}
+  .hero-lockup{flex-direction:column;gap:clamp(16px,3.4vh,28px)}
+  .hero-lockup-text{align-items:center}
+  .hero-seal{width:clamp(84px,26vw,124px)}
+  .hero-eyebrow{font-size:10px;letter-spacing:.16em;gap:9px}
   .hero-title{
-    max-width:none;letter-spacing:-.026em;
+    max-width:none;letter-spacing:-.026em;text-align:center;
     /* The 4.4vw term is far below the floor on a phone, so the floor is the
        only value that matters here — and 32px put the 77-character name on
        five lines. */
     font-size:1.7rem;
   }
-  /* All three actions stay on one row on a phone. The CTA used to take a row of
-     its own at full width, which is the obvious fix for a row that will not
-     fit — but it turned the primary action into a banner and pushed the other
-     two onto a second line, so the foot of the fold grew by two rows on exactly
-     the screens with the least of it to spare. Instead the CTA gives up the
-     width: smaller type, tighter padding, a smaller mark. It is still the only
-     saturated object in the frame, so it keeps its rank without needing 100% of
-     the measure.
-
-     Every value here is viewport-relative rather than stepped at a breakpoint.
-     "Caută un specialist · Devino membru · Instruire" is a lot of Romanian to
-     hold on one line, and the gap between an iPhone SE and a Pro Max is wide
-     enough that any one fixed size either overflows the small screen or wastes
-     the large one. Scaling the whole row together keeps its proportions at
-     every width, and there is no single size where it visibly snaps. The
-     ceilings are the values the row wants; only genuinely narrow screens ever
-     pay.
-
-     The coefficients are set from the widest of the three languages — Russian,
-     not Romanian: "Найти специалиста · Стать членом · Обучение" runs about 8px
-     longer than the Romanian at the same size. They leave that row a few pixels
-     of clearance inside the page's 24px gutter at 320px, the narrowest screen
-     this site targets. Nothing below that is supported; the px floors are only
-     there so it degrades by getting cramped rather than by breaking. Any change
-     to these three labels wants re-checking at 320px in all three locales.
-
-     Note there is no `margin-top` here: the row's vertical position on a phone
-     is set by the auto margins in the block above, which float it to the middle
-     of the fold. A number here would pin it back to the name. */
-  .hero-actions{gap:clamp(5px,1.9vw,12px)}
-  .hero-cta{
-    font-size:clamp(9.5px,2.9vw,13.5px);
-    /* The box loses a step; the type keeps its clamp. Same split as the desktop
-       rule above — a button that is too bulky for the row wants less padding,
-       not smaller words. */
-    padding:clamp(6px,2vw,8px) clamp(9px,2.7vw,14px);
-    gap:clamp(4px,1.6vw,7px);
-    box-shadow:0 8px 20px -8px rgba(127,31,22,.75);
-  }
-  .hero-cta-mark{width:clamp(11px,3.6vw,16px);height:clamp(11px,3.6vw,16px)}
-  .hero-link{gap:clamp(3px,1.3vw,5px);font-size:clamp(8.5px,2.6vw,12.5px)}
-  .hero-link-mark{width:clamp(10px,3.3vw,14px);height:clamp(10px,3.3vw,14px)}
-}
-
-/* Below ~360px every clamp above is already sitting on its floor, so the row
-   has no give left and "Найти специалиста · Стать членом · Обучение" runs to
-   the edge of the screen with no gutter at all. The two secondary pictograms
-   are what goes: they and their gaps are ~27px of the row, which is exactly
-   the overrun, and they are the least load-bearing thing in it — the CTA keeps
-   its map mark, so the row still reads as actions rather than as a line of
-   underlined body copy. Both labels keep their underline and their hit area,
-   and the marks were `aria-hidden` decoration, so nothing is lost to a screen
-   reader either. */
-@media(max-width:360px){
-  .hero-link-mark{display:none}
-  .hero-link{gap:0}
 }
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--sans);font-weight:600;font-size:14.5px;letter-spacing:.01em;padding:13px 26px;border-radius:9999px;cursor:pointer}
@@ -1503,6 +1393,181 @@ a.res-row.is-link:hover{border-color:var(--ember);box-shadow:0 6px 20px rgba(20,
   padding-bottom:calc(14px + env(safe-area-inset-bottom));pointer-events:none}
 .navbar-dock>*{pointer-events:auto}
 @media(max-width:1023px){body{padding-bottom:calc(86px + env(safe-area-inset-bottom))}}
+
+/* ── Action rail ──────────────────────────────────────────────────────
+   The three conversions as marks, in the corner the language switcher used to
+   hold. See components/ActionRail.tsx for why an icon-only rail is allowed to
+   be icon-only, and TubelightNav for why two tabs left the nav to get here.
+
+   The marks are 38px chips in 42px slots — the extra 4px is the rim's padding,
+   not spacing — which is under the 44pt touch minimum on its own. Growing the
+   chip is not the fix: the slot has to stay inside a 44px capsule that is the
+   same height as the nav pill across the measure, and a 44px chip in a 44px
+   capsule sits flush against its own border. So the *hit area* grows instead
+   and the drawn mark does not, which is what `touch-target-size` asks for —
+   see `.act::after`. */
+/* Colour travels as inherited custom properties rather than as a rule per
+   ground per state. The rail sets the pair for its ground, the primary mark
+   overrides its own hot fill, and one rule reads them — which is what stops the
+   `on-dark` variant from out-specifying the ember and painting the map chip the
+   same neutral wash as its neighbours. A declaration on the element itself
+   always beats a value inherited from an ancestor, however specific the
+   ancestor's selector was. */
+.act-rail{
+  display:flex;align-items:center;gap:4px;
+  --act-ink:var(--soot);
+  --act-hot:rgba(20,21,24,.07);
+  --act-hot-ink:var(--soot);
+}
+.act-rail.on-dark{
+  --act-ink:#fff;
+  --act-hot:rgba(255,255,255,.16);
+  --act-hot-ink:#fff;
+}
+.act-slot{
+  --lm-ring:2px;
+  position:relative;display:inline-flex;
+  padding:var(--lm-ring);border-radius:9999px;
+  /* The shader canvas paints to its own stacking context; without this it
+     composites against the page and the capsule's blur shows through it. */
+  isolation:isolate;
+}
+.act{
+  position:relative;z-index:1;
+  display:grid;place-items:center;
+  width:38px;height:38px;border-radius:9999px;
+  color:var(--act-ink);
+  /* The mark itself is the only thing that moves at rest → hover. A chip that
+     changes size would shunt its two neighbours sideways every time the pointer
+     crossed the rail. */
+  transition:background-color .22s ease,color .22s ease,opacity .22s ease;
+}
+/* The tap area, 44px, invisible, and 1px proud of the slot on every side. The
+   rail's 4px gaps keep two neighbouring areas from meeting. */
+.act::after{content:"";position:absolute;inset:-3px;border-radius:inherit}
+/* Ember, because this is the map — the one action the fold used to spend its
+   only saturated object on, and the one the rim belongs to. It is also what
+   keeps the rim a *rim*: the chip has to go opaque over the canvas underneath
+   it, or the metal shows through the middle and the mark ends up sitting on a
+   metal disc. */
+.act-primary{--act-hot:var(--ember);--act-hot-ink:#fff}
+.act-slot:hover .act,.act-slot:focus-within .act{
+  background:var(--act-hot);color:var(--act-hot-ink);
+}
+/* The primary of the three carries its full weight at rest while the other two
+   sit back — the same ranking the fold's old CTA row had, done with one step of
+   opacity instead of a second material. */
+.act-slot:not(:first-child) .act{opacity:.72}
+.act-slot:not(:first-child):hover .act,
+.act-slot:not(:first-child):focus-within .act{opacity:1}
+/* The rim is decoration; it must never be the reason a keyboard user cannot see
+   where they are. Focus goes on the slot so the outline traces the outside of
+   the ring rather than cutting through it. */
+.act-slot:focus-within{outline:2px solid var(--copper-soft);outline-offset:3px;border-radius:9999px}
+.act:focus-visible{outline:none}
+
+/* The rim, on hover only. It is armed by the first hover and idles at zero
+   speed from then on (see MetalRing), so this is a fade rather than a mount —
+   after the first pass the metal is already there and simply comes back.
+
+   Shown by `:hover`/`:focus-within` rather than by the React flag that drives
+   the shader's speed. The flag has to exist anyway — a render loop is not
+   something CSS can start — but hanging the *appearance* on it would make the
+   rim wait for a re-render to be drawn, and would leave it stuck on in any
+   state where the enter fired and the leave did not. The one thing React owns
+   here is the one thing only React can own. */
+.act-slot .lm-rim-shader{opacity:0;transition:opacity .28s ease}
+.act-slot:hover .lm-rim-shader,
+.act-slot:focus-within .lm-rim-shader{opacity:1}
+
+/* Tip: the label, one beat under the mark. It exists for the pointer and for
+   the keyboard; assistive tech has had the same word from `aria-label` all
+   along, which is why the tip itself is `aria-hidden`. */
+.act-tip{
+  position:absolute;top:calc(100% + 9px);left:50%;
+  padding:5px 10px;border-radius:8px;
+  background:rgba(18,19,22,.92);color:#fff;
+  font-size:11px;font-weight:600;letter-spacing:.02em;line-height:1;
+  white-space:nowrap;pointer-events:none;
+  opacity:0;visibility:hidden;
+  transform:translate(-50%,-4px);
+  transition:opacity .18s ease,transform .18s ease,visibility .18s;
+}
+.act-slot:hover .act-tip,.act-slot:focus-within .act-tip{
+  opacity:1;visibility:visible;transform:translate(-50%,0);
+}
+/* The rail ends on the right edge of the measure, so the last mark's tip would
+   hang off the page. The last two open leftward from their own right edge
+   instead of centring. */
+.act-slot:last-child .act-tip{left:auto;right:0;transform:translate(0,-4px)}
+.act-slot:last-child:hover .act-tip,
+.act-slot:last-child:focus-within .act-tip{transform:translate(0,0)}
+@media(prefers-reduced-motion:reduce){
+  .act-tip{transition:opacity .18s ease,visibility .18s}
+  .act-tip,.act-slot:hover .act-tip,.act-slot:focus-within .act-tip{transform:translate(-50%,0)}
+  .act-slot:last-child .act-tip,
+  .act-slot:last-child:hover .act-tip,
+  .act-slot:last-child:focus-within .act-tip{transform:none}
+}
+
+/* ── Language picker ──────────────────────────────────────────────────
+   One code and a caret; the other two open under it. See
+   components/LanguageSwitcher.tsx for why it is both a hover and a click.
+
+   The panel is hidden with `visibility` rather than unmounted, which is what
+   takes it out of the tab order and the accessibility tree while leaving the
+   `hreflang` alternates in the document for crawlers. */
+.lang-pick{position:relative}
+.lang-current{
+  display:inline-flex;align-items:center;gap:4px;
+  height:30px;padding:0 8px 0 10px;border-radius:9999px;
+  font-size:11px;font-weight:700;letter-spacing:.06em;line-height:1;
+  color:var(--soot);cursor:pointer;
+  background:rgba(255,255,255,.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+  transition:background-color .2s ease,color .2s ease;
+}
+.lang-caret{flex:none;opacity:.5;transition:transform .22s ease,opacity .2s ease}
+.lang-pick.is-open .lang-caret{transform:rotate(180deg);opacity:.8}
+.lang-pick.on-dark .lang-current{
+  background:rgba(255,255,255,.2);color:#fff;box-shadow:none;
+}
+.lang-pop{
+  position:absolute;top:calc(100% + 10px);left:0;
+  display:flex;flex-direction:column;gap:2px;
+  padding:4px;border-radius:14px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.9);
+  backdrop-filter:blur(16px);
+  box-shadow:0 14px 34px -12px rgba(10,11,13,.4);
+  opacity:0;visibility:hidden;transform:translateY(-4px);
+  transition:opacity .2s ease,transform .2s ease,visibility .2s;
+}
+.lang-pick.is-open .lang-pop{opacity:1;visibility:visible;transform:translateY(0)}
+.lang-alt{
+  display:grid;place-items:center;
+  min-width:44px;height:30px;padding:0 10px;border-radius:9999px;
+  font-size:11px;font-weight:700;letter-spacing:.06em;line-height:1;
+  color:rgba(28,30,34,.62);
+  transition:background-color .18s ease,color .18s ease;
+}
+.lang-alt:hover,.lang-alt:focus-visible{background:rgba(20,21,24,.07);color:var(--soot)}
+.lang-pick.on-dark .lang-pop{
+  border-color:rgba(255,255,255,.18);background:rgba(18,19,22,.72);
+}
+.lang-pick.on-dark .lang-alt{color:rgba(255,255,255,.68)}
+.lang-pick.on-dark .lang-alt:hover,
+.lang-pick.on-dark .lang-alt:focus-visible{background:rgba(255,255,255,.16);color:#fff}
+/* The hover half of the control opens on the root, and the gap between the chip
+   and the panel would otherwise be a dead strip that closes it mid-reach. */
+.lang-pick::after{
+  content:"";position:absolute;top:100%;left:0;width:100%;height:12px;
+}
+@media(prefers-reduced-motion:reduce){
+  .lang-pop{transition:opacity .2s ease,visibility .2s;transform:none}
+  .lang-pick.is-open .lang-pop{transform:none}
+  .lang-caret,.lang-pick.is-open .lang-caret{transition:opacity .2s ease}
+}
 
 /* ── The association in numbers ───────────────────────────────────────
    One card, two sizes: compact and clickable under "Despre asociație" on the
