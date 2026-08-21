@@ -17,7 +17,8 @@ import { NavBar } from "@/components/ui/tubelight-navbar";
 import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { scrollPageToTop } from "@/lib/nav";
-import { PAGE_RING, type RingStop } from "@/lib/page-ring";
+import { PAGE_RING, RAIL_STOPS, type RingStop } from "@/lib/page-ring";
+import ActionRail from "@/components/ActionRail";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/get-dictionary";
 
@@ -207,6 +208,45 @@ function useChromeAway() {
   return { away, show: () => set(false) };
 }
 
+/**
+ * Is the directory map actually on the screen?
+ *
+ * The map is a *section* of Servicii, not a page, so no amount of reading the
+ * URL settles this: you can stand on /servicii with the map a screen and a
+ * half below you. `#directoriu` in the address only decides where the browser
+ * drops you on arrival — after that it is stale, and a highlight driven by it
+ * would stay lit all the way down the page.
+ *
+ * So it is observed, not parsed. Clicking Caută un specialist on the home page
+ * lands you at the map with the corner mark lit, and scrolling away hands the
+ * light back to the Servicii tab, with no state stored anywhere to fall out of
+ * step. An IntersectionObserver rather than a scroll handler: the browser does
+ * the measuring off the main thread and only speaks when the answer changes.
+ */
+function useAtDirectory(): boolean {
+  const pathname = usePathname();
+  const [at, setAt] = useState(false);
+
+  useEffect(() => {
+    const map = document.getElementById("directoriu");
+    if (!map) {
+      setAt(false); // A page without a map: the tabs own the highlight.
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => setAt(entry.isIntersecting),
+      /* A sliver showing is not "you are at the map" — a third of it is. The
+         margin trims the viewport rather than the target so the answer does
+         not flicker while the section's own edge crosses the fold. */
+      { threshold: 0.34, rootMargin: "-10% 0px -10% 0px" },
+    );
+    io.observe(map);
+    return () => io.disconnect();
+  }, [pathname]);
+
+  return at;
+}
+
 export default function TubelightNav({
   locale,
   dict,
@@ -216,6 +256,7 @@ export default function TubelightNav({
 }) {
   const base = `/${locale}`;
   const nav = dict.nav;
+  const navHint = dict.navHint;
 
   // Desktop rail: words only, no exceptions. Instruire used to carry a faint
   // pictogram as the one promoted destination, which made it the only tab in
@@ -230,13 +271,25 @@ export default function TubelightNav({
   // sideways swipe and the ← / → keys also walk (see PageSwipe) — two orders
   // that drifted apart would put the lamp in this rail somewhere other than
   // where a swipe just went.
-  const desktopItems = PAGE_RING.map((stop) => ({
+  // Five, not eight. Instruire and Înregistrează-te moved to the corner rail
+  // and Membri is a members-only door reached from the footer, so this bar is
+  // the public sections only. RAIL_STOPS is a filter over PAGE_RING rather than
+  // a second hand-written list — the swipe order and the tab order still come
+  // from one place, which is the whole point of the ring.
+  const desktopItems = RAIL_STOPS.map((stop) => ({
     name: nav[stop.key],
     url: `${base}${stop.segment}`,
+    hint: navHint[stop.key as keyof typeof navHint],
   }));
 
-  // Bottom bar: no room for words, so every tab needs its own mark. Eight 44px
-  // tabs plus the pill's padding is 360px, which still clears a 375px screen.
+  // Bottom bar: still all eight. The corner rail is a hover-and-focus control,
+  // and a phone has neither — dropping three tabs down here would strand
+  // Instruire and Înregistrează-te behind the footer on exactly the devices
+  // that can least afford the scroll. No labels down here, so the repetition
+  // the desktop rail was suffering from does not arise.
+  //
+  // No room for words, so every tab needs its own mark. Eight 44px tabs plus
+  // the pill's padding is 360px, which still clears a 375px screen.
   const mobileItems = PAGE_RING.map((stop) => ({
     name: nav[stop.key],
     url: `${base}${stop.segment}`,
@@ -244,6 +297,7 @@ export default function TubelightNav({
   }));
 
   const overDark = useOverDark();
+  const atDirectory = useAtDirectory();
   const { away, show } = useChromeAway();
   const pathname = usePathname();
 
@@ -351,6 +405,7 @@ export default function TubelightNav({
               className={`vt-rail-nav ${travel}`}
               lampId="lamp-desktop"
               onDark={overDark.top}
+              dimmed={atDirectory}
             />
           </div>
 
@@ -360,12 +415,25 @@ export default function TubelightNav({
               LanguageSwitcher. It is the one island that is a utility rather
               than identity or navigation, so it is the one that gives up
               height. */}
-          <div className={`${capsule(overDark.top, "h-10")} vt-rail-lang px-1`}>
-            <LanguageSwitcher
-              current={locale}
-              variant="light"
+          {/* The corner. The three destinations that are not tabs sit ahead of
+              the language chip: navigation before utility, reading inward from
+              the edge. Both are `pointer-events-auto` islands on a shell that
+              is otherwise transparent to the mouse, so the dead ground between
+              them still belongs to the page underneath. */}
+          <div className="pointer-events-auto flex items-center gap-2">
+            <ActionRail
+              locale={locale}
+              dict={dict}
+              atDirectory={atDirectory}
               onDark={overDark.top}
             />
+            <div className={`${capsule(overDark.top, "h-10")} vt-rail-lang px-1`}>
+              <LanguageSwitcher
+                current={locale}
+                variant="light"
+                onDark={overDark.top}
+              />
+            </div>
           </div>
         </div>
       </div>

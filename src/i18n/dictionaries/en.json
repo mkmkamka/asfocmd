@@ -17,6 +17,13 @@
     "members": "Members",
     "memberArea": "Members"
   },
+  "navHint": {
+    "home": "The chimney sweeps' association of Moldova",
+    "about": "Who we are and what we stand for",
+    "services": "Sweeping, inspection and the sweeps' directory",
+    "news": "News from the association's work",
+    "contact": "Write to us, or come by the office"
+  },
   "top": {
     "phone": "+373 79 447 686",
     "email": "asfocmd@gmail.com",

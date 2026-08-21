@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { scrollPageToTop } from "@/lib/nav";
+import { Lamp } from "@/components/ui/lamp";
 
 interface NavItem {
   name: string;
@@ -14,6 +15,10 @@ interface NavItem {
   /** Optional. The desktop bar passes none — it is words only. The mobile bar
       passes one for every item, because there are no labels down there. */
   icon?: LucideIcon;
+  /** One line saying what the page is, opened under the tab on hover and on
+      keyboard focus. The labelled bar only: the icon-only dock has no room,
+      and a phone has no pointer to open it with. */
+  hint?: string;
 }
 
 interface NavBarProps {
@@ -35,6 +40,15 @@ interface NavBarProps {
    * `useOverDark` in TubelightNav.
    */
   onDark?: boolean;
+  /**
+   * Something else owns the highlight for now, so no tab burns.
+   *
+   * The map is a section of Servicii, not a page of its own: while it is on
+   * screen the corner rail's Caută un specialist is lit, and two lights for
+   * one place would read as a bug. The tab takes it back the moment the map
+   * leaves the screen — see `useAtDirectory` in TubelightNav.
+   */
+  dimmed?: boolean;
 }
 
 /* The tubelight pill. Positioning belongs to the caller (TubelightNav): on
@@ -46,6 +60,7 @@ export function NavBar({
   iconOnly = false,
   lampId = "lamp",
   onDark = false,
+  dimmed = false,
 }: NavBarProps) {
   const pathname = usePathname();
 
@@ -55,13 +70,28 @@ export function NavBar({
   // `/stiri/slug` still lights up "News", and the shortest route (Home, `/ro`)
   // only wins at the very top level. A trailing hash on the URL (a deep link
   // like `/servicii#directoriu`) is ignored because usePathname strips it.
+  /* Home is the one tab that may not match by prefix. Every path on the site
+     starts with `/ro`, so a prefix rule hands Home every page it does not
+     recognise — which was invisible while all eight pages had a tab of their
+     own and the longest match won, and became "you are on Acasă" the moment
+     Instruire left this rail. It is the shortest url by construction, so the
+     rule is derived rather than written down: nothing to update when a stop
+     is added or the locale changes. */
+  const home = items.reduce((a, b) => (b.url.length < a.url.length ? b : a));
   const routeMatch = items
     .slice()
     .sort((a, b) => b.url.length - a.url.length)
-    .find(
-      (item) => pathname === item.url || pathname.startsWith(`${item.url}/`),
+    .find((item) =>
+      item === home
+        ? pathname === item.url
+        : pathname === item.url || pathname.startsWith(`${item.url}/`),
     );
-  const activeTab = routeMatch?.name ?? items[0].name;
+  /* No match means no lamp — not "fall back to the first tab". Since Instruire,
+     Membri and Înregistrează-te left this rail for the corner, those three
+     paths match nothing here, and the old `?? items[0].name` fallback would
+     have lit *Acasă* while you stood on Instruire: the one thing the highlight
+     exists to never do. Off-rail pages are the corner rail's to light. */
+  const activeTab = dimmed ? null : (routeMatch?.name ?? null);
 
   // The pill itself is barely-there glass: a whisper of background, a hairline
   // border and a heavy backdrop blur — the page stays visible through it.
@@ -136,6 +166,18 @@ export function NavBar({
                 {item.name}
               </span>
             )}
+            {/* The description, opened under the tab by hover or focus. It is
+                `absolute`, so an opening tip cannot change the pill's height
+                and shove the page around; `aria-hidden` because the tab's own
+                word is the accessible name and a screen reader reading both
+                would say the sentence twice. Hover only, by the user's call —
+                which means it does not exist on a phone, where there is no
+                pointer to open it and the dock is icon-only anyway. */}
+            {!iconOnly && item.hint && (
+              <span className="nav-hint" aria-hidden>
+                {item.hint}
+              </span>
+            )}
             {isActive && (
               <motion.div
                 layoutId={lampId}
@@ -154,14 +196,10 @@ export function NavBar({
                     that value disappears into the picture, so it switches to
                     the palette's light oxide red — the same tone the fold's
                     eyebrow rule uses. */}
-                <div
-                  className="absolute -top-2 left-1/2 h-1 w-8 -translate-x-1/2 rounded-t-full"
-                  style={{ background: onDark ? "#D9847C" : "var(--ember)" }}
-                >
-                  <div className="absolute -left-2 -top-2 h-6 w-12 rounded-full bg-primary/20 blur-md" />
-                  <div className="absolute -top-1 h-6 w-8 rounded-full bg-primary/20 blur-md" />
-                  <div className="absolute left-2 top-0 h-4 w-4 rounded-full bg-primary/20 blur-sm" />
-                </div>
+                <Lamp
+                  color={onDark ? "#D9847C" : "var(--ember)"}
+                  halo={onDark ? "rgba(217,132,124,.30)" : "var(--ember-halo)"}
+                />
               </motion.div>
             )}
           </Link>

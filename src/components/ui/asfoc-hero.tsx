@@ -222,15 +222,20 @@ export function AsfocHero({
                 come from `.hero-cta`; the wrapper only adds the edge. Last in
                 the stack, so the primary action closes the sequence instead of
                 opening it. */}
-            <div className="hero-cta-lane">
+            {/* The mark moved inside the capsule. It used to sit outside as a
+                sibling so it could share a left column with the two above —
+                which was right while these were a stack of two bare words and
+                one pill. They are three capsules of one shape now, so the
+                column that mattered is the capsule's edge, not the glyph's,
+                and a mark hanging outside its own button is what would break
+                the row. Still the one saturated object in the frame. */}
+            <LiquidMetalLink
+              className="hero-cta"
+              href={`${base}/servicii#directoriu`}
+            >
               <Map className="hero-cta-mark" size={16} aria-hidden />
-              <LiquidMetalLink
-                className="hero-cta"
-                href={`${base}/servicii#directoriu`}
-              >
-                {cta.primary}
-              </LiquidMetalLink>
-            </div>
+              <span className="hero-cta-label">{cta.primary}</span>
+            </LiquidMetalLink>
           </motion.div>
         </motion.div>
 

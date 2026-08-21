@@ -82,6 +82,10 @@
      --sand / --line, so those surfaces stay quiet and the ember glyph on top
      is the only colour in them. */
   --ember:#7F1F16; --ember-dark:#5E140E; --ember-tint:#ECECEF;
+  /* The lamp's bloom: --ember at the 20% the three hand-written halos
+     each used before Lamp took them over. Named rather than inlined so
+     the bar and its glow can never drift apart. */
+  --ember-halo:rgba(127,31,22,.20);
   /* Accents are one hue now: copper used to sit ~28deg toward yellow from
      the ember, which read as orange fighting the nav red. It is now a deep
      oxide red — same family as --ember, darker value — and the old gold
@@ -388,7 +392,12 @@ ul{list-style:none}
 /* Three lanes, stacked — one destination per row rather than three sharing
    one. Left-aligned, same edge as the eyebrow and the name above them. */
 .hero-actions{
-  display:flex;flex-direction:column;align-items:flex-start;gap:7px;
+  /* A row, reading left to right, since all three are capsules of one
+     shape now. It was a column of three lanes when they were two bare
+     words and one pill: a stack is how you rank unlike things, and a
+     row is how you offer like ones. It goes back to a column on phones,
+     where three capsules cannot share 375px — see the 640px block. */
+  display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px;
   margin-top:var(--fold-step-2);
   /* One row height for all three lanes, and the reason the marks finally sit
      on an even column. A capsule is taller than a line of type — 33px against
@@ -450,14 +459,9 @@ ul{list-style:none}
      same total as a plain gap. One column, no residual. */
   --lane-lead:calc(var(--cta-gap) + var(--cta-rim) + var(--cta-pad-x));
 }
-/* The third lane: mark, then the capsule — the mark a sibling of the button
-   rather than its child, which is the only arrangement that gets it onto the
-   same left column as the two above. */
-.hero-cta-lane{
-  display:inline-flex;align-items:center;gap:var(--cta-gap);
-  min-height:var(--lane-h);
-  color:rgba(255,255,255,.9);
-}
+/* `.hero-cta-lane` is gone: the mark is the button's child now, so there is no
+   sibling to lane up with. The row's shared box does the aligning — see "One
+   box, read three times" at the foot of this file. */
 /* The only saturated object in the frame, and a full capsule — the fold's
    other rounds are all chrome (nav, language, credits) and this is the one
    thing that is a *button*, so it wears the site's own button shape.
@@ -482,12 +486,12 @@ ul{list-style:none}
 }
 .hero-cta:hover{background:#93251A;box-shadow:0 12px 26px -10px rgba(127,31,22,.85);transform:translateY(-1px)}
 .hero-cta:active{transform:translateY(0)}
-/* Outside the pill now, so it takes the two other marks' treatment rather
-   than the button's white: same 16px, same .78 resting opacity. The hover
-   is driven off the lane, since the pointer is on the capsule, not on the
-   mark. */
-.hero-cta-mark{flex:none;opacity:.78;transition:opacity .2s ease,transform .25s ease}
-.hero-cta-lane:hover .hero-cta-mark{opacity:1;transform:translateY(-2px)}
+/* Inside the pill again, so it takes the button's white rather than the two
+   ghosts' ink — `currentColor` by inheritance, no value of its own. The hover
+   is driven off the button now that the pointer and the mark are on the same
+   element. */
+.hero-cta-mark{flex:none;opacity:.85;transition:opacity .2s ease,transform .25s ease}
+.hero-cta:hover .hero-cta-mark{opacity:1;transform:translateY(-2px)}
 
 /* ── Liquid-metal rim ─────────────────────────────────────────────────
    A shader canvas showing only at the button's edge. The wrapper is the ring:
@@ -2329,4 +2333,149 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
 }
 @media(max-width:700px){
   .hscroll-card--text .hscroll-card-body h3{font-size:22px}
+}
+
+
+/* ═══ The corner rail, the nav hint, and the phone stack ═══════════════════
+   Added with the five-tab rail: see components/ActionRail.tsx. */
+
+/* ── Corner rail ──────────────────────────────────────────────────────
+   Capsules, not circles. A circle in a corner has no edge to belong to and
+   floats free of the bar it is in; a capsule shares the language chip's
+   shape beside it and the nav pill's shape across from it, so the corner
+   reads as one rail of one material instead of three loose dots. */
+.act-rail{display:flex;align-items:center;gap:6px}
+.act-slot{position:relative;display:inline-flex}
+.act{
+  position:relative;display:grid;place-items:center;
+  height:40px;min-width:44px;padding:0 12px;border-radius:9999px;
+  border:1px solid var(--border);background:color-mix(in srgb,var(--background) 5%,transparent);
+  color:color-mix(in srgb,var(--foreground) 80%,transparent);
+  backdrop-filter:blur(12px);
+  transition:color .25s ease,background-color .25s ease,border-color .25s ease;
+}
+.act:hover{color:var(--ember);background:color-mix(in srgb,var(--ember) 7%,transparent)}
+.act-rail.on-dark .act{border-color:rgba(255,255,255,.2);background:rgba(0,0,0,.25);color:rgba(255,255,255,.8)}
+.act-rail.on-dark .act:hover{color:#fff;background:rgba(255,255,255,.12)}
+/* The one saturated mark, matching the fold's primary. */
+.act-primary{border-color:color-mix(in srgb,var(--ember) 45%,transparent)}
+.act-rail.on-dark .act-primary{border-color:rgba(217,132,124,.55)}
+
+/* The hairline that wakes on hover — "this is clickable". It is not the lamp:
+   the lamp is on top and means "you are here". Two edges, two meanings, so
+   they can both be lit without saying the same thing twice. */
+.act::after{
+  content:"";position:absolute;left:14px;right:14px;bottom:6px;height:1px;
+  background:currentColor;opacity:0;transform:scaleX(.3);transform-origin:50% 50%;
+  transition:opacity .25s ease,transform .3s cubic-bezier(.85,0,.15,1);
+}
+.act:hover::after,.act:focus-visible::after{opacity:.55;transform:scaleX(1)}
+/* While it is lit the hairline stands down: the lamp is already saying it. */
+.act.is-lit::after{opacity:0}
+.act.is-lit{color:var(--ember);background:color-mix(in srgb,var(--ember) 9%,transparent)}
+.act-rail.on-dark .act.is-lit{color:#fff;background:rgba(255,255,255,.14)}
+
+/* The word, opened under the mark by hover or focus. `translate` only — the
+   tip must never change the rail's height or the whole corner shifts. */
+.act-tip{
+  position:absolute;top:calc(100% + 7px);left:50%;
+  transform:translate(-50%,-3px);
+  padding:3px 8px;border-radius:6px;
+  font-size:11px;font-weight:600;letter-spacing:.01em;white-space:nowrap;
+  background:var(--foreground);color:var(--background);
+  opacity:0;pointer-events:none;
+  transition:opacity .2s ease,transform .2s ease;
+}
+.act-slot:hover .act-tip,.act-slot:focus-within .act-tip{opacity:.95;transform:translate(-50%,0)}
+
+/* ── Nav description ──────────────────────────────────────────────────
+   One line under a tab, on hover and on focus. Absolute for the same reason
+   the tip is: an opening description must not resize the pill it hangs off.
+   Hover-driven, so it does not exist on a phone — the dock down there is
+   icon-only and has no pointer to open anything with. */
+.nav-hint{
+  position:absolute;top:calc(100% + 9px);left:50%;
+  transform:translate(-50%,-3px);
+  max-width:min(46vw,300px);
+  font-size:11px;font-weight:500;line-height:1.35;letter-spacing:.01em;
+  text-align:center;text-wrap:balance;
+  color:color-mix(in srgb,var(--foreground) 62%,transparent);
+  opacity:0;pointer-events:none;
+  transition:opacity .22s ease,transform .22s ease;
+}
+a:hover>.nav-hint,a:focus-visible>.nav-hint{opacity:1;transform:translate(-50%,0)}
+/* Over the picture the 62% ink disappears into it, same as the labels do. */
+.on-dark .nav-hint,.bg-black\/25 .nav-hint{color:rgba(255,255,255,.72)}
+
+@media (max-width:640px){
+  /* The phone stack. `grid-template-columns:max-content` sizes the column to
+     the widest of the three, and `justify-items:stretch` pours the other two
+     out to meet it — so they match without any width being written down, and
+     they keep matching when the Russian strings run longer than the Romanian.
+     A hand-set width here is a width that is wrong in two locales. */
+  .hero-actions{
+    display:grid;grid-template-columns:max-content;justify-items:stretch;
+    justify-content:start;gap:8px;
+  }
+  .hero-actions>*{width:100%}
+  .hero-cta,.hero-link{justify-content:flex-start}
+}
+
+/* ── The two quiet actions, as capsules ───────────────────────────────
+   "Vaguely buttons": the shape without the fill. They keep their hairline
+   rule — the one under Instruire still measures and revises itself — but
+   they now carry an edge, so the row reads as three controls of one family
+   rather than two words that happen to sit beside a button.
+
+   The gap goes from `--lane-lead` to a plain 7px. That arithmetic existed to
+   drop each mark onto a shared left column while the row was a *stack* and
+   the CTA's mark hung outside its pill; every mark is inside its own capsule
+   now, and equal padding puts them on that column for free. Twenty pixels
+   between a glyph and its word inside a button is not alignment, it is a
+   hole. */
+.hero-link{
+  gap:7px;padding:5px 13px;border-radius:9999px;
+  border:1px solid rgba(255,255,255,.22);
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(6px);
+  transition:border-color .25s ease,background-color .25s ease,transform .2s ease;
+}
+.hero-link:hover{
+  border-color:rgba(255,255,255,.42);
+  background:rgba(0,0,0,.3);
+  transform:translateY(-1px);
+}
+.hero-link:active{transform:translateY(0)}
+/* The capsule already spends its padding on the left; the lane lead would
+   spend it a second time and push the label off the column. */
+.hero-link .hero-link-mark{margin-left:0}
+
+/* ── One box, read three times ────────────────────────────────────────
+   Measured on the page before this block: the two ghosts came out 35.2px
+   tall and the primary 28.1, sitting 3px low in the row — 14.5px/23.2 type
+   in a 5px pad with a 1px border against 16px/25.6 type in a 4px pad inside
+   a 2px rim. Three sets of numbers describing one shape is how they drifted.
+
+   So the shape is stated once here and every lane derives from it. The
+   primary is borderless but wears the rim, so it adds the ghosts' border and
+   subtracts its own rim — which is why it can read `--lm-ring` at all: it is
+   *inside* `.lm-rim`, and the variable inherits down to it. Change a number
+   here and all three follow; there is nowhere left for them to disagree. */
+.hero-actions{
+  --hact-fs:14.5px;
+  --hact-lh:1.6;
+  --hact-pad-y:5px;
+  --hact-pad-x:13px;
+  --hact-edge:1px;
+}
+.hero-link{
+  font-size:var(--hact-fs);line-height:var(--hact-lh);
+  padding:var(--hact-pad-y) var(--hact-pad-x);
+  border-width:var(--hact-edge);
+}
+.hero-cta{
+  font-size:var(--hact-fs);line-height:var(--hact-lh);
+  padding:
+    calc(var(--hact-pad-y) + var(--hact-edge) - var(--lm-ring,2px))
+    calc(var(--hact-pad-x) + var(--hact-edge) - var(--lm-ring,2px));
 }

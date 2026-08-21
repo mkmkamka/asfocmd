@@ -18,18 +18,34 @@ import type { Dictionary } from "@/i18n/get-dictionary";
  * Keys are `dict.nav` keys, so the labels stay in whatever locale is mounted.
  */
 export const PAGE_RING = [
-  { segment: "", key: "home" },
-  { segment: "/despre", key: "about" },
-  { segment: "/servicii", key: "services" },
-  { segment: "/instruire", key: "training" },
-  { segment: "/stiri", key: "news" },
-  { segment: "/contact", key: "contact" },
-  { segment: "/membri", key: "memberArea" },
-  { segment: "/membru", key: "becomeMember" },
+  { segment: "", key: "home", rail: true },
+  { segment: "/despre", key: "about", rail: true },
+  { segment: "/servicii", key: "services", rail: true },
+  { segment: "/instruire", key: "training", rail: false },
+  { segment: "/stiri", key: "news", rail: true },
+  { segment: "/contact", key: "contact", rail: true },
+  { segment: "/membri", key: "memberArea", rail: false },
+  { segment: "/membru", key: "becomeMember", rail: false },
 ] as const satisfies readonly {
   segment: string;
   key: keyof Dictionary["nav"];
+  rail: boolean;
 }[];
+
+/**
+ * The stops the middle rail shows.
+ *
+ * The ring above is every page a swipe can reach; this is the subset that
+ * earns a tab. Instruire and Înregistrează-te left the rail because the
+ * corner rail carries them now, and stating the same destination twice on one
+ * screen is what made the fold read as repetitive. Membri is the members'
+ * private area — a door for people who already joined, reached from the
+ * footer, not a public section worth a permanent tab.
+ *
+ * Derived, not a second hand-written list: a tab order that could drift out of
+ * step with the swipe order is the bug the ring was written to prevent.
+ */
+export const RAIL_STOPS = PAGE_RING.filter((stop) => stop.rail);
 
 export type RingStop = (typeof PAGE_RING)[number];
 

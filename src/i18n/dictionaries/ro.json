@@ -17,6 +17,13 @@
     "members": "Membri",
     "memberArea": "Membri"
   },
+  "navHint": {
+    "home": "Asociația hornarilor și coșarilor din Moldova",
+    "about": "Cine suntem și pentru ce stăm",
+    "services": "Curățare, inspecție și directoriul coșarilor",
+    "news": "Noutăți din activitatea asociației",
+    "contact": "Scrie-ne sau treci pe la sediu"
+  },
   "top": {
     "phone": "+373 79 447 686",
     "email": "asfocmd@gmail.com",
