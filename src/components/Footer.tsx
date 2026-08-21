@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Icon from "./Icon";
+import Logo from "./Logo";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/get-dictionary";
 
@@ -33,6 +34,13 @@ export default function Footer({
         <div className="foot-grid">
           {/* Stay Connected + newsletter */}
           <div className="foot-stay">
+            {/* The footer had no mark at all. The seal opens it, in the white
+                knockout, with the name beside it — at 44px the seal's own
+                lettering is too small to read, so the wordmark carries it. */}
+            <Link className="foot-lockup" href={base} aria-label="ASFOCMD">
+              <Logo size={44} tone="footer" />
+              <span>ASFOCMD</span>
+            </Link>
             <h3 className="foot-stay-title">{f.newsletter.title}</h3>
             <p className="foot-stay-sub">{f.newsletter.subtitle}</p>
             <form className="foot-news" action={`${base}/contact`}>
@@ -82,11 +90,6 @@ export default function Footer({
               <a href="#" aria-label="Facebook"><Icon name="facebook" size={20} /></a>
               <a href="#" aria-label="Instagram"><Icon name="instagram" size={20} /></a>
               <a href="#" aria-label="Telegram"><Icon name="send" size={20} /></a>
-            </div>
-            <div className="foot-theme" aria-hidden="true">
-              <Icon name="sun" size={16} />
-              <span className="theme-switch"><span className="knob" /></span>
-              <Icon name="moon" size={16} />
             </div>
           </div>
         </div>

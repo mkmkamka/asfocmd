@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import TubelightNav from "@/components/TubelightNav";
+import ScrollGallery from "@/components/ScrollGallery";
 import Footer from "@/components/Footer";
 import MemberStrip from "@/components/MemberStrip";
 import StatCard from "@/components/StatCard";
@@ -36,7 +36,13 @@ export default async function Home({
   const dict = await getDictionary(locale);
   const t = dict.home;
   const base = `/${locale}`;
-  const latestPosts = (await getPosts()).slice(0, 3);
+  /* Eight, and only posts that carry a photograph. The sideways band is made of
+     pictures — a card falling back to the soot gradient would read as a hole in
+     the row rather than as a post without an image, which is what it looked
+     like in the three-card grid this replaced. */
+  const latestPosts = (await getPosts())
+    .filter((post) => post.image)
+    .slice(0, 8);
 
   /* The hero band is a story, played in order and then from the top — see
      HeroVideo for the playback. The arc is hearth → sky → country: it opens on
@@ -183,49 +189,23 @@ export default async function Home({
         </div>
       </section>
 
-      {/* NEWS — latest three posts */}
-      <section id="stiri" className="services" style={{ background: "var(--sand)" }}>
-        <div className="wrap">
-          <div className="sec-head">
-            <div className="kick" aria-hidden />
-            <h2>{t.news.title}</h2>
-          </div>
-          <div className="news-grid">
-            {latestPosts.map((post) => (
-              <Link href={`${base}/stiri/${post.slug}`} key={post.slug}>
-                <article className="post">
-                  <div className={`cover${post.cover > 1 ? ` c${post.cover}` : ""}`}>
-                    {post.image && (
-                      <Image
-                        src={post.image}
-                        alt={post.title[locale]}
-                        fill
-                        sizes="(max-width: 860px) 100vw, 33vw"
-                        style={{ objectFit: "cover" }}
-                      />
-                    )}
-                    <span className="cat">{post.cat[locale]}</span>
-                  </div>
-                  <div className="body">
-                    <div className="date">{post.date[locale]}</div>
-                    <h3>{post.title[locale]}</h3>
-                    <p>{post.excerpt[locale]}</p>
-                    <span className="more">
-                      {t.news.more}
-                      <Icon name="arrowRight" size={16} />
-                    </span>
-                  </div>
-                </article>
-              </Link>
-            ))}
-          </div>
-          <div style={{ textAlign: "center", marginTop: 36 }}>
-            <Link className="btn btn-ghost" href={`${base}/stiri`}>
-              {dict.pages.news.back}
-              <Icon name="arrowRight" size={18} />
-            </Link>
-          </div>
-        </div>
+      {/* NEWS — a sideways band rather than the three-card grid that used to
+          sit here. The grid could only ever show three of twenty-nine posts and
+          spent a full screen doing it; the band shows eight in the same height
+          and makes the archive feel like an archive. `#stiri` stays on the
+          section so the existing deep links still land. */}
+      <section id="stiri">
+        <ScrollGallery
+          cards={latestPosts.map((post) => ({
+            href: `${base}/stiri/${post.slug}`,
+            image: post.image!,
+            label: post.title[locale],
+            meta: post.date[locale],
+          }))}
+          kicker={dict.nav.news}
+          title={t.news.title}
+          more={{ label: dict.pages.news.back, href: `${base}/stiri` }}
+        />
       </section>
 
       {/* CONTACT — closing CTA */}

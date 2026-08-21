@@ -27,11 +27,12 @@ interface NavBarProps {
   /** Unique per mounted instance — motion shares layoutId globally. */
   lampId?: string;
   /**
-   * Set while the pill floats over the home page's graded hero. The rail's
-   * resting material is ink on a 5% light wash, which needs a bright page
-   * behind it; over a graded picture the labels disappear. This flips the whole
-   * pill to light type on a dark wash for as long as the fold is under it —
-   * see `useOverHero` in TubelightNav.
+   * Set while the pill floats over a dark ground — the home page's graded hero,
+   * a soot band, the closing call to action, the footer. The rail's resting
+   * material is ink on a 5% light wash, which needs a bright page behind it;
+   * over anything dark the labels disappear with it. This flips the whole pill
+   * to light type on a dark wash for as long as that ground is under it — see
+   * `useOverDark` in TubelightNav.
    */
   onDark?: boolean;
 }
@@ -67,7 +68,17 @@ export function NavBar({
   return (
     <div
       className={cn(
-        "flex items-center rounded-full border shadow-lg backdrop-blur-lg transition-colors duration-300",
+        // `translate` — not `transform` — is in the list because the caller may
+        // hand this pill a travel class to ride out on when the top rail steps
+        // off the screen (see `useChromeAway`). Tailwind v4 compiles
+        // `translate-y-*` to the standalone `translate` property, so a
+        // transition naming `transform` covers nothing at all and the rail
+        // teleports instead of sliding — silently, with the class list looking
+        // entirely correct. Named properties rather than `transition-colors`
+        // plus a second utility, because two `transition-property` utilities on
+        // one element are decided by the order Tailwind emits them in, not the
+        // order they are written here.
+        "flex items-center rounded-full border shadow-lg backdrop-blur-lg transition-[translate,background-color,border-color] duration-300 ease-out",
         onDark ? "border-white/20 bg-black/25" : "border-border bg-background/5",
         // 44px tall on desktop so the pill matches the seal and language
         // capsules either side of it; the icon-only bar sizes to its tabs.

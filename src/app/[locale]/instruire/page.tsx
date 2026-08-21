@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import TubelightNav from "@/components/TubelightNav";
+import ScrollGallery from "@/components/ScrollGallery";
 import Footer from "@/components/Footer";
 import Icon, { type IconName } from "@/components/Icon";
 import { getDictionary } from "@/i18n/get-dictionary";
@@ -90,46 +90,23 @@ export default async function TrainingPage({
         </div>
       </section>
 
-      {/* TRAINING POSTS */}
+      {/* TRAINING POSTS — the same sideways band the home page's news section
+          uses. Every announcement is here, not just the photographed ones: this
+          is the training page's own record of what it has run, so a course
+          disappearing because nobody attached a picture to it would be a worse
+          bug than an uneven row. The ones without a photograph are set as type
+          instead — see `.hscroll-card--text` in globals.css. */}
       {posts.length > 0 && (
-        <section>
-          <div className="wrap">
-            <div className="sec-head">
-              <div className="kick" aria-hidden />
-              <h2>{t.recent.title}</h2>
-              <p>{t.recent.subtitle}</p>
-            </div>
-            <div className="news-grid listing">
-              {posts.map((post) => (
-                <Link href={`${base}/stiri/${post.slug}`} key={post.slug}>
-                  <article className="post">
-                    <div className={`cover${post.cover > 1 ? ` c${post.cover}` : ""}`}>
-                      {post.image && (
-                        <Image
-                          src={post.image}
-                          alt={post.title[locale]}
-                          fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw"
-                          style={{ objectFit: "cover" }}
-                        />
-                      )}
-                      <span className="cat">{post.cat[locale]}</span>
-                    </div>
-                    <div className="body">
-                      <div className="date">{post.date[locale]}</div>
-                      <h3>{post.title[locale]}</h3>
-                      <p>{post.excerpt[locale]}</p>
-                      <span className="more">
-                        {dict.home.news.more}
-                        <Icon name="arrowRight" size={16} />
-                      </span>
-                    </div>
-                  </article>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+        <ScrollGallery
+          cards={posts.map((post) => ({
+            href: `${base}/stiri/${post.slug}`,
+            image: post.image,
+            label: post.title[locale],
+            meta: post.date[locale],
+          }))}
+          kicker={dict.nav.training}
+          title={t.recent.title}
+        />
       )}
 
       {/* UPCOMING + CTA */}

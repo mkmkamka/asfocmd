@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { GraduationCap, Map, UserPlus } from "lucide-react";
@@ -30,6 +30,77 @@ type HomeDict = Dictionary["home"];
    material, and wearing it three times across the fold is what made the actions
    read as chrome; the one saturated object left is the primary CTA. */
 
+/* The arithmetic under "Instruire" — the plateau lengths themselves.
+   See `.hero-link:nth-of-type(2)` in globals.css for the rule they drive.
+
+   A CSS `@keyframes` can only ever state one sequence, so the rule used to
+   count out the same five lengths in the same order on every pass. Anything
+   watched for more than one cycle then reads as a loop rather than as a
+   measurement. This draws instead: a bag of plateaus, emptied in a fresh
+   shuffle each pass, with the travel and the hold drawn per step — so the
+   rule keeps stating and revising a quantity without ever repeating itself.
+
+   Returns the ref for `.hero-actions`: `--sum` is inherited, so setting it on
+   the lane's container reaches a pseudo-element that JS cannot address. */
+function useVaryingRule(enabled: boolean) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !enabled) return;
+
+    // Eight, not four: a full pass has to outlast the time anyone spends
+    // looking at the fold, or the reshuffle is what becomes the pattern.
+    const PLATEAUS = [1, 0.92, 0.81, 0.7, 0.6, 0.49, 0.38, 0.29];
+    let bag: number[] = [];
+    let last = 1;
+    let timer = 0;
+
+    const draw = () => {
+      if (!bag.length) {
+        bag = PLATEAUS.slice();
+        for (let i = bag.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [bag[i], bag[j]] = [bag[j], bag[i]];
+        }
+        // Never state the same length either side of a reshuffle: held twice
+        // in a row it reads as the rule having stalled, not as a value.
+        if (bag[0] === last) [bag[0], bag[1]] = [bag[1], bag[0]];
+      }
+      return bag.shift() as number;
+    };
+
+    const step = () => {
+      const next = draw();
+      const move = Math.round(240 + Math.random() * 260);
+      const hold = Math.round(620 + Math.random() * 900);
+      last = next;
+      el.style.setProperty("--sum-move", `${move}ms`);
+      el.style.setProperty("--sum", next.toFixed(3));
+      timer = window.setTimeout(step, move + hold);
+    };
+
+    // The fold's own entrance runs for about a second; the rule waits it out
+    // rather than starting to count under a headline that is still arriving.
+    timer = window.setTimeout(step, 1800);
+
+    // Background tabs keep firing timers while nothing is composited, so the
+    // bag would be halfway drained by the time the page is looked at again.
+    const onVisibility = () => {
+      window.clearTimeout(timer);
+      if (!document.hidden) timer = window.setTimeout(step, 400);
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [enabled]);
+
+  return ref;
+}
+
 export function AsfocHero({
   base,
   hero,
@@ -51,6 +122,7 @@ export function AsfocHero({
   membersSlot?: ReactNode;
 }) {
   const reduce = useReducedMotion();
+  const actionsRef = useVaryingRule(!reduce);
 
   /* One orchestrated entrance rather than four independent delays: the rule
      draws, the name rises, the actions follow, the credits settle last. Reduced
@@ -70,13 +142,20 @@ export function AsfocHero({
 
   return (
     <main>
-      {/* Below `lg` the nav is a *sticky* 64px row in normal flow (identity
-          capsule + language switcher — see TubelightNav), which would otherwise
-          push a full-height fold 64px past the bottom of the screen and clip the
-          credit rail. The row has no surface of its own, just two floating
-          capsules, so the fold is pulled back up under it and the footage runs
-          behind them exactly as it runs behind the desktop pill. */}
-      <section className="hero-fold relative -mt-16 flex min-h-dvh w-full flex-col lg:mt-0">
+      {/* Below `lg` the nav is a *sticky* row in normal flow (identity capsule +
+          language switcher — see TubelightNav), which would otherwise push a
+          full-height fold past the bottom of the screen and clip the credit
+          rail. The row has no surface of its own, just two floating capsules,
+          so the fold is pulled back up under it and the footage runs behind
+          them exactly as it runs behind the desktop pill.
+
+          The pull-up has to match the shell's real height — capsule + its own
+          `py-2.5` — or a strip of the page background shows above the video.
+          It drifted once already when the seal capsule's size changed and
+          this number was not updated with it; it is spelled out here so the
+          next resize is a find, not a rediscovery. h-14 capsule (56px) +
+          py-2.5 (10px top + 10px bottom) = 76px. */}
+      <section className="hero-fold relative -mt-[76px] flex min-h-dvh w-full flex-col lg:mt-0">
         <HeroVideo
           clips={clips}
           className="inset-y-0 left-1/2 w-screen -translate-x-1/2"
@@ -120,12 +199,11 @@ export function AsfocHero({
               Each action carries its own mark, same 16px size across all
               three, sitting on the same left column — a membership card for
               joining, a cap for the courses, a folded map for the
-              directory. The capsule's own padding is uneven on purpose
-              (tight on the left, roomier on the right around the longer
-              label) so the mark lands on the same column the two above it
-              start from, instead of sitting wherever a symmetric pill
-              happens to put it. */}
-          <motion.div className="hero-actions" variants={rise}>
+              directory. All three marks are siblings of the thing they
+              introduce, the third one included — it is outside the capsule,
+              not in it, which is the only way it lands on the same left
+              column as the other two. */}
+          <motion.div className="hero-actions" variants={rise} ref={actionsRef}>
             <Link className="hero-link" href={`${base}/membru`}>
               <UserPlus className="hero-link-mark" size={16} aria-hidden />
               <span className="hero-link-label">{becomeMember}</span>
@@ -134,18 +212,25 @@ export function AsfocHero({
               <GraduationCap className="hero-link-mark" size={16} aria-hidden />
               <span className="hero-link-label">{training}</span>
             </Link>
-            {/* The one saturated object in the frame, now wearing a 2px
-                liquid-metal rim. The fill, the type and every responsive rule
-                still come from `.hero-cta`; the wrapper only adds the edge.
-                Last in the stack: the primary action closes the sequence
-                instead of opening it. */}
-            <LiquidMetalLink
-              className="hero-cta"
-              href={`${base}/servicii#directoriu`}
-            >
+            {/* The map mark sits outside the capsule, as a sibling of it, so
+                it starts on the same left column as the two marks above —
+                inside the pill it could never be on that column, because the
+                pill's own rim and padding always stood in front of it. The
+                button itself is text-only and symmetrically padded again.
+                The one saturated object in the frame, wearing a 2px
+                liquid-metal rim: fill, type and every responsive rule still
+                come from `.hero-cta`; the wrapper only adds the edge. Last in
+                the stack, so the primary action closes the sequence instead of
+                opening it. */}
+            <div className="hero-cta-lane">
               <Map className="hero-cta-mark" size={16} aria-hidden />
-              {cta.primary}
-            </LiquidMetalLink>
+              <LiquidMetalLink
+                className="hero-cta"
+                href={`${base}/servicii#directoriu`}
+              >
+                {cta.primary}
+              </LiquidMetalLink>
+            </div>
           </motion.div>
         </motion.div>
 

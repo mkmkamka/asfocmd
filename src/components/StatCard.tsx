@@ -113,7 +113,15 @@ export default function StatCard({
             corner — the box identifies the association rather than labelling a
             row of figures, so it gets the logo, not a coloured kicker. */}
         <span className="factbox-kick">
-          <Logo size={26} />
+          {/* Rests in the greyscale cut and comes up in full colour when the
+              card is hovered, matching the partner logos in the card's foot.
+              Two stacked marks rather than a CSS grayscale() of the colour one:
+              a luminance filter flattens the oxblood brick and the soot cap
+              into the same mid grey. */}
+          <span className="seal-swap">
+            <Logo size={26} tone="mono" />
+            <Logo size={26} />
+          </span>
           {kick}
         </span>
         {href && more && (

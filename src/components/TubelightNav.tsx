@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   ShieldCheck,
@@ -17,33 +17,95 @@ import { NavBar } from "@/components/ui/tubelight-navbar";
 import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { scrollPageToTop } from "@/lib/nav";
+import { PAGE_RING, type RingStop } from "@/lib/page-ring";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/get-dictionary";
 
-/* Is the floating chrome currently sitting over the home page's graded hero?
+/* One mark per destination, for the phone's bottom bar. Keyed by ring stop
+   rather than listed in order, so the running order lives in exactly one
+   place — PAGE_RING — and this stays a lookup. */
+const TAB_MARKS: Record<RingStop["key"], typeof House> = {
+  home: House,
+  about: Info,
+  services: Wrench,
+  training: GraduationCap,
+  news: Newspaper,
+  contact: Mail,
+  memberArea: ShieldCheck,
+  becomeMember: UserPlus,
+};
 
-   The rail's resting material is ink on a 5% light wash — it needs a bright
-   page under it. The home fold is a full-screen graded picture, so for as long
-   as it is behind the chrome the whole rail has to run light, then flip back as
-   the page scrolls into the white bands below. That flip is what a nav over a
-   cinematic hero is supposed to do; the alternative is a permanently dark pill
-   on every page, which is a different (and much louder) decision.
+/* Every dark ground on the site, named in one place.
 
-   Two thresholds, because the top rail and the phone's bottom dock sit at
-   opposite ends of the viewport and stop being over the fold at different
-   moments. Pages without a `.hero-fold` never report true, so /despre,
-   /servicii and the rest are untouched. */
-function useOverHero() {
+   The chrome's resting material is ink on a 5% light wash, so it needs a bright
+   page under it; over anything dark the labels go with it and the rail reads as
+   empty. The home fold was only the first and loudest of those grounds, and
+   checking it alone is what left the nav invisible further down: the soot bands
+   (`.band`), the closing call to action (`.cta`) and the footer are all just as
+   dark, and the footer is the one that matters most because it is on every page
+   and the phone's bottom dock comes to rest on it at the end of every scroll.
+
+   `.page-hero` is deliberately absent — the inner pages open on sand-to-white,
+   which the resting material is already built for.
+
+   This list is the known weak point, and every entry after the first three was
+   added the same way: something dark shipped, the nav went invisible over it,
+   someone noticed. `.a-cover` is the soot fallback behind an article's cover
+   photo, which six of the archive posts have no image for; `.hscroll` is the
+   sideways gallery. Both were live and broken before being typed in here.
+   Nothing links this list to the rules that actually paint those surfaces
+   dark, which is why it keeps going stale — see the note in globals.css. */
+const DARK_BANDS = ".hero-fold,.band,.cta,footer,.a-cover,.hscroll";
+
+/* Is the floating chrome sitting over one of them right now?
+
+   Two answers, because the top rail and the phone's bottom dock sit at opposite
+   ends of the viewport and cross a given band at quite different moments.
+
+   Where those two live is measured rather than typed in. The rail that belongs
+   to the other breakpoint is `display:none` and measures 0×0, so it simply
+   drops out, and the answer stays correct when the rail's height or the dock's
+   safe-area inset changes — a pair of hand-tuned pixel thresholds would quietly
+   drift away from the boxes they were describing. */
+const SLACK = 12; // Flip while the pill is still clear of the seam, not on it.
+
+function useOverDark() {
   const pathname = usePathname();
   const [state, setState] = useState({ top: false, bottom: false });
 
   useEffect(() => {
+    // Cached per page: the bands are markup, and markup only changes when the
+    // route does — which is exactly when this effect re-runs.
+    const bands = Array.from(document.querySelectorAll(DARK_BANDS));
+    // The shells, not the capsules inside them. The capsules now slide off the
+    // top of the screen on the way down (see `useChromeAway`), and a box that
+    // is mid-slide reports a rect 90px above where it will come to rest — read
+    // during the return trip, that samples the wrong band and the rail lands
+    // wearing the wrong material for a moment before correcting itself. The
+    // shells never move, and a transform on a child does not touch the parent's
+    // layout box, so they describe the same y-band at rest and stay honest
+    // throughout the slide.
+    const topChrome = Array.from(document.querySelectorAll(".chrome-shell"));
+    const dockChrome = Array.from(document.querySelectorAll(".vt-dock-nav"));
+
+    // Vertical overlap only. Every band here runs the full measure, and so does
+    // the rail, so there is no case where the two share a y-range and miss each
+    // other on x.
+    const overlaps = (boxes: Element[], rects: DOMRect[]) =>
+      boxes.some((box) => {
+        const b = box.getBoundingClientRect();
+        if (!b.width || !b.height) return false; // display:none at this breakpoint
+        return rects.some(
+          (d) => d.top < b.bottom + SLACK && d.bottom > b.top - SLACK,
+        );
+      });
+
     const read = () => {
-      const fold = document.querySelector(".hero-fold");
-      const foot = fold ? fold.getBoundingClientRect().bottom : -1;
-      // The top rail floats at 44px; give it its own height again as slack so
-      // the flip happens while the pill is still fully over the picture.
-      const next = { top: foot > 100, bottom: foot > window.innerHeight - 36 };
+      const rects = bands.map((el) => el.getBoundingClientRect());
+      const next = {
+        top: overlaps(topChrome, rects),
+        bottom: overlaps(dockChrome, rects),
+      };
       // Bail out when nothing moved — this runs on every scroll frame, and a
       // fresh object each time would re-render the whole rail all the way down
       // the page for no reason.
@@ -61,6 +123,88 @@ function useOverHero() {
   }, [pathname]);
 
   return state;
+}
+
+/* ── The rail steps out of the way ─────────────────────────────────────
+   Present when the page opens, gone as soon as you head down it, back the
+   instant you turn around. Reading is the one thing the chrome cannot help
+   with, and on a phone the top capsules and the bottom dock together eat
+   about a fifth of the screen; going down means you are reading, coming back
+   up means you are looking for something — which is when navigation should be
+   under your thumb again, without a trip to the top of the page to fetch it.
+
+   Direction, not depth. A rail that reappears only at the top of the document
+   makes you scroll for it; one that reappears on any upward flick is where
+   you left it. The one exception is the top of the page itself, where the
+   rail is always out: there is nothing above it to go back to.
+
+   Only the top chrome travels. The phone's bottom dock stays put — it is
+   already at the far end of the screen, out of the reading column, and a set
+   of tabs that ducks away from the thumb reaching for it is worse than one
+   that is simply there. */
+
+const SETTLE = 6; // px. Below this it is momentum wobble, not a decision.
+
+function useChromeAway() {
+  const pathname = usePathname();
+  const [away, setAway] = useState(false);
+  // Mirrored in a ref so the scroll handler can compare against the live value
+  // without re-subscribing on every flip, and so a reveal from outside the
+  // handler (focus, route change) is visible to it.
+  const awayRef = useRef(false);
+
+  const set = useCallback((next: boolean) => {
+    if (awayRef.current === next) return;
+    awayRef.current = next;
+    setAway(next);
+  }, []);
+
+  useEffect(() => {
+    set(false); // A new page opens with its navigation showing.
+
+    /* How far the page has to travel before the rail is allowed to leave: the
+       depth of the band the rail itself occupies. Measured off the shells
+       rather than typed in, so it stays correct when the rail's height or its
+       top offset changes, and so the two breakpoints — a 44px rail floating at
+       44px, a shorter bar sitting flush at the top — each get their own answer
+       without either being written down anywhere. */
+    const restBand = () =>
+      Array.from(document.querySelectorAll(".chrome-shell")).reduce(
+        (deepest, shell) => {
+          const b = shell.getBoundingClientRect();
+          if (!b.height) return deepest; // display:none at this breakpoint
+          return Math.max(deepest, b.bottom);
+        },
+        0,
+      );
+
+    let band = restBand();
+    let last = Math.max(0, window.scrollY);
+
+    const read = () => {
+      const y = Math.max(0, window.scrollY); // iOS rubber-bands past zero
+      const travel = y - last;
+      if (Math.abs(travel) < SETTLE) return;
+      last = y;
+      set(travel > 0 && y > band);
+    };
+
+    const remeasure = () => {
+      band = restBand();
+      read();
+    };
+
+    window.addEventListener("scroll", read, { passive: true });
+    window.addEventListener("resize", remeasure);
+    return () => {
+      window.removeEventListener("scroll", read);
+      window.removeEventListener("resize", remeasure);
+    };
+  }, [pathname, set]);
+
+  // Something took focus inside chrome that is off the screen — a keyboard
+  // user tabbing into a rail they cannot see. Bring it back before they land.
+  return { away, show: () => set(false) };
 }
 
 export default function TubelightNav({
@@ -81,32 +225,40 @@ export default function TubelightNav({
   //
   // Membership is the last tab: it is the conversion action, and it opens the
   // same /membru page the hero's "Înregistrează-te" link does.
-  const desktopItems = [
-    { name: nav.home, url: base },
-    { name: nav.about, url: `${base}/despre` },
-    { name: nav.services, url: `${base}/servicii` },
-    { name: nav.training, url: `${base}/instruire` },
-    { name: nav.news, url: `${base}/stiri` },
-    { name: nav.contact, url: `${base}/contact` },
-    { name: nav.memberArea, url: `${base}/membri` },
-    { name: nav.becomeMember, url: `${base}/membru` },
-  ];
+  //
+  // The order is not written here any more. It comes from PAGE_RING, which a
+  // sideways swipe and the ← / → keys also walk (see PageSwipe) — two orders
+  // that drifted apart would put the lamp in this rail somewhere other than
+  // where a swipe just went.
+  const desktopItems = PAGE_RING.map((stop) => ({
+    name: nav[stop.key],
+    url: `${base}${stop.segment}`,
+  }));
 
-  // Bottom bar: no room for words, so every tab needs its own mark. Seven 44px
-  // tabs plus the pill's padding is 316px, which still clears a 320px screen.
-  const mobileItems = [
-    { name: nav.home, url: base, icon: House },
-    { name: nav.about, url: `${base}/despre`, icon: Info },
-    { name: nav.services, url: `${base}/servicii`, icon: Wrench },
-    { name: nav.training, url: `${base}/instruire`, icon: GraduationCap },
-    { name: nav.news, url: `${base}/stiri`, icon: Newspaper },
-    { name: nav.contact, url: `${base}/contact`, icon: Mail },
-    { name: nav.memberArea, url: `${base}/membri`, icon: ShieldCheck },
-    { name: nav.becomeMember, url: `${base}/membru`, icon: UserPlus },
-  ];
+  // Bottom bar: no room for words, so every tab needs its own mark. Eight 44px
+  // tabs plus the pill's padding is 360px, which still clears a 375px screen.
+  const mobileItems = PAGE_RING.map((stop) => ({
+    name: nav[stop.key],
+    url: `${base}${stop.segment}`,
+    icon: TAB_MARKS[stop.key],
+  }));
 
-  const overHero = useOverHero();
+  const overDark = useOverDark();
+  const { away, show } = useChromeAway();
   const pathname = usePathname();
+
+  /* The trip off the screen, carried by each capsule rather than by the shell
+     around it. Moving an ancestor — `transform`, or `translate` as Tailwind v4
+     compiles this — makes that ancestor a backdrop root, and a backdrop root
+     above the glass is what turns these capsules into flat tint: the same trap
+     the view-transition names avoid, for the same reason (see the block in
+     globals.css). A box moving itself is fine; the root lands at the blurred
+     box rather than above it.
+
+     `100%` is the capsule's own height, so the 44px islands and the 40px
+     language chip each clear the top of the screen by their own measure; the
+     3rem covers the offset they float at plus the shadow they cast. */
+  const travel = away ? "translate-y-[calc(-100%-3rem)]" : "translate-y-0";
 
   /* The seal is a link home; on the home page itself it is a link to the top of
      it. Without this, clicking the identity mark from the middle of the page is
@@ -117,30 +269,48 @@ export default function TubelightNav({
     scrollPageToTop();
   };
 
-  /* Identity and language wear the same glass shell; only the height differs.
-     The seal sits alone — no wordmark — at the rail's full 44px, matching the
-     nav pill beside it. Language runs 40px: it is a utility, and three
+  /* Navigation and language wear the same glass shell; only the height differs.
+     Language runs 40px: it is a utility, and three
      two-letter codes do not need the same presence as the site's identity or
      its navigation. Height is a parameter rather than a `!h-10` override
      because Tailwind v4 moved the important modifier to a suffix, and a class
-     string that silently stops applying is a bad way to find that out. */
+     string that silently stops applying is a bad way to find that out.
+
+     `backdrop-blur-lg` here is the material, not a garnish — it is the only
+     reason these read as glass rather than as a flat wash. That makes them
+     sensitive to any ancestor that becomes a backdrop root: the blur keeps
+     running, samples nothing, and the capsules go transparent with no error
+     anywhere. The `vt-*` classes below are on the capsules for exactly that
+     reason; see the view-transition block in globals.css before moving one up
+     to a wrapper. */
   const capsule = (onDark: boolean, h = "h-11") =>
-    `pointer-events-auto flex ${h} items-center rounded-full border shadow-lg backdrop-blur-lg transition-colors duration-300 ${
+    `pointer-events-auto flex ${h} items-center rounded-full border shadow-lg backdrop-blur-lg transition-[translate,background-color,border-color] duration-300 ease-out ${travel} ${
       onDark ? "border-white/20 bg-black/25" : "border-border bg-background/5"
     }`;
 
-  /* The seal is black artwork, so its chip stays light on both grounds — it
-     just goes more opaque over the picture, where a 45% white plate would let
-     the footage through and break the engraving up. */
-  const seal = (size: number, onDark: boolean) => (
-    <span
-      className={`grid h-9 w-9 place-items-center rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,.6)] transition-colors duration-300 ${
-        onDark ? "bg-white/85" : "bg-white/45"
-      }`}
-    >
-      <Logo size={size} />
-    </span>
-  );
+  /* The seal is one disc, not a capsule with a plate inside it.
+     It used to be a 48px white plate inside a 56px glass capsule carrying a
+     48px mark: three concentric circles — the seal's own engraved ring, the
+     plate, the capsule — at near-identical diameters. They merged into a fat
+     white blob and the mark read as oversized at any size, because the plate
+     it sat on had no margin left to read as a plate.
+
+     So the glass shell comes off here (it is the only island whose artwork is
+     itself a circle) and the plate becomes the whole control: a 48px disc with
+     a 34px mark, leaving a 7px white ring. That also brings the island down to
+     the nav pill's own weight class instead of overhanging it by 12px.
+
+     The plate stays white on both grounds — the artwork is black — and just
+     goes more opaque over the picture, where a 45% white disc would let the
+     footage through and break the engraving up. `shadow-lg`'s two layers are
+     spelled out so the inset highlight can sit in the same declaration; two
+     separate shadow utilities would overwrite one another. */
+  const SEAL_MARK = 34; // inside the 48px (`size-12`) disc
+
+  const seal = (onDark: boolean) =>
+    `pointer-events-auto grid size-12 place-items-center rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,.6),0_10px_15px_-3px_rgba(0,0,0,.25),0_4px_6px_-4px_rgba(0,0,0,.25)] transition-[translate,background-color] duration-300 ease-out ${travel} ${
+      onDark ? "bg-white/85" : "bg-white/45"
+    }`;
 
   return (
     <>
@@ -157,15 +327,18 @@ export default function TubelightNav({
           chrome on the site's own measure, so the seal now shares a left edge
           with the hero title, the fact card and the services grid, and the
           language capsule shares a right edge with the credit logos. */}
-      <div className="pointer-events-none fixed inset-x-0 top-11 z-50 hidden lg:block">
+      <div
+        className="chrome-shell pointer-events-none fixed inset-x-0 top-11 z-50 hidden lg:block"
+        onFocusCapture={show}
+      >
         <div className="wrap flex items-center justify-between gap-3">
           <Link
             href={base}
             aria-label="ASFOCMD"
             onClick={homeClick}
-            className={`${capsule(overHero.top)} w-11 justify-center`}
+            className={`${seal(overDark.top)} vt-rail-seal`}
           >
-            {seal(30, overHero.top)}
+            <Logo size={SEAL_MARK} />
           </Link>
 
           {/* In flow on lg (no room to center absolutely), truly centered on
@@ -175,8 +348,9 @@ export default function TubelightNav({
           <div className="pointer-events-auto xl:absolute xl:left-1/2 xl:-translate-x-1/2">
             <NavBar
               items={desktopItems}
+              className={`vt-rail-nav ${travel}`}
               lampId="lamp-desktop"
-              onDark={overHero.top}
+              onDark={overDark.top}
             />
           </div>
 
@@ -186,11 +360,11 @@ export default function TubelightNav({
               LanguageSwitcher. It is the one island that is a utility rather
               than identity or navigation, so it is the one that gives up
               height. */}
-          <div className={`${capsule(overHero.top, "h-10")} px-1`}>
+          <div className={`${capsule(overDark.top, "h-10")} vt-rail-lang px-1`}>
             <LanguageSwitcher
               current={locale}
               variant="light"
-              onDark={overHero.top}
+              onDark={overDark.top}
             />
           </div>
         </div>
@@ -201,21 +375,24 @@ export default function TubelightNav({
           viewport, inside thumb reach. Same measure as the desktop rail: on a
           phone `.wrap` is a plain 24px gutter, which is the gutter the hero
           type below it uses. */}
-      <div className="sticky top-0 z-50 py-2.5 lg:hidden">
+      <div
+        className="chrome-shell sticky top-0 z-50 py-2.5 lg:hidden"
+        onFocusCapture={show}
+      >
         <div className="wrap flex items-center justify-between gap-2">
           <Link
             href={base}
             aria-label="ASFOCMD"
             onClick={homeClick}
-            className={`${capsule(overHero.top)} w-11 justify-center`}
+            className={`${seal(overDark.top)} vt-top-seal`}
           >
-            {seal(28, overHero.top)}
+            <Logo size={SEAL_MARK} />
           </Link>
-          <div className={`${capsule(overHero.top, "h-10")} px-1`}>
+          <div className={`${capsule(overDark.top, "h-10")} vt-top-lang px-1`}>
             <LanguageSwitcher
               current={locale}
               variant="light"
-              onDark={overHero.top}
+              onDark={overDark.top}
             />
           </div>
         </div>
@@ -229,8 +406,9 @@ export default function TubelightNav({
         <NavBar
           items={mobileItems}
           iconOnly
+          className="vt-dock-nav"
           lampId="lamp-mobile"
-          onDark={overHero.bottom}
+          onDark={overDark.bottom}
         />
       </div>
     </>

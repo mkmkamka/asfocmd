@@ -1,8 +1,6 @@
-import Link from "next/link";
-import Image from "next/image";
 import TubelightNav from "@/components/TubelightNav";
+import ScrollGallery from "@/components/ScrollGallery";
 import Footer from "@/components/Footer";
-import Icon from "@/components/Icon";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { isLocale, defaultLocale, type Locale } from "@/i18n/config";
 import { getNewsPosts } from "@/lib/cms";
@@ -51,39 +49,18 @@ export default async function NewsPage({
         </div>
       </div>
 
-      <section>
-        <div className="wrap">
-          <div className="news-grid listing">
-            {posts.map((post) => (
-              <Link href={`${base}/stiri/${post.slug}`} key={post.slug}>
-                <article className="post">
-                  <div className={`cover${post.cover > 1 ? ` c${post.cover}` : ""}`}>
-                    {post.image && (
-                      <Image
-                        src={post.image}
-                        alt={post.title[locale]}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw"
-                        style={{ objectFit: "cover" }}
-                      />
-                    )}
-                    <span className="cat">{post.cat[locale]}</span>
-                  </div>
-                  <div className="body">
-                    <div className="date">{post.date[locale]}</div>
-                    <h3>{post.title[locale]}</h3>
-                    <p>{post.excerpt[locale]}</p>
-                    <span className="more">
-                      {dict.home.news.more}
-                      <Icon name="arrowRight" size={16} />
-                    </span>
-                  </div>
-                </article>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* The archive as one sideways run, the same band the home page and
+          /instruire use. Every post is in it — this page is the full record,
+          so nothing is filtered out; the ones with no photograph are set as
+          type (see `.hscroll-card--text` in globals.css). */}
+      <ScrollGallery
+        cards={posts.map((post) => ({
+          href: `${base}/stiri/${post.slug}`,
+          image: post.image,
+          label: post.title[locale],
+          meta: post.date[locale],
+        }))}
+      />
 
       <Footer locale={locale} dict={dict} />
     </>

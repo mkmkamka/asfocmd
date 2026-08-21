@@ -1,16 +1,27 @@
-// Official ASFOCMD seal — black line-art on light surfaces, white knockout
-// on dark ones (tone="footer"). Sourced from /brand/asfoc-seal-*.png.
+// Official ASFOCMD seal — the full mark: ring, ribbon, ASFOCMD + MOLDOVA,
+// brick chimney, ladder, brush, smoke and fire.
+//
+// The artwork is generated. Edit tools/seal/gen.py and re-run it; never edit
+// the SVGs in /public/brand by hand.
+const FILE = {
+  dark: "asfoc-seal",
+  mono: "asfoc-seal-mono",
+  footer: "asfoc-seal-white",
+} as const;
+
 export default function Logo({
   size = 42,
   tone = "dark",
 }: {
   size?: number;
-  tone?: "dark" | "footer";
+  /**
+   * "footer" is the white knockout, for dark grounds.
+   * "mono" is the greyscale cut, for the resting half of a hover swap.
+   */
+  tone?: keyof typeof FILE;
 }) {
-  const src =
-    tone === "footer"
-      ? "/brand/asfoc-seal-white-512.png"
-      : "/brand/asfoc-seal-512.png";
+  const src = `/brand/${FILE[tone]}.svg`;
+
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img

@@ -388,39 +388,106 @@ ul{list-style:none}
 /* Three lanes, stacked — one destination per row rather than three sharing
    one. Left-aligned, same edge as the eyebrow and the name above them. */
 .hero-actions{
-  display:flex;flex-direction:column;align-items:flex-start;gap:14px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:7px;
   margin-top:var(--fold-step-2);
+  /* One row height for all three lanes, and the reason the marks finally sit
+     on an even column. A capsule is taller than a line of type — 33px against
+     26px — so with three auto-height rows and one gap between them, the third
+     mark was pushed 3px past the rhythm the first two set (34.6px, 34.6px,
+     37.5px measured). Three identical pictograms unevenly spaced is exactly
+     the kind of misalignment that is visible without being nameable.
+     Equal rows fix it at the source: every lane is `--lane-h` tall and
+     centres its own content, so both columns step by the same amount all the
+     way down. The gap comes down to compensate — the two text lanes now carry
+     their own leading — leaving the block the same overall height. */
+  --lane-h:30px;
+  /* The unavoidable trade in this block, stated once so it stops being
+     rediscovered: with the mark outside the capsule, the capsule's *edge*
+     and the capsule's *label* cannot both sit on the column the two words
+     above use. The label is always `--cta-rim + --cta-pad-x` right of the
+     edge, and closing that would mean the pill overlapping its own mark.
+
+     Two things were tried before this and both failed on sight. Aligning
+     the capsule's *edge* to the words put the whole distance into the
+     third label, which then read as indented. Splitting the distance in
+     half — words halfway between the capsule's edge and its label — put
+     5.5px into each, and 5.5px of text misalignment is still plainly
+     visible: the eye tracks a left edge of type to well under a pixel, and
+     forgives a gap far more readily. Halving an error the eye is sharp
+     about, to buy back one it is blunt about, is a bad trade.
+
+     So the labels align exactly, all three, and the entire distance goes
+     into the gap — where the only defence is to make it small. That is why
+     `--cta-pad-x` is 8px rather than a button's usual 14–16: every pixel
+     off the pad is a pixel off the one visible discrepancy left in this
+     block. It cannot reach zero. A filled capsule's edge starts before its
+     label by exactly rim + pad, so if the labels line up, the fill on the
+     third lane must begin that much earlier than the words above it do.
+     There is no arrangement of a padded button and two plain words that
+     escapes this; the remaining choice is only which error to take, and
+     type wins.
+
+     The pad is 6px, tighter than the 8 it was cut to for that reason and
+     tighter still than a button's usual 14–16, because a tight capsule is
+     the look being asked for here. It happens to pay twice: every pixel off
+     the pad is a pixel off the one visible discrepancy left in this block.
+
+     The rounded cap pays a little of it back: at the top and bottom of the
+     16px mark the pill's arc has already fallen ~2px right of where it sits
+     at the middle, so that lane's air reads slightly wider than it
+     measures.
+
+     `--cta-gap` is the one number to turn — the air between the mark and
+     the capsule. Everything else follows it, the links included.
+     `--cta-rim` has to be restated here because `--lm-ring` lives on
+     `.lm-rim` and cannot be read from outside it; the two are the same
+     number and change together at 640px. */
+  --cta-gap:12px;
+  --cta-rim:2px;
+  --cta-pad-x:6px;
+  /* Mark → any label, in every lane: for the capsule this is its gap plus
+     everything it puts in front of its own text; the two links take the
+     same total as a plain gap. One column, no residual. */
+  --lane-lead:calc(var(--cta-gap) + var(--cta-rim) + var(--cta-pad-x));
 }
-/* The only saturated object in the frame — and a full capsule again. It spent a
-   while at 4px on the argument that the fold's other rounds made a pill read as
-   another tab; but those pills are all chrome (nav, language, credits) and this
-   is the one thing that is a *button*, so it can wear the site's own button
-   shape without being mistaken for chrome. */
+/* The third lane: mark, then the capsule — the mark a sibling of the button
+   rather than its child, which is the only arrangement that gets it onto the
+   same left column as the two above. */
+.hero-cta-lane{
+  display:inline-flex;align-items:center;gap:var(--cta-gap);
+  min-height:var(--lane-h);
+  color:rgba(255,255,255,.9);
+}
+/* The only saturated object in the frame, and a full capsule — the fold's
+   other rounds are all chrome (nav, language, credits) and this is the one
+   thing that is a *button*, so it wears the site's own button shape.
+   Slim, though. Next to two lanes of plain type it was carrying the padding,
+   weight and drop shadow of a landing-page CTA sitting on its own, and that
+   bulk is what made it read as a foreign object in a stack of links rather
+   than the last item of one: type a touch under the links' own, padding
+   roughly halved, and a shadow that seats it instead of floating it. */
 .hero-cta{
-  display:inline-flex;align-items:center;gap:7px;
+  display:inline-flex;align-items:center;
   background:var(--ember);color:#fff;
-  /* Mark back, same 16px size as the two above it. Text-only left the
-     capsule looking lopsided rather than aligned — the left padding is
-     tight by design (see below), and with nothing but a short word sitting
-     right up against it, the pill read as a chunk of empty red on the
-     right rather than a balanced button. The icon fills exactly that
-     visual weight instead of the padding having to.
-     Padding stays uneven on purpose: a stadium shape can carry only 4px on
-     its rounded end before the curve starts eating into the content, so the
-     left side gets exactly that and no more — which is what lands the mark
-     on the same column the two marks above it start from. The right side
-     keeps the fuller pad a pill needs so "un specialist" doesn't run into
-     the curve on its own end. */
-  font-size:14.5px;font-weight:640;letter-spacing:.005em;
-  padding:7px 20px 7px 4px;border-radius:9999px;
+  /* The vertical is two numbers, not one: 4px of pad *and* a 1.15 line box.
+     At 1.35 the leading was quietly adding 2.8px above and below the word
+     that no padding value could take back — the capsule measured 28.9px
+     around a 14px label and read as padded even at 5px of pad. Set to the
+     type's own height and the pill closes to 24.1. */
+  font-size:14px;font-weight:620;letter-spacing:.005em;line-height:1.15;
+  padding:4px var(--cta-pad-x);border-radius:9999px;
   white-space:nowrap;
-  box-shadow:0 12px 30px -10px rgba(127,31,22,.75);
+  box-shadow:0 8px 20px -10px rgba(127,31,22,.7);
   transition:background .25s ease,box-shadow .25s ease,transform .2s ease;
 }
-.hero-cta:hover{background:#93251A;box-shadow:0 16px 38px -10px rgba(127,31,22,.9);transform:translateY(-1px)}
+.hero-cta:hover{background:#93251A;box-shadow:0 12px 26px -10px rgba(127,31,22,.85);transform:translateY(-1px)}
 .hero-cta:active{transform:translateY(0)}
-.hero-cta-mark{flex:none;transition:transform .25s ease}
-.hero-cta:hover .hero-cta-mark{transform:translateY(-2px)}
+/* Outside the pill now, so it takes the two other marks' treatment rather
+   than the button's white: same 16px, same .78 resting opacity. The hover
+   is driven off the lane, since the pointer is on the capsule, not on the
+   mark. */
+.hero-cta-mark{flex:none;opacity:.78;transition:opacity .2s ease,transform .25s ease}
+.hero-cta-lane:hover .hero-cta-mark{opacity:1;transform:translateY(-2px)}
 
 /* ── Liquid-metal rim ─────────────────────────────────────────────────
    A shader canvas showing only at the button's edge. The wrapper is the ring:
@@ -469,26 +536,129 @@ ul{list-style:none}
 
 /* Secondary actions as type, not chrome: a hairline that fills in on hover.
    The rule is on the *label* only — an underline that ran under the pictogram
-   too would turn each link back into a box. */
+   too would turn each link back into a box.
+
+   The gap is `--lane-lead`, not a number of its own: it carries these two
+   words out to exactly the column the capsule's own label lands on. Wider
+   than a link's icon gap would normally be, and deliberately so — see the
+   note in `.hero-actions`. */
 .hero-link{
-  display:inline-flex;align-items:center;gap:7px;
+  display:inline-flex;align-items:center;gap:var(--lane-lead);
+  min-height:var(--lane-h);
   font-size:14.5px;font-weight:560;color:rgba(255,255,255,.9);
   white-space:nowrap;
   transition:color .2s ease;
 }
 .hero-link-mark{flex:none;opacity:.78;transition:opacity .2s ease}
+/* The 3px between the word and its hairline is on the rule, not as padding on
+   the label. As padding it was inside the box the lane centres, so the word
+   itself rode 1.5px above its own pictogram while the button's label — with no
+   such padding — sat dead centre on its. */
 .hero-link-label{
   position:relative;
-  padding-bottom:3px;
 }
+/* The two rules move, and they do not move alike — each one acts out what its
+   own link is for. The hairline is the same 1px box in both cases; what
+   differs is which cheap property is animated on it.
+
+   Note the longhands. The shorthand `background` resets `background-image`, so
+   a hover written as `background:` would wipe the effect for as long as the
+   pointer sits on the link. */
 .hero-link-label::after{
-  content:"";position:absolute;left:0;bottom:0;height:1px;width:100%;
-  background:rgba(255,255,255,.42);
-  transition:background .25s ease;
+  content:"";position:absolute;left:0;bottom:-3px;height:1px;width:100%;
+  background-color:rgba(255,255,255,.42);
+  background-repeat:no-repeat;
+  transition:background-color .25s ease;
+}
+
+/* ── Înregistrează-te: two become one ────────────────────────────────
+   Joining the association is the one action on this page that is about
+   company, so the rule under it is two lights rather than one. They enter
+   from opposite ends, converge on the centre, and the whole hairline blooms
+   at the moment they touch — then they leave along the same path, together,
+   as a single light. Nothing arrives or departs alone.
+
+   Both layers are the same band, `--glint`, twice. A background-position
+   percentage aligns the image's own p% with the box's p%, so with a band
+   image twice the box's width the bright centre sits at `W(1 - p)`: p=-100%
+   parks it off the right, p=200% off the left, and p=50% is dead centre —
+   which is why both layers converge on the same number from opposite
+   directions.
+
+   The 58.1% keyframe is a reset, not a move: layer B has to get from the
+   right-hand parking spot back to the left-hand one, and interpolating that
+   would drag the band back across the rule. Done in 0.1% of a 9.2s cycle —
+   nine milliseconds — while both bands are outside the box anyway. */
+.hero-actions{
+  --glint:linear-gradient(90deg,
+    rgba(255,255,255,0) 34%,
+    rgba(217,132,124,.55) 44%,
+    rgba(255,255,255,.98) 50%,
+    rgba(217,132,124,.55) 56%,
+    rgba(255,255,255,0) 66%);
+}
+@keyframes hero-rule-converge{
+  0%,10%{
+    background-position:-100% 0,200% 0;
+    background-color:rgba(255,255,255,.42);
+  }
+  36%,44%{
+    background-position:50% 0,50% 0;
+    background-color:rgba(255,255,255,.95);
+  }
+  58%{
+    background-position:-100% 0,-100% 0;
+    background-color:rgba(255,255,255,.42);
+  }
+  58.1%,100%{
+    background-position:-100% 0,200% 0;
+    background-color:rgba(255,255,255,.42);
+  }
+}
+.hero-link:nth-of-type(1) .hero-link-label::after{
+  background-image:var(--glint),var(--glint);
+  background-size:200% 100%,200% 100%;
+  background-position:-100% 0,200% 0;
+  animation:hero-rule-converge 9.2s cubic-bezier(.37,0,.18,1) 1.4s infinite;
+}
+
+/* ── Instruire: the rule does arithmetic ─────────────────────────────
+   Training is measured, so this one is a quantity rather than a light. The
+   rule adds and subtracts its own length from a fixed left origin, in
+   plateaus: a value is stated, held long enough to be read, then changed.
+   The easing is almost square, so each change lands rather than drifts. No
+   glint here at all; a sum does not shimmer.
+
+   The lengths used to be a five-step `@keyframes` — the same five values in
+   the same order every 7.6 seconds, which is a loop long enough to notice and
+   short enough to memorise. That is the one thing a counter must never look
+   like, so the sequence is no longer written down anywhere: `--sum` and its
+   travel time are set from JS (see `useVaryingRule` in asfoc-hero.tsx), drawn
+   from a bag that is reshuffled every pass, and no two cycles run alike.
+
+   Still one transition on an already-composited 1px box, so it costs what the
+   keyframes did. Custom properties inherit into the pseudo-element, so the
+   script only ever touches `.hero-actions` — it never has to reach a rule it
+   cannot select. */
+.hero-link:nth-of-type(2) .hero-link-label::after{
+  transform-origin:left center;
+  transform:scaleX(var(--sum,1));
+  /* Longhand pairs, both of them: this block replaces the shared
+     `transition:background-color` above wholesale, so the hover colour has to
+     be re-stated here or it would snap. */
+  transition:transform var(--sum-move,420ms) cubic-bezier(.85,0,.15,1),
+             background-color .25s ease;
+}
+
+/* 9.2s of glint against a sequence that never repeats: the two lanes cannot
+   fall into step, which is most of what keeps a pair of animated rules from
+   reading as one widget. */
+@media(prefers-reduced-motion:reduce){
+  .hero-link-label::after{animation:none;background-image:none;transform:none}
 }
 .hero-link:hover{color:#fff}
 .hero-link:hover .hero-link-mark{opacity:1}
-.hero-link:hover .hero-link-label::after{background:var(--copper-soft)}
+.hero-link:hover .hero-link-label::after{background-color:var(--copper-soft)}
 
 /* ── Credit rail ──────────────────────────────────────────────────────
    The affiliations, along the foot of the fold. They were a rounded glass pill
@@ -671,23 +841,58 @@ ul{list-style:none}
   .hero-fold .member-strip{
     grid-template-columns:1fr;justify-items:center;gap:7px;
   }
-  .hero-fold .ms-marks{grid-column:1;gap:4px}
+  .hero-fold .ms-marks{grid-column:1;gap:6px}
   .hero-fold .ms-label{
     grid-column:1;justify-self:center;
     max-width:none;margin:0;
     font-size:7px;letter-spacing:.13em;line-height:1;
     white-space:nowrap;text-align:center;
   }
-  /* The marks come down with the caption. The rail is a footnote on a phone,
-     and 34px marks over a 7px caption made the caption look like a mistake. */
-  .hero-fold{--ms-mark:27px}
-  .hero-fold .ms-item{--ms-pad-x:7px;padding:5px var(--ms-pad-x)}
+  /* The marks come down with the caption, but only so far: these are links,
+     and on a touch screen a link has to be a target before it is a credit.
+     At 27px the three of them were 39x33 boxes — under the 44px minimum in
+     every touch guideline, and small enough that a thumb hits the gap
+     between two of them as often as either one. 38px of artwork inside
+     6/10 of padding puts the shortest of them at 44 and `min-height`
+     guarantees the rest, with the row gap opened to 6px so a near miss
+     lands on nothing rather than on the neighbour.
+
+     There is room for it: the three marks measured 123px across a 375px
+     screen with 327px of rail available, so the whole row grows by half
+     again and still sits comfortably inside one line. */
+  .hero-fold{--ms-mark:38px}
+  .hero-fold .ms-item{
+    --ms-pad-x:10px;padding:6px var(--ms-pad-x);
+    min-height:48px;
+  }
 }
 @media(max-width:640px){
+  /* A phone has one column, so the fold is centred on it rather than hung off
+     a left edge that only exists on a wide screen. The stage centres its three
+     children and hands down `text-align`, which is all the eyebrow and the
+     name need.
+
+     `.hero-actions` is the exception, and deliberately: the block is centred
+     but its lanes stay left-aligned inside it, so the three marks keep the
+     single column they have on desktop. Centring each lane on its own would
+     scatter them by the difference between "Instruire" and "Caută un
+     specialist" — a ragged icon column, which is the one thing this block has
+     been built not to be. */
+  .hero-stage{align-items:center;text-align:center}
+  .hero-actions{align-items:flex-start}
+  /* 16px, not 24. On a 375px screen the desktop gutter is 13% of the width
+     spent on nothing, and it is what pushed the name onto an extra line.
+     `padding-inline`, never the shorthand: `.hero-credits-inner` is a `.wrap`
+     too, and it carries the 84px of bottom padding that holds the logo rail
+     clear of the floating dock. A shorthand here has the same specificity and
+     lands later in the file, so it silently zeroes that and drops the logos
+     behind the dock. */
+  .wrap{padding-inline:16px}
   /* Clears the top of the screen and puts the eyebrow just above the first
      third — high enough to be the first thing read, low enough that the
-     picture still opens the frame. */
-  .hero-stage{padding-top:clamp(96px,17vh,150px)}
+     picture still opens the frame. Trimmed from 96/17vh/150: the old floor
+     stood the whole fold down the screen on a short phone. */
+  .hero-stage{padding-top:clamp(76px,13vh,124px)}
   .hero-title{
     max-width:none;letter-spacing:-.026em;
     /* The 4.4vw term is far below the floor on a phone, so the floor is the
@@ -704,11 +909,62 @@ ul{list-style:none}
      Note there is no `margin-top` here: the block's vertical position on a
      phone is set by the auto margins in the block above, which float it to
      the middle of the fold. A number here would pin it back to the name. */
-  .hero-actions{gap:10px}
-  .hero-cta{font-size:13.5px;padding:7px 18px 7px 4px}
-  .hero-cta-mark{width:14px;height:14px}
-  .hero-link{gap:7px;font-size:13.5px}
-  .hero-link-mark{width:14px;height:14px}
+  /* On a phone these three stop being lines of type and become the things a
+     thumb has to hit, so they are sized as targets first — and the size has
+     to come from the *type*, not from padding wrapped around small type.
+     17px labels with 20px marks, which is a phone's body size rather than a
+     caption's, in a 50px band that is a real target on all three lanes:
+     `.hero-link` carries the same min-height, so the whole band is the
+     anchor, not the word inside it.
+
+     Growing the type is also what lets the capsule get tighter rather than
+     fatter. The pill has to clear 44px to be pressable, and that height can
+     be bought two ways: 15px type in 12px of vertical pad, or 17px type in
+     11px. The second reads bigger and looks less padded, which is the whole
+     point. `--cta-pad-x` is 6px — the same tight value as the desktop, not a
+     scaled-up version of it, because horizontal padding buys nothing on a
+     touch target: the pill is already 200px wide, and no thumb has ever
+     missed it sideways.
+
+     The block's gap goes up with the lanes rather than down: adjacent
+     targets need a miss to land on nothing instead of on the neighbour. It
+     costs no layout, because the fold had the room — the auto margins above
+     were spending it on empty space.
+
+     The label column follows all of this automatically through
+     `--lane-lead`; the alignment worked out in the block above is
+     scale-free. */
+  .hero-actions{
+    gap:12px;
+    --lane-h:50px;
+    --cta-gap:11px;--cta-rim:1.5px;--cta-pad-x:6px;
+  }
+  /* Vertical pad is the only padding on this button doing real work: the
+     lane's min-height reserves the band, but the capsule is the thing being
+     pressed, and 11px around 17px type is exactly what clears 44. */
+  /* The capsule is as tight here as on desktop — same 1.15 line box, 5px of
+     pad rather than 4 only because the type is 3px larger. It measures ~30px
+     tall, not the 44 it used to.
+
+     The tap target is not gone, it has just stopped being made of paint. A
+     transparent `::before` extends the anchor's hit region 8px past the pill
+     on both sides, which is a real part of the element for hit-testing — so
+     the thing a thumb lands on is ~46px while the thing an eye sees is 30.
+     That is the correct way round: padding is for looks, hit area is for
+     fingers, and only one of them has to be visible.
+
+     Vertical only (`inset:-8px 0`). Widening it would push the hit region
+     left under the map mark, which belongs to the same link but reads as a
+     separate object, and right into empty space. The 12px lane gap keeps this
+     clear of the link above it. */
+  .hero-cta{font-size:17px;padding:5px var(--cta-pad-x)}
+  .hero-cta::before{
+    content:"";position:absolute;inset:-8px 0;
+    border-radius:inherit;
+  }
+  .hero-cta-mark{width:20px;height:20px}
+  .hero-link{font-size:17px}
+  .hero-link-mark{width:20px;height:20px}
 }
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--sans);font-weight:600;font-size:14.5px;letter-spacing:.01em;padding:13px 26px;border-radius:9999px;cursor:pointer}
@@ -1012,6 +1268,12 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
 .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1.1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08)}
 /* Stay Connected + newsletter */
 .foot-stay{max-width:340px}
+/* Seal + wordmark opening the footer, above the newsletter. */
+.foot-lockup{display:inline-flex;align-items:center;gap:12px;margin:0 0 20px;
+  text-decoration:none;color:#fff;opacity:.92;transition:opacity .2s}
+.foot-lockup:hover{opacity:1}
+.foot-lockup span{font-family:var(--display,var(--sans));font-weight:800;font-size:17px;
+  letter-spacing:.14em;text-transform:uppercase}
 .foot-stay-title{color:#fff;font-family:var(--display,var(--sans));font-weight:800;font-size:clamp(30px,3vw,40px);line-height:1.05;letter-spacing:-.01em;margin:0 0 14px}
 .foot-stay-sub{font-size:14px;line-height:1.6;color:#a9adb8;margin:0 0 20px;max-width:300px}
 .foot-news{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:5px 5px 5px 18px;max-width:320px}
@@ -1031,9 +1293,9 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
 .socials a{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.07);display:grid;place-items:center;color:#c7c9d0;padding:0}
 .socials a:hover{background:var(--ember);color:#fff}
 /* Light/dark toggle (visual, matches reference design) */
-.foot-theme{display:flex;align-items:center;gap:10px;margin-top:20px;color:#7f838d}
-.theme-switch{width:46px;height:24px;border-radius:999px;background:rgba(255,255,255,.18);position:relative;flex:none}
-.theme-switch .knob{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+/* The sun/moon switch that used to sit under the socials is gone. It was
+   `aria-hidden` and wired to nothing — a control that looked live and did
+   nothing when pressed, promising a dark mode the site does not have. */
 .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:22px;font-size:13px;color:#7f838d;flex-wrap:wrap;gap:10px}
 @media(max-width:900px){.foot-grid{grid-template-columns:1fr 1fr;gap:40px 48px}}
 @media(max-width:520px){.foot-grid{grid-template-columns:1fr}}
@@ -1521,6 +1783,12 @@ a.res-row.is-link:hover{border-color:var(--ember);box-shadow:0 6px 20px rgba(20,
 /* Seal + wordmark lockup, black on the glass — no accent colour here. */
 .factbox-kick{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;
   letter-spacing:.16em;text-transform:uppercase;color:var(--soot)}
+/* Seal hover swap: the greyscale cut rests, the colour one fades in over it on
+   card hover — same rule the .fx-org partner logos in the foot follow. */
+.seal-swap{position:relative;display:block;flex:none;line-height:0}
+.seal-swap>:last-child{position:absolute;inset:0;opacity:0;transition:opacity .25s ease}
+.factbox:hover .seal-swap>:last-child{opacity:1}
+@media (prefers-reduced-motion:reduce){.seal-swap>:last-child{transition:none}}
 .factbox-more{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);transition:color .2s}
 .factbox--link:hover .factbox-more{color:var(--ember)}
 
@@ -1798,3 +2066,267 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
 .members-benefits b{display:block;font-size:14.5px;color:var(--soot);margin-bottom:2px}
 .members-benefits p{font-size:13px;color:var(--muted);line-height:1.5}
 .members-side .btn{justify-content:center;width:100%}
+
+/* ── Sideways navigation ──────────────────────────────────────────────
+   The pages as a deck. A swipe, or ← / → on a desktop, steps one page along
+   PAGE_RING and wraps at both ends; the page itself slides in the direction
+   of the gesture, so the movement and the intent are the same thing. See
+   PageSwipe for the gesture and src/lib/page-ring.ts for the order.
+
+   The whole page is one snapshot: the locale layout wraps `children` in a
+   React <ViewTransition> whose `update` class is the transition type the
+   navigation carried — `nav-forward`, `nav-back`, or nothing at all, which is
+   what every ordinary click still is. Untyped navigations never reach these
+   rules and stay instant.
+
+   Snapshots of a full document are captured at their own height, so the pair
+   is pinned to natural size from the top-left corner: a group box
+   interpolating between a short page and a long one must not be allowed to
+   stretch either image. `mix-blend-mode` goes back to normal because the two
+   sheets are adjacent and never overlap — `plus-lighter` is for a cross-fade,
+   which this is the opposite of.
+
+   `.page-shell` carries no background of its own, deliberately. It is an
+   ancestor of the whole page, and the hero's footage is an `-z-10` layer that
+   escapes to the root stacking context (neither the shell nor `.hero-fold`
+   is one) — so any background painted on this box paints *over* the video and
+   the fold goes blank. The page background stays where it has always been, on
+   `body`, which propagates to the canvas and paints below everything. The
+   snapshots are transparent in the few places the page is, and it does not
+   show: the same canvas is behind both sheets. */
+
+::view-transition-old(.nav-forward),::view-transition-new(.nav-forward),
+::view-transition-old(.nav-back),::view-transition-new(.nav-back){
+  block-size:auto;
+  mix-blend-mode:normal;
+  animation-duration:.46s;
+  animation-timing-function:cubic-bezier(.36,.66,.04,1);
+  animation-fill-mode:both;
+}
+::view-transition-old(.nav-forward){animation-name:page-exit-left}
+::view-transition-new(.nav-forward){animation-name:page-enter-right}
+::view-transition-old(.nav-back){animation-name:page-exit-right}
+::view-transition-new(.nav-back){animation-name:page-enter-left}
+
+/* Viewport units, not percentages. The captured element is the document, so
+   `100%` would be one page-height's worth of travel — several screens wide of
+   where the sheet needs to land. */
+@keyframes page-exit-left{from{translate:0}to{translate:-100vw}}
+@keyframes page-enter-right{from{translate:100vw}to{translate:0}}
+@keyframes page-exit-right{from{translate:0}to{translate:100vw}}
+@keyframes page-enter-left{from{translate:-100vw}to{translate:0}}
+
+/* The chrome does not travel with the page. A rail that slid out and a rail
+   that slid in would leave the viewer without a single fixed point to read
+   the movement against, and the identity mark would appear to leave the site
+   for half a second. Naming these lifts them out of the page's own snapshot
+   into groups of their own, which then simply do not animate. Only one set is
+   ever rendered at a time — the others are `display:none` at their breakpoint,
+   and a name on a box that is not painted is inert.
+
+   The names sit on the glass capsules themselves, never on the rails that
+   position them, and that distinction is the whole ball game. A
+   `view-transition-name` forces paint containment, and a paint-contained box
+   becomes a *backdrop root*: every `backdrop-filter` inside it can only sample
+   what that box itself painted. Name the empty positioning shell and the pill
+   inside it goes on blurring — an empty backdrop. The blur silently costs a
+   compositing layer and returns nothing, and all that survives is the flat
+   tint, which is what "the nav stopped being glass" looks like. Named on the
+   capsule instead, the backdrop root lands *at* the blurred box rather than
+   above it, so the page behind is still in scope and the glass holds. */
+.vt-rail-seal{view-transition-name:chrome-rail-seal}
+.vt-rail-nav {view-transition-name:chrome-rail-nav}
+.vt-rail-lang{view-transition-name:chrome-rail-lang}
+.vt-top-seal {view-transition-name:chrome-top-seal}
+.vt-top-lang {view-transition-name:chrome-top-lang}
+.vt-dock-nav {view-transition-name:chrome-dock-nav}
+::view-transition-group(chrome-rail-seal),
+::view-transition-group(chrome-rail-nav),
+::view-transition-group(chrome-rail-lang),
+::view-transition-group(chrome-top-seal),
+::view-transition-group(chrome-top-lang),
+::view-transition-group(chrome-dock-nav){animation:none;z-index:100}
+::view-transition-old(chrome-rail-seal),
+::view-transition-old(chrome-rail-nav),
+::view-transition-old(chrome-rail-lang),
+::view-transition-old(chrome-top-seal),
+::view-transition-old(chrome-top-lang),
+::view-transition-old(chrome-dock-nav){display:none}
+::view-transition-new(chrome-rail-seal),
+::view-transition-new(chrome-rail-nav),
+::view-transition-new(chrome-rail-lang),
+::view-transition-new(chrome-top-seal),
+::view-transition-new(chrome-top-lang),
+::view-transition-new(chrome-dock-nav){animation:none}
+
+/* A page sliding the full width of the screen is the single most common
+   trigger for motion sensitivity there is, so it is the first thing to go.
+   The navigation still happens — it just happens instantly. */
+@media(prefers-reduced-motion:reduce){
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*){animation-duration:1ms!important;animation-delay:0s!important}
+}
+
+/* ── The swipe cue ────────────────────────────────────────────────────
+   Where the finger is going, named. It rides in from the edge the next page
+   will arrive from, tracking the drag through `--p` (0 → 1, where 1 is far
+   enough to commit), and lights ember at the moment the step is armed — so
+   the gesture can be abandoned on purpose rather than by accident.
+
+   No transition on `transform` while the drag is live: it has to sit under
+   the finger. The spring back is switched on at release instead, by the same
+   `data-active` flag that fades the pill out. */
+.swipe-hint{
+  --p:0;
+  position:fixed;top:50%;z-index:60;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:9px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(20,21,24,.74);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  box-shadow:var(--shadow-md);
+  color:#fff;font-size:13px;font-weight:620;letter-spacing:.01em;
+  white-space:nowrap;pointer-events:none;opacity:0;
+  transition:opacity .18s ease,background-color .2s ease,border-color .2s ease;
+}
+.swipe-hint[data-side="right"]{
+  right:0;
+  transform:translate(calc(100% - var(--p) * 100% - var(--p) * 14px),-50%);
+}
+.swipe-hint[data-side="left"]{
+  left:0;
+  transform:translate(calc(var(--p) * 100% + var(--p) * 14px - 100%),-50%);
+}
+/* One chevron each way, and each side shows the one that points off-screen —
+   the direction the page is being pulled from. */
+.swipe-hint[data-side="right"] .swipe-hint-mark:first-child,
+.swipe-hint[data-side="left"] .swipe-hint-mark:last-child{display:none}
+.swipe-hint-mark{flex:none;opacity:.7}
+.swipe-hint[data-active="1"]{opacity:calc(.3 + var(--p) * .7)}
+.swipe-hint[data-active="0"]{
+  transition:opacity .28s ease,transform .34s cubic-bezier(.2,.8,.2,1);
+}
+.swipe-hint[data-armed="1"]{
+  background:var(--ember);border-color:rgba(255,255,255,.34);
+}
+.swipe-hint[data-armed="1"] .swipe-hint-mark{opacity:1}
+/* A pointer means a keyboard: ← and → do the same job with no cue needed. */
+@media(hover:hover) and (pointer:fine){.swipe-hint{display:none}}
+@media(prefers-reduced-motion:reduce){.swipe-hint{transition:opacity .18s ease}}
+
+/* ── Sideways gallery ─────────────────────────────────────────────────
+   A band that reads across while the page reads down. The rail is the tall
+   scroll region, the stage pins to the viewport inside it, and the track of
+   cards is pulled left by ScrollGallery in step with progress through the rail.
+
+   Every number that would have to change when the content changes lives in
+   the component, measured from the DOM — the rail's height and the track's
+   travel are both derived from the track's real width. What is left here is
+   only material: colour, size, radius, rhythm. */
+.hscroll{background:var(--soot);color:#e6e7ec}
+.hscroll-rail{position:relative}
+.hscroll-stage{
+  position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;justify-content:center;gap:34px;
+  overflow:hidden;
+  /* The measure, not the viewport edge. 1180px less its 24px gutters is a
+     1132px content band, so this is the same left edge the headline above and
+     the hero title on the home page sit on. */
+  padding-left:max(24px,calc((100vw - 1132px) / 2));
+  padding-right:max(24px,calc((100vw - 1132px) / 2));
+}
+.hscroll-head{max-width:640px}
+.hscroll-kick{
+  display:block;margin-bottom:12px;
+  font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--copper-soft);
+}
+.hscroll-head h2{color:#fff;font-size:clamp(26px,3.4vw,40px);margin:0}
+.hscroll-track{
+  display:flex;gap:22px;
+  /* The trailing gutter rides with the track so the last card stops on the
+     measure's right edge rather than against the glass. */
+  padding-right:max(24px,calc((100vw - 1132px) / 2));
+  will-change:transform;
+}
+.hscroll-card{
+  flex:none;position:relative;overflow:hidden;
+  width:420px;height:min(56vh,480px);border-radius:22px;
+  background:linear-gradient(135deg,var(--soot),var(--soot-2));
+  border:1px solid rgba(255,255,255,.09);
+  text-decoration:none;
+}
+.hscroll-card img{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.hscroll-card:hover img{transform:scale(1.04)}
+/* Type needs a floor to sit on: the photographs run from bright document scans
+   to near-black interiors, and a label without this disappears on half of them. */
+.hscroll-card::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 42%,rgba(12,13,15,.88));
+}
+.hscroll-card-body{position:absolute;left:26px;right:26px;bottom:24px;z-index:1}
+.hscroll-card-meta{
+  display:block;margin-bottom:8px;
+  font-size:12px;font-weight:640;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--copper-soft);
+}
+.hscroll-card-body h3{
+  color:#fff;font-size:19px;line-height:1.25;margin:0;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
+@media(max-width:700px){
+  .hscroll-card{width:min(78vw,320px);height:min(58vh,420px)}
+  .hscroll-track{gap:14px}
+}
+
+/* Pinning the viewport and taking the scroll over is the loudest thing on the
+   site, so it is the first thing to go. The band becomes an ordinary
+   horizontal scroller of its natural height: same cards, same order, moved by
+   the reader instead of by the page. The `!important` is aimed at the inline
+   transform Motion writes on the track, which nothing else can outrank. */
+@media(prefers-reduced-motion:reduce){
+  .hscroll-rail{height:auto!important}
+  .hscroll-stage{position:relative;height:auto;padding-block:64px;overflow:visible}
+  .hscroll-track{transform:none!important;overflow-x:auto;padding-bottom:8px}
+}
+/* The way out. A band that pins the viewport has to say where it ends and
+   what is past it, or it reads as a trap. */
+.hscroll-more{
+  display:inline-block;margin-top:18px;
+  color:#fff;font-size:14px;font-weight:640;text-decoration:none;
+  border-bottom:1px solid var(--copper-soft);padding-bottom:3px;
+  transition:border-color .2s ease,color .2s ease;
+}
+.hscroll-more:hover{color:var(--copper-soft)}
+
+/* A card with no photograph is a typographic card, not a broken one. Same soot
+   ground, but the title is the picture: set large, top-aligned, under the ember
+   rule the rest of the site uses to open a section. Six of the eleven training
+   announcements carry no image, and filtering them out to keep the row pretty
+   would quietly take six real courses off the training page. */
+.hscroll-card--text{background:linear-gradient(150deg,var(--soot-2),#0E0F12)}
+/* No scrim: there is nothing underneath to hold the type off. */
+.hscroll-card--text::after{display:none}
+/* The body fills the card rather than sitting at the top of it: rule and date
+   at the head, title pushed to the foot by `margin-top:auto`. That puts the
+   title on the same baseline as the photographed cards' titles, so a row of
+   mixed cards reads as one row and not as two kinds of thing — and it stops a
+   short course name leaving two thirds of the card empty. */
+.hscroll-card--text .hscroll-card-body{
+  top:30px;bottom:24px;
+  display:flex;flex-direction:column;
+}
+.hscroll-card--text .hscroll-card-body::before{
+  content:"";display:block;
+  width:38px;height:2px;border-radius:2px;margin-bottom:18px;
+  background:var(--copper-soft);
+}
+.hscroll-card--text .hscroll-card-body h3{
+  margin-top:auto; /* pushed to the foot — see the note above */
+  font-family:var(--display);font-size:26px;line-height:1.18;letter-spacing:-.02em;
+  -webkit-line-clamp:6;
+}
+@media(max-width:700px){
+  .hscroll-card--text .hscroll-card-body h3{font-size:22px}
+}

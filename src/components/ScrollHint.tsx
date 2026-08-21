@@ -39,7 +39,7 @@ export default function ScrollHint({ text }: { text: string }) {
   const [atEnd, setAtEnd] = useState(false);
   // The cue rests as an ember glyph on light glass, which needs a bright page
   // under it. While it floats over the home page's graded hero it runs light
-  // instead — same flip the nav rail makes, see `useOverHero` in TubelightNav.
+  // instead — same flip the nav rail makes, see `useOverDark` in TubelightNav.
   const [onDark, setOnDark] = useState(false);
   const pathname = usePathname();
 

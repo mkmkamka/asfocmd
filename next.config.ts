@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    /* Turns on Next's half of React's <ViewTransition>: route changes become
+       transitions the browser can animate, and `transitionTypes` passed to
+       router.push reach the CSS. The locale layout wraps every page in one —
+       see "Sideways navigation" in globals.css. */
+    viewTransition: true,
+  },
+
   async headers() {
     return [
       {
