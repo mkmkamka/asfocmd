@@ -2349,8 +2349,11 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
 .act{
   position:relative;display:grid;place-items:center;
   height:40px;min-width:44px;padding:0 12px;border-radius:9999px;
-  border:1px solid var(--border);background:color-mix(in srgb,var(--background) 5%,transparent);
-  color:color-mix(in srgb,var(--foreground) 80%,transparent);
+  /* --line/--ink, not --border/--foreground: the latter two are not defined
+     anywhere, so the declarations were invalid and dropped — which is why
+     these marks had no border on a light page at all. */
+  border:1px solid var(--line);background:color-mix(in srgb,var(--ink) 5%,transparent);
+  color:color-mix(in srgb,var(--ink) 80%,transparent);
   backdrop-filter:blur(12px);
   transition:color .25s ease,background-color .25s ease,border-color .25s ease;
 }
@@ -2377,35 +2380,7 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
 
 /* The word, opened under the mark by hover or focus. `translate` only — the
    tip must never change the rail's height or the whole corner shifts. */
-.act-tip{
-  position:absolute;top:calc(100% + 7px);left:50%;
-  transform:translate(-50%,-3px);
-  padding:3px 8px;border-radius:6px;
-  font-size:11px;font-weight:600;letter-spacing:.01em;white-space:nowrap;
-  background:var(--foreground);color:var(--background);
-  opacity:0;pointer-events:none;
-  transition:opacity .2s ease,transform .2s ease;
-}
-.act-slot:hover .act-tip,.act-slot:focus-within .act-tip{opacity:.95;transform:translate(-50%,0)}
-
-/* ── Nav description ──────────────────────────────────────────────────
-   One line under a tab, on hover and on focus. Absolute for the same reason
-   the tip is: an opening description must not resize the pill it hangs off.
-   Hover-driven, so it does not exist on a phone — the dock down there is
-   icon-only and has no pointer to open anything with. */
-.nav-hint{
-  position:absolute;top:calc(100% + 9px);left:50%;
-  transform:translate(-50%,-3px);
-  max-width:min(46vw,300px);
-  font-size:11px;font-weight:500;line-height:1.35;letter-spacing:.01em;
-  text-align:center;text-wrap:balance;
-  color:color-mix(in srgb,var(--foreground) 62%,transparent);
-  opacity:0;pointer-events:none;
-  transition:opacity .22s ease,transform .22s ease;
-}
-a:hover>.nav-hint,a:focus-visible>.nav-hint{opacity:1;transform:translate(-50%,0)}
-/* Over the picture the 62% ink disappears into it, same as the labels do. */
-.on-dark .nav-hint,.bg-black\/25 .nav-hint{color:rgba(255,255,255,.72)}
+/* Both hover chips are described once, at the foot of this file. */
 
 @media (max-width:640px){
   /* The phone stack. `grid-template-columns:max-content` sizes the column to
@@ -2478,4 +2453,145 @@ a:hover>.nav-hint,a:focus-visible>.nav-hint{opacity:1;transform:translate(-50%,0
   padding:
     calc(var(--hact-pad-y) + var(--hact-edge) - var(--lm-ring,2px))
     calc(var(--hact-pad-x) + var(--hact-edge) - var(--lm-ring,2px));
+}
+
+
+/* ── Language picker ──────────────────────────────────────────────────
+   From the homepage-redesign branch: the code you are reading in, with the
+   other two on demand. A visitor picks a language once and never touches
+   it again, so three codes in a row spent the widest island in the rail on
+   two nobody was going to press. See components/LanguageSwitcher.tsx. */
+.lang-pick{position:relative}
+.lang-current{
+  display:inline-flex;align-items:center;gap:4px;
+  height:30px;padding:0 8px 0 10px;border-radius:9999px;
+  font-size:11px;font-weight:700;letter-spacing:.06em;line-height:1;
+  color:var(--soot);cursor:pointer;
+  background:rgba(255,255,255,.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+  transition:background-color .2s ease,color .2s ease;
+}
+.lang-caret{flex:none;opacity:.5;transition:transform .22s ease,opacity .2s ease}
+.lang-pick.is-open .lang-caret{transform:rotate(180deg);opacity:.8}
+.lang-pick.on-dark .lang-current{
+  background:rgba(255,255,255,.2);color:#fff;box-shadow:none;
+}
+.lang-pop{
+  position:absolute;top:calc(100% + 10px);left:0;
+  display:flex;flex-direction:column;gap:2px;
+  padding:4px;border-radius:14px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.9);
+  backdrop-filter:blur(16px);
+  box-shadow:0 14px 34px -12px rgba(10,11,13,.4);
+  opacity:0;visibility:hidden;transform:translateY(-4px);
+  transition:opacity .2s ease,transform .2s ease,visibility .2s;
+}
+.lang-pick.is-open .lang-pop{opacity:1;visibility:visible;transform:translateY(0)}
+.lang-alt{
+  display:grid;place-items:center;
+  min-width:44px;height:30px;padding:0 10px;border-radius:9999px;
+  font-size:11px;font-weight:700;letter-spacing:.06em;line-height:1;
+  color:rgba(28,30,34,.62);
+  transition:background-color .18s ease,color .18s ease;
+}
+.lang-alt:hover,.lang-alt:focus-visible{background:rgba(20,21,24,.07);color:var(--soot)}
+.lang-pick.on-dark .lang-pop{
+  border-color:rgba(255,255,255,.18);background:rgba(18,19,22,.72);
+}
+.lang-pick.on-dark .lang-alt{color:rgba(255,255,255,.68)}
+.lang-pick.on-dark .lang-alt:hover,
+.lang-pick.on-dark .lang-alt:focus-visible{background:rgba(255,255,255,.16);color:#fff}
+/* The hover half of the control opens on the root, and the gap between the chip
+   and the panel would otherwise be a dead strip that closes it mid-reach. */
+.lang-pick::after{
+  content:"";position:absolute;top:100%;left:0;width:100%;height:12px;
+}
+@media(prefers-reduced-motion:reduce){
+  .lang-pop{transition:opacity .2s ease,visibility .2s;transform:none}
+  .lang-pick.is-open .lang-pop{transform:none}
+  .lang-caret,.lang-pick.is-open .lang-caret{transition:opacity .2s ease}
+}
+
+/* ═══ Lockup, equal actions, matched chrome ════════════════════════════════ */
+
+/* ── The lockup ───────────────────────────────────────────────────────
+   Seal left, label over name right. `align-items:start` rather than centre:
+   the seal is a disc and the text block is two stacked lines of very
+   different weight, so centring them balances two shapes that were never
+   going to balance and leaves the label floating. Top edges aligned, the
+   label sitting level with the crown of the seal, reads as a letterhead. */
+.hero-lockup{
+  display:flex;align-items:flex-start;gap:20px;
+  margin-bottom:var(--fold-step-2,26px);
+}
+.hero-seal{flex:none;display:block;line-height:0;margin-top:2px}
+.hero-lockup-text{display:flex;flex-direction:column;gap:9px;min-width:0}
+/* The eyebrow keeps its rule but loses the separator and the second name:
+   the seal beside it already says ASFOCMD, in the association's own hand. */
+.hero-lockup .hero-eyebrow{display:inline-flex;align-items:center}
+.hero-lockup .hero-title{margin:0}
+
+@media (max-width:640px){
+  /* The seal comes down with everything else, but not to nothing — under
+     ~40px the engraving stops resolving, which is the whole reason it left
+     the rail. 64px is the floor that keeps the ring and the lettering. */
+  .hero-lockup{gap:14px}
+  .hero-seal>*{width:64px!important;height:64px!important}
+}
+
+/* ── Three actions, one width ─────────────────────────────────────────
+   `grid-auto-columns:1fr` inside a `width:max-content` grid gives every
+   column the width of the widest one — so the row is three identical
+   capsules without any width being written down, and it re-measures itself
+   when the Russian strings run longer than the Romanian. Hand-set widths are
+   widths that are wrong in two of three locales. */
+.hero-actions{
+  display:grid;grid-auto-flow:column;grid-auto-columns:1fr;
+  width:max-content;
+}
+/* Centred, and the mark given real air. The primary was reading cramped
+   because it carried no gap at all — its mark and its word were touching
+   while the two ghosts had 7px between theirs. One gap, all three. */
+.hero-link,.hero-cta{justify-content:center;gap:var(--hact-gap,8px)}
+.hero-actions{--hact-gap:8px}
+
+@media (max-width:640px){
+  /* Back to a column, still all one width — `1fr` in a `max-content` grid
+     does the same job on one axis as on the other. */
+  .hero-actions{grid-auto-flow:row;grid-auto-columns:auto;width:max-content}
+}
+
+/* ── The corner marks take the nav pill's material ────────────────────
+   They were lighter and glassier than the bar across from them, which read
+   as two different chromes in one row. Same blur, same shadow, same wash and
+   border on each ground — the corner and the centre are one rail now. */
+.act{
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);
+}
+.act-rail.on-dark .act{background:rgba(0,0,0,.25);border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.8)}
+.act-rail.on-dark .act:hover{color:#fff}
+
+/* ── One chip, two places ─────────────────────────────────────────────
+   The word under a nav tab was bare grey type hanging in the air while the
+   word under a corner mark was a proper chip; hovering the bar looked
+   unfinished next to hovering the corner. One rule for both now. */
+.nav-hint,.act-tip{
+  position:absolute;top:calc(100% + 8px);left:50%;
+  transform:translate(-50%,-4px) scale(.96);transform-origin:50% 0;
+  max-width:min(52vw,280px);width:max-content;
+  padding:5px 10px;border-radius:8px;
+  font-size:11px;font-weight:600;letter-spacing:.005em;line-height:1.3;
+  text-align:center;text-wrap:balance;white-space:normal;
+  color:var(--sand);background:color-mix(in srgb,var(--ink) 92%,transparent);
+  box-shadow:0 10px 24px -12px rgba(10,11,13,.55);
+  opacity:0;pointer-events:none;
+  transition:opacity .2s ease,transform .22s cubic-bezier(.2,.9,.3,1);
+}
+a:hover>.nav-hint,a:focus-visible>.nav-hint,
+.act-slot:hover .act-tip,.act-slot:focus-within .act-tip,
+.act-slot.is-held .act-tip{opacity:1;transform:translate(-50%,0) scale(1)}
+@media (prefers-reduced-motion:reduce){
+  .nav-hint,.act-tip{transition:opacity .2s ease;transform:translate(-50%,0)}
 }

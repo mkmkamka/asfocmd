@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
@@ -14,10 +13,8 @@ import {
   UserPlus,
 } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
-import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { scrollPageToTop } from "@/lib/nav";
-import { PAGE_RING, RAIL_STOPS, type RingStop } from "@/lib/page-ring";
+import { RAIL_STOPS, type RingStop } from "@/lib/page-ring";
 import ActionRail from "@/components/ActionRail";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/get-dictionary";
@@ -229,10 +226,7 @@ function useAtDirectory(): boolean {
 
   useEffect(() => {
     const map = document.getElementById("directoriu");
-    if (!map) {
-      setAt(false); // A page without a map: the tabs own the highlight.
-      return;
-    }
+    if (!map) return; // No map on this page: the tabs own the highlight.
     const io = new IntersectionObserver(
       ([entry]) => setAt(entry.isIntersecting),
       /* A sliver showing is not "you are at the map" — a third of it is. The
@@ -241,7 +235,15 @@ function useAtDirectory(): boolean {
       { threshold: 0.34, rootMargin: "-10% 0px -10% 0px" },
     );
     io.observe(map);
-    return () => io.disconnect();
+    /* Unlit on the way out, not on the way in. Resetting in the effect body
+       would be a synchronous setState on every route change; doing it here
+       covers the one case that actually needs it — leaving a page that has a
+       map for one that does not, where nothing would otherwise put the mark
+       out. */
+    return () => {
+      io.disconnect();
+      setAt(false);
+    };
   }, [pathname]);
 
   return at;
@@ -290,7 +292,7 @@ export default function TubelightNav({
   //
   // No room for words, so every tab needs its own mark. Eight 44px tabs plus
   // the pill's padding is 360px, which still clears a 375px screen.
-  const mobileItems = PAGE_RING.map((stop) => ({
+  const mobileItems = RAIL_STOPS.map((stop) => ({
     name: nav[stop.key],
     url: `${base}${stop.segment}`,
     icon: TAB_MARKS[stop.key],
@@ -299,7 +301,6 @@ export default function TubelightNav({
   const overDark = useOverDark();
   const atDirectory = useAtDirectory();
   const { away, show } = useChromeAway();
-  const pathname = usePathname();
 
   /* The trip off the screen, carried by each capsule rather than by the shell
      around it. Moving an ancestor — `transform`, or `translate` as Tailwind v4
@@ -314,57 +315,6 @@ export default function TubelightNav({
      3rem covers the offset they float at plus the shadow they cast. */
   const travel = away ? "translate-y-[calc(-100%-3rem)]" : "translate-y-0";
 
-  /* The seal is a link home; on the home page itself it is a link to the top of
-     it. Without this, clicking the identity mark from the middle of the page is
-     a dead press — Next resolves the href to the route you are already on. */
-  const homeClick = (e: React.MouseEvent) => {
-    if (pathname !== base) return;
-    e.preventDefault();
-    scrollPageToTop();
-  };
-
-  /* Navigation and language wear the same glass shell; only the height differs.
-     Language runs 40px: it is a utility, and three
-     two-letter codes do not need the same presence as the site's identity or
-     its navigation. Height is a parameter rather than a `!h-10` override
-     because Tailwind v4 moved the important modifier to a suffix, and a class
-     string that silently stops applying is a bad way to find that out.
-
-     `backdrop-blur-lg` here is the material, not a garnish — it is the only
-     reason these read as glass rather than as a flat wash. That makes them
-     sensitive to any ancestor that becomes a backdrop root: the blur keeps
-     running, samples nothing, and the capsules go transparent with no error
-     anywhere. The `vt-*` classes below are on the capsules for exactly that
-     reason; see the view-transition block in globals.css before moving one up
-     to a wrapper. */
-  const capsule = (onDark: boolean, h = "h-11") =>
-    `pointer-events-auto flex ${h} items-center rounded-full border shadow-lg backdrop-blur-lg transition-[translate,background-color,border-color] duration-300 ease-out ${travel} ${
-      onDark ? "border-white/20 bg-black/25" : "border-border bg-background/5"
-    }`;
-
-  /* The seal is one disc, not a capsule with a plate inside it.
-     It used to be a 48px white plate inside a 56px glass capsule carrying a
-     48px mark: three concentric circles — the seal's own engraved ring, the
-     plate, the capsule — at near-identical diameters. They merged into a fat
-     white blob and the mark read as oversized at any size, because the plate
-     it sat on had no margin left to read as a plate.
-
-     So the glass shell comes off here (it is the only island whose artwork is
-     itself a circle) and the plate becomes the whole control: a 48px disc with
-     a 34px mark, leaving a 7px white ring. That also brings the island down to
-     the nav pill's own weight class instead of overhanging it by 12px.
-
-     The plate stays white on both grounds — the artwork is black — and just
-     goes more opaque over the picture, where a 45% white disc would let the
-     footage through and break the engraving up. `shadow-lg`'s two layers are
-     spelled out so the inset highlight can sit in the same declaration; two
-     separate shadow utilities would overwrite one another. */
-  const SEAL_MARK = 34; // inside the 48px (`size-12`) disc
-
-  const seal = (onDark: boolean) =>
-    `pointer-events-auto grid size-12 place-items-center rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,.6),0_10px_15px_-3px_rgba(0,0,0,.25),0_4px_6px_-4px_rgba(0,0,0,.25)] transition-[translate,background-color] duration-300 ease-out ${travel} ${
-      onDark ? "bg-white/85" : "bg-white/45"
-    }`;
 
   return (
     <>
@@ -386,14 +336,20 @@ export default function TubelightNav({
         onFocusCapture={show}
       >
         <div className="wrap flex items-center justify-between gap-3">
-          <Link
-            href={base}
-            aria-label="ASFOCMD"
-            onClick={homeClick}
-            className={`${seal(overDark.top)} vt-rail-seal`}
+          {/* The corner the seal used to hold. The seal has gone down into the
+              fold at a size worth looking at (see asfoc-hero), and what is left
+              up here is the one control that is neither identity nor
+              navigation — so it takes the quietest corner rather than the
+              busiest one. */}
+          <div
+            className={`pointer-events-auto vt-rail-lang transition-[translate] duration-300 ease-out ${travel}`}
           >
-            <Logo size={SEAL_MARK} />
-          </Link>
+            <LanguageSwitcher
+              current={locale}
+              variant="light"
+              onDark={overDark.top}
+            />
+          </div>
 
           {/* In flow on lg (no room to center absolutely), truly centered on
               xl+. The absolute positioning resolves against the *fixed* parent,
@@ -415,25 +371,19 @@ export default function TubelightNav({
               LanguageSwitcher. It is the one island that is a utility rather
               than identity or navigation, so it is the one that gives up
               height. */}
-          {/* The corner. The three destinations that are not tabs sit ahead of
-              the language chip: navigation before utility, reading inward from
-              the edge. Both are `pointer-events-auto` islands on a shell that
-              is otherwise transparent to the mouse, so the dead ground between
-              them still belongs to the page underneath. */}
-          <div className="pointer-events-auto flex items-center gap-2">
+          {/* The three destinations that are not tabs, kept as separate marks
+              rather than gathered into one pill: they go to three unrelated
+              places, and a single capsule around them would claim they are one
+              control. `pointer-events-auto` on an otherwise transparent shell,
+              so the dead ground beside them still belongs to the page. */}
+          <div className="pointer-events-auto">
             <ActionRail
               locale={locale}
               dict={dict}
               atDirectory={atDirectory}
               onDark={overDark.top}
+              travel={travel}
             />
-            <div className={`${capsule(overDark.top, "h-10")} vt-rail-lang px-1`}>
-              <LanguageSwitcher
-                current={locale}
-                variant="light"
-                onDark={overDark.top}
-              />
-            </div>
           </div>
         </div>
       </div>
@@ -448,21 +398,25 @@ export default function TubelightNav({
         onFocusCapture={show}
       >
         <div className="wrap flex items-center justify-between gap-2">
-          <Link
-            href={base}
-            aria-label="ASFOCMD"
-            onClick={homeClick}
-            className={`${seal(overDark.top)} vt-top-seal`}
+          <div
+            className={`vt-top-lang transition-[translate] duration-300 ease-out ${travel}`}
           >
-            <Logo size={SEAL_MARK} />
-          </Link>
-          <div className={`${capsule(overDark.top, "h-10")} vt-top-lang px-1`}>
             <LanguageSwitcher
               current={locale}
               variant="light"
               onDark={overDark.top}
             />
           </div>
+          {/* Same three marks as the desktop corner. The bottom dock is five
+              tabs now, so without these the phone would have no route to
+              Instruire or Înregistrează-te at all. */}
+          <ActionRail
+            locale={locale}
+            dict={dict}
+            atDirectory={atDirectory}
+            onDark={overDark.top}
+            travel={travel}
+          />
         </div>
       </div>
 

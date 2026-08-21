@@ -7,6 +7,12 @@ import { GraduationCap, Map, UserPlus } from "lucide-react";
 import { HeroVideo } from "@/components/ui/hero-video";
 import { LiquidMetalLink } from "@/components/ui/liquid-metal-button";
 import type { Dictionary } from "@/i18n/get-dictionary";
+import Logo from "@/components/Logo";
+
+/* Big enough for the engraving to resolve — the ring, the lettering and the
+   figure inside it. Under about 40px those merge into a dark blob, which is
+   what the 34px mark in the old top rail had been doing. */
+const LOCKUP_SEAL = 96;
 
 type HomeDict = Dictionary["home"];
 
@@ -170,25 +176,36 @@ export function AsfocHero({
           initial="hidden"
           animate="show"
         >
-          {/* Eyebrow and short name on one line. They used to be two elements a
-              headline apart — a copper kicker above the title and an ember
-              `ASFOCMD` mark below it — which stated the same identity twice in
-              the same 200px of fold. One label, one rule, one accent. */}
-          <motion.div className="hero-eyebrow" variants={rise}>
-            <span className="hero-eyebrow-rule" aria-hidden />
-            {hero.eyebrow}
-            <span className="hero-eyebrow-sep" aria-hidden />
-            ASFOCMD
-          </motion.div>
+          {/* The lockup: the seal, at a size worth looking at, with the label
+              above the name beside it — a letterhead, which is what a seal and
+              an official name have always been.
 
-          {/* The association's full name, still the headline — but set in a
-              measure instead of across the viewport. Holding it on one line
-              forced it down to min(2.55vw,42px), which is 32px on a 1280 screen:
-              the longest string on the page was also among the smallest type on
-              it. In three lines it can take its real size. */}
-          <motion.h1 className="hero-title" variants={rise}>
-            {hero.titleLine1}
-          </motion.h1>
+              The seal used to be a 34px mark on a 48px disc in the top rail,
+              where it was competing with the nav pill for the same band and
+              losing. It is engraved artwork; below about 40px the ring, the
+              lettering and the figure inside it stop resolving and it reads as
+              a dark blob. Down here it has the room the drawing was made for,
+              and the corner it left goes to the language chip.
+
+              `aria-hidden` on the mark: the name is right beside it in real
+              text, and a screen reader announcing both says the association
+              twice. */}
+          <motion.div className="hero-lockup" variants={rise}>
+            <span className="hero-seal" aria-hidden>
+              <Logo size={LOCKUP_SEAL} />
+            </span>
+            <span className="hero-lockup-text">
+              <span className="hero-eyebrow">
+                <span className="hero-eyebrow-rule" aria-hidden />
+                {hero.eyebrow}
+              </span>
+              {/* Still the headline, and still set in a measure rather than
+                  across the viewport: held on one line it was forced down to
+                  32px on a 1280 screen, the longest string on the page in
+                  nearly its smallest type. */}
+              <h1 className="hero-title">{hero.titleLine1}</h1>
+            </span>
+          </motion.div>
 
           {/* Three lanes, not a row: each destination gets its own line, and
               the order now reads as a sequence rather than a rank — join,
