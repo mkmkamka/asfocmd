@@ -265,50 +265,6 @@ function useAtDirectory(): boolean {
   return /\/specialisti(\/|$)/.test(pathname);
 }
 
-/**
- * Has the page's own seal — the one every page opens on, in the home fold's
- * lockup or in `.page-hero`'s kicker — scrolled out of view?
- *
- * The corner rail gave up its seal when it moved down into the page itself
- * (see `dacf278`), so the identity mark is the first thing on screen without
- * exception. A second, small copy in the corner while that is still visible
- * would just be saying the same thing twice in one glance; it earns its
- * corner back only once the page one has scrolled away, and only while you
- * are looking for it — which is why `useChromeAway`'s direction still gates
- * it, this only decides whether it is eligible to show at all.
- *
- * A scroll read rather than an IntersectionObserver, for the same reason
- * `useOverDark` is one: everything else the chrome does is decided on the
- * scroll frame, and a seal fading on the observer's schedule while the rail
- * it sits in slides on the scroll's is two clocks driving one row. The mark
- * is a single box on the page's own axis, so there is nothing here an
- * observer would measure better.
- */
-function usePastMark(): boolean {
-  const pathname = usePathname();
-  const [past, setPast] = useState(false);
-
-  useEffect(() => {
-    const read = () => {
-      const mark = document.querySelector(".hero-lockup, .page-hero");
-      // No mark on this page (e.g. /contact) — the corner is free.
-      // Otherwise: past it once its foot has cleared the rail's own band,
-      // so the two seals are never both on screen at once.
-      const next = mark ? mark.getBoundingClientRect().bottom <= 56 : true;
-      setPast((prev) => (prev === next ? prev : next));
-    };
-    read();
-    window.addEventListener("scroll", read, { passive: true });
-    window.addEventListener("resize", read);
-    return () => {
-      window.removeEventListener("scroll", read);
-      window.removeEventListener("resize", read);
-    };
-  }, [pathname]);
-
-  return past;
-}
-
 export default function TubelightNav({
   locale,
   dict,
@@ -360,7 +316,6 @@ export default function TubelightNav({
 
   const overDark = useOverDark();
   const atDirectory = useAtDirectory();
-  const pastMark = usePastMark();
   const { away, show } = useChromeAway();
   const pathname = usePathname();
 
@@ -424,7 +379,6 @@ export default function TubelightNav({
               href={base}
               aria-label="ASFOCMD"
               onClick={homeClick}
-              data-shown={pastMark || undefined}
               className={`vt-mark-seal ${travel} ${overDark.top ? "on-dark" : ""}`}
             >
               <Logo size={34} tone={overDark.top ? "footer" : "dark"} />
@@ -493,7 +447,6 @@ export default function TubelightNav({
               href={base}
               aria-label="ASFOCMD"
               onClick={homeClick}
-              data-shown={pastMark || undefined}
               className={`vt-mark-seal ${travel} ${overDark.top ? "on-dark" : ""}`}
             >
               <Logo size={34} tone={overDark.top ? "footer" : "dark"} />

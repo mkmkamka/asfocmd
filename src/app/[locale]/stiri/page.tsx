@@ -1,7 +1,6 @@
 import TubelightNav from "@/components/TubelightNav";
 import ScrollGallery from "@/components/ScrollGallery";
 import Footer from "@/components/Footer";
-import Logo from "@/components/Logo";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { isLocale, defaultLocale, type Locale } from "@/i18n/config";
 import { getNewsPosts } from "@/lib/cms";
@@ -43,13 +42,11 @@ export default async function NewsPage({
 
       {/* The archive as one sideways run, the same band the home page and
           /instruire use — but here it *is* the page, opening straight under
-          the nav with no header band of any kind above it. The seal rides in
-          the gallery's own headroom instead, which is space the stage was
-          already leaving above the cards. Every post is in it; this page is
-          the full record, so nothing is filtered out, and the ones with no
-          photograph are set as type (see `.hscroll-card--text`). */}
+          the nav with no header band of any kind above it. Every post is in
+          it; this page is the full record, so nothing is filtered out, and
+          the ones with no photograph are set as type (`.hscroll-card--text`). */}
       <ScrollGallery
-        mark={<Logo size={72} tone="footer" />}
+        lead
         cards={posts.map((post) => ({
           href: `${base}/stiri/${post.slug}`,
           image: post.image,

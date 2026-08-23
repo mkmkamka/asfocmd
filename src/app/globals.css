@@ -1450,23 +1450,12 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
    worth of dead air on top. Below lg the nav sits in flow, so the tighter
    16px base holds, same as contact's own mobile padding. */
 @media(min-width:1024px){.page-hero .wrap{padding-top:clamp(100px,12vh,118px)}}
-/* The seal, on every inner page.
-   It moved out of the top rail into the home fold, which left the other seven
-   pages with no mark on them at all. `.kick` is already an empty decorative
-   element on all of them — rule and dot, drawn from ::before and ::after — so
-   the seal arrives as its background and the whole set is covered by one rule
-   instead of seven edits. Decorative, and the element is already aria-hidden,
-   which is exactly what a background image should be.
-
-   56px, not the fold's 128: it is a page mark here, introducing a heading,
-   not the subject of the screen. Still clear of the ~40px floor where the
-   engraving stops resolving. The rule and dot stay underneath it. */
-.page-hero .kick{position:relative;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);padding-bottom:11px;margin-bottom:10px;
-  padding-top:64px;
-  background:url("/brand/asfoc-seal.svg") no-repeat top center;background-size:56px 56px}
-@media(max-width:640px){
-  .page-hero .kick{padding-top:54px;background-size:46px 46px}
-}
+/* Rule and dot, and no seal. The mark used to be set as this element's
+   background on every inner page, centred directly under the nav — but the
+   corner of the rail carries the seal permanently now, so a second copy a
+   few centimetres below it stated the same identity twice in one glance.
+   The kicker goes back to being the quiet sign it was. */
+.page-hero .kick{position:relative;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);padding-bottom:11px;margin-bottom:10px}
 .page-hero .kick::after{content:"";position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:76px;height:1px;
   background:linear-gradient(90deg,transparent,rgba(140,42,31,.8) 28%,rgba(140,42,31,.8) 72%,transparent)}
 .page-hero .kick::before{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;
@@ -2325,14 +2314,6 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
   padding-left:max(24px,calc((100vw - 1132px) / 2));
   padding-right:max(24px,calc((100vw - 1132px) / 2));
 }
-/* The seal, in the band's own headroom. Centred rather than set on the
-   measure's left edge like the head below it: on /stiri this is the first
-   and only mark on the page, and a lone 72px disc hanging off the left of a
-   full-width band reads as something that lost its heading. `align-self`
-   because the stage is a flex column — the head beside it keeps its edge. */
-.hscroll-mark{align-self:center;line-height:0;display:block}
-@media(max-width:640px){.hscroll-mark>*{width:56px!important;height:56px!important}}
-
 /* ── The gallery as the page's opening band ───────────────────────────
    When the sideways run *is* the page (only /stiri), it starts flush under
    the nav. Two things were pushing it down a third of the screen: the 64px
@@ -2625,15 +2606,14 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
 .vt-mark-seal{
   display:grid;place-items:center;
   width:38px;height:38px;
-  /* Scale as well as opacity, and only a hair of it: a mark that purely
-     fades reads as a rendering glitch, one that settles the last few percent
-     reads as arriving. */
-  opacity:0;scale:.9;pointer-events:none;
-  transition:translate var(--chrome-dur) var(--chrome-ease),
-             opacity var(--chrome-dur) var(--chrome-ease),
-             scale var(--chrome-dur) var(--chrome-ease);
+  /* Always on. It used to fade in only once the page's own centred seal had
+     scrolled away, so that the same mark was never stated twice at once —
+     but those centred seals are gone now (the inner pages' kicker carried
+     one, /stiri's gallery carried another), and the corner is where the
+     identity lives. It still rides the rail's own travel, so it leaves and
+     returns with everything else beside it. */
+  transition:translate var(--chrome-dur) var(--chrome-ease);
 }
-.vt-mark-seal[data-shown]{opacity:1;scale:1;pointer-events:auto}
 /* A little lift under the artwork so it holds its own against a busy
    photograph without a plate behind it. */
 .vt-mark-seal.on-dark{filter:drop-shadow(0 2px 6px rgba(0,0,0,.55))}

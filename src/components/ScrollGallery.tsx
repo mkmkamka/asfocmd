@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type GalleryCard = {
   href: string;
@@ -44,19 +44,20 @@ export default function ScrollGallery({
   kicker,
   title,
   more,
-  mark,
+  lead,
 }: {
   cards: GalleryCard[];
   /**
-   * An identity mark, set in the band's own headroom above the cards.
+   * This gallery opens the page rather than sitting partway down one.
    *
-   * /stiri opens directly on this gallery — no page header of any kind — so
-   * the seal has nowhere else to go, and the stage's `justify-content:center`
-   * already leaves a clear strip above the track for it to sit in. Pages that
-   * reach the gallery partway down (the home page, /instruire) have their
-   * identity established long before and pass nothing.
+   * The band then starts flush under the nav and packs its cards to the top,
+   * instead of centring them in a 100vh box and spending the remainder as
+   * equal margins above and below. Only /stiri passes it — there the sideways
+   * run *is* the page. Where the band interrupts a page that was already
+   * running (the home page, /instruire), centred is what makes it read as one
+   * full-screen object.
    */
-  mark?: ReactNode;
+  lead?: boolean;
   /** Both optional, and both omitted on /stiri: that page's own `page-hero`
       already carries the same words as its `<h1>`, and a band that repeats the
       heading directly above it reads as a rendering fault. Where the band is
@@ -107,12 +108,8 @@ export default function ScrollGallery({
        gallery, not about leaving the page — PageSwipe reads that attribute and
        keeps its hands off. It already stands aside for real horizontal
        scrollers, but this one moves by transform, so it has to be told. */
-    /* `--lead` when this gallery opens the page rather than sitting partway
-       down one, which is what carrying a `mark` means. The band then starts
-       flush under the nav and packs its contents to the top instead of
-       centring them in the viewport — see the note in globals.css. */
     <section
-      className={`hscroll${mark ? " hscroll--lead" : ""}`}
+      className={`hscroll${lead ? " hscroll--lead" : ""}`}
       data-no-page-swipe
     >
       <div
@@ -121,7 +118,6 @@ export default function ScrollGallery({
         style={{ height: `calc(100vh + ${travel}px)` }}
       >
         <div ref={stageRef} className="hscroll-stage">
-          {mark && <div className="hscroll-mark">{mark}</div>}
           {(kicker || title || more) && (
             <div className="hscroll-head">
               {kicker && <span className="hscroll-kick">{kicker}</span>}
