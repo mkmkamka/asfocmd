@@ -47,8 +47,8 @@ const TAB_MARKS: Record<RingStop["key"], typeof House> = {
    and the phone's bottom dock comes to rest on it at the end of every scroll.
 
    `.page-hero` is deliberately absent — the inner pages open on sand-to-white,
-   which the resting material is already built for. `.news-hero` is /stiri's
-   own opening band, which is the one that does open dark.
+   which the resting material is already built for. /stiri has no header band
+   at all; it opens straight onto `.hscroll`, which is already listed here.
 
    This list is the known weak point, and every entry after the first three was
    added the same way: something dark shipped, the nav went invisible over it,
@@ -58,7 +58,7 @@ const TAB_MARKS: Record<RingStop["key"], typeof House> = {
    Nothing links this list to the rules that actually paint those surfaces
    dark, which is why it keeps going stale — see the note in globals.css. */
 const DARK_BANDS =
-  ".hero-fold,.news-hero,.band,.cta,footer,.a-cover,.hscroll,.news-recent";
+  ".hero-fold,.band,.cta,footer,.a-cover,.hscroll,.news-recent";
 
 /* Is the floating chrome sitting over one of them right now?
 
@@ -186,15 +186,23 @@ function useChromeAway() {
 
     /* A sideways gallery is the one place scrolling down does not mean
        reading down — the page is stationary and the cards are travelling
-       across it. Hiding the rail there takes the navigation away during the
-       longest single band on the page, in exchange for uncovering nothing,
-       so while one is on screen the rail stays put. `.hscroll` pins itself
-       to the viewport for its whole run, so "on screen" is just an overlap
-       test against it. */
+       across it, so the rail stays put rather than hiding while nothing is
+       being uncovered.
+
+       While the gallery is *pinned*, though — not merely while some part of
+       it is on screen. Testing plain visibility against `.hscroll` brought
+       the rail back the instant the band's top edge appeared at the foot of
+       the viewport, a screen and a half before the sideways run actually
+       began, and kept it out long after the run had finished. The pinned
+       span is a thing that can be measured exactly: `.hscroll-rail` is the
+       tall scroll region and the stage inside it is `sticky top:0`, so the
+       stage is stuck precisely while the rail's top has passed the top of
+       the viewport and its foot has not yet reached the bottom. That window
+       is the horizontal scroll, start to end. */
     const inGallery = () =>
-      Array.from(document.querySelectorAll(".hscroll")).some((el) => {
+      Array.from(document.querySelectorAll(".hscroll-rail")).some((el) => {
         const b = el.getBoundingClientRect();
-        return b.top < window.innerHeight && b.bottom > 0;
+        return b.top <= 0 && b.bottom >= window.innerHeight;
       });
 
     const read = () => {
@@ -358,10 +366,15 @@ export default function TubelightNav({
      globals.css). A box moving itself is fine; the root lands at the blurred
      box rather than above it.
 
-     `100%` is the capsule's own height, so the 44px islands and the 40px
-     language chip each clear the top of the screen by their own measure; the
-     3rem covers the offset they float at plus the shadow they cast. */
-  const travel = away ? "translate-y-[calc(-100%-3rem)]" : "translate-y-0";
+     One distance for every capsule, not `calc(-100% - 3rem)`. A percentage
+     resolves against each box's *own* height, so the 44px pill, the 40px
+     corner marks and the 30px language chip were each covering a different
+     number of pixels in the same 300ms — same start, same finish, three
+     different speeds, which is exactly why the row did not read as one
+     object leaving. 8rem clears the tallest capsule plus the 44px offset it
+     floats at and the shadow under it, so a single value serves all of them
+     and the rail moves as a unit. */
+  const travel = away ? "-translate-y-32" : "translate-y-0";
 
 
   return (
@@ -398,9 +411,7 @@ export default function TubelightNav({
               data-shown={pastMark || undefined}
               className={`vt-mark-seal ${travel} ${overDark.top ? "on-dark" : ""}`}
             >
-              <span className="vt-mark-seal-plate">
-                <Logo size={16} />
-              </span>
+              <Logo size={34} tone={overDark.top ? "footer" : "dark"} />
             </Link>
             <div
               className={`vt-rail-lang transition-[translate] duration-300 ease-out ${travel}`}
@@ -469,9 +480,7 @@ export default function TubelightNav({
               data-shown={pastMark || undefined}
               className={`vt-mark-seal ${travel} ${overDark.top ? "on-dark" : ""}`}
             >
-              <span className="vt-mark-seal-plate">
-                <Logo size={16} />
-              </span>
+              <Logo size={34} tone={overDark.top ? "footer" : "dark"} />
             </Link>
             <div
               className={`vt-top-lang transition-[translate] duration-300 ease-out ${travel}`}

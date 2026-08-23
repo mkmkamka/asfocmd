@@ -41,21 +41,15 @@ export default async function NewsPage({
     <>
       <TubelightNav locale={locale} dict={dict} />
 
-      {/* The seal on soot, and nothing else. The heading and lead that used to
-          sit here said what the cards immediately below already show, and the
-          band reads as an opening rather than as a page header without them.
-          The white knockout, because the ground is dark. */}
-      <div className="news-hero">
-        <span className="news-hero-seal" aria-hidden>
-          <Logo size={104} tone="footer" />
-        </span>
-      </div>
-
       {/* The archive as one sideways run, the same band the home page and
-          /instruire use. Every post is in it — this page is the full record,
-          so nothing is filtered out; the ones with no photograph are set as
-          type (see `.hscroll-card--text` in globals.css). */}
+          /instruire use — but here it *is* the page, opening straight under
+          the nav with no header band of any kind above it. The seal rides in
+          the gallery's own headroom instead, which is space the stage was
+          already leaving above the cards. Every post is in it; this page is
+          the full record, so nothing is filtered out, and the ones with no
+          photograph are set as type (see `.hscroll-card--text`). */}
       <ScrollGallery
+        mark={<Logo size={72} tone="footer" />}
         cards={posts.map((post) => ({
           href: `${base}/stiri/${post.slug}`,
           image: post.image,

@@ -148,6 +148,16 @@ ul{list-style:none}
 :root{
   --nav-fill:rgba(244,244,245,.05);
   --nav-shadow:0 10px 15px -3px rgba(20,21,24,.1),0 4px 6px -4px rgba(20,21,24,.1);
+  /* One rhythm for every piece of floating chrome — the nav pill, the
+     language chip, the three corner marks and the corner seal all leave and
+     return on this. They are separate boxes in separate components, so
+     without a shared token they drift: the pill took its curve from
+     Tailwind's `ease-out` utility and the others from the CSS keyword of the
+     same name, which is a different bezier, and the row stopped moving as
+     one object. The value *is* Tailwind's `ease-out`, so anything still
+     using that utility stays in step. */
+  --chrome-dur:.3s;
+  --chrome-ease:cubic-bezier(0,0,.2,1);
 }
 .glass,.btn,.chip,.reset-btn{
   position:relative;isolation:isolate;
@@ -1411,8 +1421,9 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
 
 /* ---- inner pages ---- */
 /* Sand-to-white, as it always was. This band was briefly turned black on
-   every page; only /stiri was ever meant to open dark, and it has its own
-   `.news-hero` for that. The rest of the site opens on paper. */
+   every page; only /stiri was ever meant to open dark, and it does that by
+   having no header band at all — it opens straight onto the gallery, which
+   is soot already. The rest of the site opens on paper. */
 .page-hero{background:
    radial-gradient(900px 400px at 85% -20%,rgba(127,31,22,.07),transparent 60%),
    linear-gradient(180deg,var(--sand),#fff);border-bottom:1px solid var(--line)}
@@ -1467,24 +1478,9 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
 .page-hero h1{font-size:clamp(24px,3.2vw,36px);margin-bottom:11px}
 .page-hero .lead{font-size:clamp(14px,1.5vw,16.5px);line-height:1.55;color:#4a4e57;max-width:640px;margin:0 auto}
 
-/* ── Știri opening band ───────────────────────────────────────────────
-   The one page that does open dark, and the only one that ever should have.
-   Nothing in it but the seal: the archive's own cards say what the page is
-   far better than a heading and a lead paragraph above them did. Soot, not
-   a near-black of its own, so it runs seamlessly into the gallery below and
-   the footer below that — all three are the same ground. */
-.news-hero{
-  background:var(--soot);
-  display:grid;place-items:center;
-  padding:112px 24px clamp(40px,7vh,72px);
-}
-@media(min-width:1024px){.news-hero{padding-top:clamp(140px,17vh,190px)}}
-.news-hero-seal{display:block;line-height:0}
-@media(max-width:640px){.news-hero-seal>*{width:72px!important;height:72px!important}}
 /* No seam between the dark bands. `footer` carries a 24px top margin for the
    light pages that end on paper; where a soot band runs straight into it the
    body's sand shows through as a stripe. */
-.news-hero + .hscroll,
 .hscroll + footer,
 .news-recent + footer{margin-top:0}
 
@@ -2329,6 +2325,13 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
   padding-left:max(24px,calc((100vw - 1132px) / 2));
   padding-right:max(24px,calc((100vw - 1132px) / 2));
 }
+/* The seal, in the band's own headroom. Centred rather than set on the
+   measure's left edge like the head below it: on /stiri this is the first
+   and only mark on the page, and a lone 72px disc hanging off the left of a
+   full-width band reads as something that lost its heading. `align-self`
+   because the stage is a flex column — the head beside it keeps its edge. */
+.hscroll-mark{align-self:center;line-height:0;display:block}
+@media(max-width:640px){.hscroll-mark>*{width:56px!important;height:56px!important}}
 .hscroll-head{max-width:640px}
 .hscroll-kick{
   display:block;margin-bottom:12px;
@@ -2448,10 +2451,15 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
      class to ride out on when the top chrome steps off the screen (see
      `useChromeAway`). Tailwind v4 compiles `translate-y-*` to the standalone
      `translate` property, and without it named here the capsules teleported
-     while the nav pill beside them — which does name it — slid. Same list,
-     same duration, same easing as `NavBar`, so the whole rail moves as one
-     object rather than as a pill and three marks that happen to agree. */
-  transition:translate .3s ease-out,color .25s ease,
+     while the nav pill beside them — which does name it — slid.
+
+     `--chrome-ease`, not the `ease-out` keyword. The pill and the language
+     chip get their curve from Tailwind's `ease-out` utility, which is
+     `cubic-bezier(0,0,.2,1)`; the CSS keyword of the same name is
+     `cubic-bezier(0,0,.58,1)`. Identical duration and distance, different
+     acceleration — near enough to look like a bug rather than a decision,
+     which is exactly how it read. */
+  transition:translate var(--chrome-dur) var(--chrome-ease),color .25s ease,
              background-color .25s ease,border-color .25s ease;
 }
 /* The lit mark's slot: `layoutId="act-lamp"` FLIPs this box between whichever
@@ -2576,38 +2584,36 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
    it, sized to match its 30px content rather than its 40px capsule — the
    seal is a mark, not a menu, and giving it the taller box would make two
    different heights read as one control. */
-/* One transition declaration, naming `translate` alongside the rest. The
-   element also carries a Tailwind `transition-[translate,opacity]` utility,
+/* The mark itself, and nothing else. It used to sit on a glass capsule with
+   a hairline border, over a second white plate inside that — three nested
+   containers to hold one piece of artwork, which read as a button that had
+   lost its label rather than as an identity mark. No fill, no border, no
+   shell: the engraving floats in the corner and the page shows through it.
+   Which cut of the seal is drawn is decided per ground in TubelightNav (the
+   white knockout over anything dark, the ink cut over paper), so it needs no
+   plate to survive either one.
+
+   One transition declaration, naming `translate` alongside the rest. The
+   element also carried a Tailwind `transition-[translate,opacity]` utility,
    and two `transition-property` sources on one box do not merge — the later
-   one simply replaces the earlier, so whichever lost left the seal popping
-   in and out while the rail beside it slid. Everything it animates is named
-   here, in the same rhythm the pill and the corner marks use. */
+   simply replaces the earlier, so whichever lost left the mark popping in
+   while the rail beside it slid. Everything is named here, at the same 300ms
+   ease-out the pill, the corner marks and the language chip all use. */
 .vt-mark-seal{
-  display:grid;place-items:center;width:30px;height:30px;border-radius:9999px;
-  background:var(--nav-fill);border:1px solid var(--line);
-  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
-  box-shadow:var(--nav-shadow);
-  /* `scale` as well as opacity: a mark that only fades reads as a glitch,
-     one that also settles the last few percent reads as arriving. */
-  opacity:0;scale:.82;pointer-events:none;
-  transition:translate .3s ease-out,opacity .3s ease-out,scale .3s ease-out,
-             background-color .3s ease,border-color .3s ease;
+  display:grid;place-items:center;
+  width:38px;height:38px;
+  /* Scale as well as opacity, and only a hair of it: a mark that purely
+     fades reads as a rendering glitch, one that settles the last few percent
+     reads as arriving. */
+  opacity:0;scale:.9;pointer-events:none;
+  transition:translate var(--chrome-dur) var(--chrome-ease),
+             opacity var(--chrome-dur) var(--chrome-ease),
+             scale var(--chrome-dur) var(--chrome-ease);
 }
 .vt-mark-seal[data-shown]{opacity:1;scale:1;pointer-events:auto}
-.vt-mark-seal.on-dark{background:rgba(0,0,0,.25);border-color:rgba(255,255,255,.2)}
-/* The seal is black artwork, so it needs its own light plate regardless of
-   the glass shell around it — on-dark that shell is translucent black, which
-   would otherwise swallow the mark whole. Same trick the fold's own seal
-   used before it moved into the page: more opaque over a picture, where a
-   faint plate would let the footage bleed through and break the engraving
-   up; barely-there over paper, where the page is already the backdrop. */
-.vt-mark-seal-plate{
-  display:grid;place-items:center;width:22px;height:22px;border-radius:9999px;
-  background:rgba(255,255,255,.45);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
-  transition:background-color .3s ease;
-}
-.vt-mark-seal.on-dark .vt-mark-seal-plate{background:rgba(255,255,255,.85);box-shadow:none}
+/* A little lift under the artwork so it holds its own against a busy
+   photograph without a plate behind it. */
+.vt-mark-seal.on-dark{filter:drop-shadow(0 2px 6px rgba(0,0,0,.55))}
 
 /* ── Language picker ──────────────────────────────────────────────────
    From the homepage-redesign branch: the code you are reading in, with the

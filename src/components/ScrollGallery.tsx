@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 export type GalleryCard = {
   href: string;
@@ -44,8 +44,19 @@ export default function ScrollGallery({
   kicker,
   title,
   more,
+  mark,
 }: {
   cards: GalleryCard[];
+  /**
+   * An identity mark, set in the band's own headroom above the cards.
+   *
+   * /stiri opens directly on this gallery — no page header of any kind — so
+   * the seal has nowhere else to go, and the stage's `justify-content:center`
+   * already leaves a clear strip above the track for it to sit in. Pages that
+   * reach the gallery partway down (the home page, /instruire) have their
+   * identity established long before and pass nothing.
+   */
+  mark?: ReactNode;
   /** Both optional, and both omitted on /stiri: that page's own `page-hero`
       already carries the same words as its `<h1>`, and a band that repeats the
       heading directly above it reads as a rendering fault. Where the band is
@@ -103,6 +114,7 @@ export default function ScrollGallery({
         style={{ height: `calc(100vh + ${travel}px)` }}
       >
         <div ref={stageRef} className="hscroll-stage">
+          {mark && <div className="hscroll-mark">{mark}</div>}
           {(kicker || title || more) && (
             <div className="hscroll-head">
               {kicker && <span className="hscroll-kick">{kicker}</span>}
