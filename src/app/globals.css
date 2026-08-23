@@ -1688,8 +1688,16 @@ a.member-badge:hover{border-color:var(--ember);box-shadow:0 6px 20px rgba(20,21,
    edge, reading as neither aligned to the content nor parked in the corner.
    A corner cue belongs in the corner. */
 .scroll-cue-rail{
-  position:fixed;right:24px;bottom:24px;z-index:60;
+  position:fixed;right:24px;z-index:60;
   pointer-events:none;
+  /* Sat on the home fold's credit rule, rather than floating above it.
+     That rail runs 74px tall at the foot of the fold (13px padding, a 48px
+     row of marks, 13px again), so its logos are centred 37px off the bottom
+     of the screen; a 44px disc has to sit at (74 - 44) / 2 to put its own
+     centre on that same line. At 24px the cue was 9px high and read as a
+     third object floating in the corner instead of the last item on the
+     row. Pages with no credit rail simply get a cue near the bottom edge. */
+  bottom:15px;
 }
 .scroll-cue{display:grid;place-items:center;width:44px;height:44px;
   border-radius:9999px;cursor:pointer;pointer-events:auto;
@@ -2315,27 +2323,17 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
   padding-right:max(24px,calc((100vw - 1132px) / 2));
 }
 /* ── The gallery as the page's opening band ───────────────────────────
-   When the sideways run *is* the page (only /stiri), it starts flush under
-   the nav. Two things were pushing it down a third of the screen: the 64px
-   top padding every `section` carries, and the stage's own
-   `justify-content:center`, which centres mark-plus-cards in a 100vh box and
-   so spends whatever is left over as equal margins above and below.
+   When the sideways run *is* the page (only /stiri), it drops the 64px top
+   padding every `section` carries. That padding is what was holding the
+   cards a third of the way down the screen: the stage is a 100vh box that
+   centres its own contents, so an offset on the section shifts that whole
+   centred block down with it rather than being absorbed.
 
-   Packed to the top instead, with just enough clearance for the floating
-   rail (44px offset + 44px tall) and a little air under it. Galleries that
-   sit partway down a page keep the centred treatment — there the band is a
-   full-screen interruption and centring is what makes it read as one. */
+   The centring itself stays. The cards want to sit in the middle of the
+   fold with matching air above and below — packed to the top instead they
+   read as crowded under the nav. With the padding gone the band is a clean
+   100vh and the cards land on its centre line. */
 .hscroll--lead{padding-top:0}
-.hscroll--lead .hscroll-stage{
-  justify-content:flex-start;
-  padding-top:clamp(100px,12vh,120px);
-  gap:clamp(16px,2.4vh,24px);
-}
-@media(max-width:1023px){
-  /* Below `lg` the chrome is a sticky row in normal flow, so it has already
-     taken its own height out of the page — the band only needs its own air. */
-  .hscroll--lead .hscroll-stage{padding-top:clamp(20px,4vh,36px)}
-}
 .hscroll-head{max-width:640px}
 .hscroll-kick{
   display:block;margin-bottom:12px;
