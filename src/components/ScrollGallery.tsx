@@ -107,7 +107,14 @@ export default function ScrollGallery({
        gallery, not about leaving the page — PageSwipe reads that attribute and
        keeps its hands off. It already stands aside for real horizontal
        scrollers, but this one moves by transform, so it has to be told. */
-    <section className="hscroll" data-no-page-swipe>
+    /* `--lead` when this gallery opens the page rather than sitting partway
+       down one, which is what carrying a `mark` means. The band then starts
+       flush under the nav and packs its contents to the top instead of
+       centring them in the viewport — see the note in globals.css. */
+    <section
+      className={`hscroll${mark ? " hscroll--lead" : ""}`}
+      data-no-page-swipe
+    >
       <div
         ref={railRef}
         className="hscroll-rail"

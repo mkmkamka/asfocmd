@@ -2332,6 +2332,29 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
    because the stage is a flex column — the head beside it keeps its edge. */
 .hscroll-mark{align-self:center;line-height:0;display:block}
 @media(max-width:640px){.hscroll-mark>*{width:56px!important;height:56px!important}}
+
+/* ── The gallery as the page's opening band ───────────────────────────
+   When the sideways run *is* the page (only /stiri), it starts flush under
+   the nav. Two things were pushing it down a third of the screen: the 64px
+   top padding every `section` carries, and the stage's own
+   `justify-content:center`, which centres mark-plus-cards in a 100vh box and
+   so spends whatever is left over as equal margins above and below.
+
+   Packed to the top instead, with just enough clearance for the floating
+   rail (44px offset + 44px tall) and a little air under it. Galleries that
+   sit partway down a page keep the centred treatment — there the band is a
+   full-screen interruption and centring is what makes it read as one. */
+.hscroll--lead{padding-top:0}
+.hscroll--lead .hscroll-stage{
+  justify-content:flex-start;
+  padding-top:clamp(100px,12vh,120px);
+  gap:clamp(16px,2.4vh,24px);
+}
+@media(max-width:1023px){
+  /* Below `lg` the chrome is a sticky row in normal flow, so it has already
+     taken its own height out of the page — the band only needs its own air. */
+  .hscroll--lead .hscroll-stage{padding-top:clamp(20px,4vh,36px)}
+}
 .hscroll-head{max-width:640px}
 .hscroll-kick{
   display:block;margin-bottom:12px;

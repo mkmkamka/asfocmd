@@ -70,7 +70,23 @@ const DARK_BANDS =
    drops out, and the answer stays correct when the rail's height or the dock's
    safe-area inset changes — a pair of hand-tuned pixel thresholds would quietly
    drift away from the boxes they were describing. */
-const SLACK = 12; // Flip while the pill is still clear of the seam, not on it.
+/* Real overlap, not a slack-padded near-miss.
+
+   This used to expand each box by 12px on both sides before testing, to flip
+   the rail a moment before it reached a dark band rather than while sitting
+   on the seam. That is harmless for the desktop rail, which floats over the
+   page — but below `lg` the chrome is a sticky row *in normal flow*, so it
+   never overlaps anything: it sits directly on top of the band that follows
+   it, edge to edge. The padded test read that seam as a permanent overlap,
+   and every page whose first band is dark reported the top chrome as being
+   over it while it was in fact sitting on sand.
+
+   Nothing caught it because the pieces up there all used to carry their own
+   opaque plates. The corner seal now picks its *artwork* from this answer —
+   the white knockout over dark, the ink cut over paper — so a wrong answer
+   is an invisible mark rather than a slightly-off tint. A 1px genuine
+   overlap is the honest test; the 300ms colour transition covers the seam. */
+const SLACK = -1;
 
 function useOverDark() {
   const pathname = usePathname();
