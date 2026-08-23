@@ -24,7 +24,7 @@ export const PAGE_RING = [
   { segment: "/instruire", key: "training", rail: false },
   { segment: "/stiri", key: "news", rail: true },
   { segment: "/contact", key: "contact", rail: true },
-  { segment: "/membri", key: "memberArea", rail: false },
+  { segment: "/membri", key: "memberArea", rail: true },
   { segment: "/membru", key: "becomeMember", rail: false },
 ] as const satisfies readonly {
   segment: string;
@@ -38,9 +38,9 @@ export const PAGE_RING = [
  * The ring above is every page a swipe can reach; this is the subset that
  * earns a tab. Instruire and Înregistrează-te left the rail because the
  * corner rail carries them now, and stating the same destination twice on one
- * screen is what made the fold read as repetitive. Membri is the members'
- * private area — a door for people who already joined, reached from the
- * footer, not a public section worth a permanent tab.
+ * screen is what made the fold read as repetitive. Membri stays a tab — it is
+ * how a member checks their own status, and burying that behind the footer
+ * left it undiscoverable.
  *
  * Derived, not a second hand-written list: a tab order that could drift out of
  * step with the swipe order is the bug the ring was written to prevent.

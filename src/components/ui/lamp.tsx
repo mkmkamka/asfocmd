@@ -29,15 +29,21 @@ export function Lamp({
     <span
       aria-hidden
       className={cn(
-        "pointer-events-none absolute left-1/2 h-1 w-8 -translate-x-1/2 rounded-t-full",
+        "pointer-events-none absolute left-1/2 h-1 -translate-x-1/2 rounded-t-full",
         className,
       )}
-      /* The offset is an inline style rather than a `-top-2` utility so a host
-         can move the light without fighting Tailwind's utilities layer, which
-         outranks anything a stylesheet rule can say about it. The hero's two
-         bordered capsules use it to sit their lamps 1px higher, in line with
-         the borderless one between them. */
-      style={{ top: "var(--lamp-offset, -0.5rem)", background: color }}
+      /* Offset and width are inline styles rather than `-top-2` / `w-8`
+         utilities so a host can move and size the light without fighting
+         Tailwind's utilities layer, which outranks anything a stylesheet rule
+         can say about it. The hero's two bordered capsules use the offset to
+         sit their lamps 1px higher, in line with the borderless one between
+         them; the corner marks use the width, because 32px of bar on a 44px
+         circle reads as a lid rather than as a light. */
+      style={{
+        top: "var(--lamp-offset, -0.5rem)",
+        width: "var(--lamp-w, 2rem)",
+        background: color,
+      }}
     >
       <span
         className="absolute -left-2 -top-2 h-6 w-12 rounded-full blur-md"

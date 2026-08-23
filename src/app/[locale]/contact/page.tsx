@@ -46,12 +46,6 @@ export default async function ContactPage({
           contact information. */}
       <main className="contact-screen">
         <div className="wrap contact-inner">
-          <header className="contact-head">
-            <div className="kick" aria-hidden />
-            <h1>{t.title}</h1>
-            <p className="lead">{t.lead}</p>
-          </header>
-
           <div className="contact-trio">
             {/* 1 — reach us */}
             <section className="c-box">

@@ -28,11 +28,9 @@ import { scrollToAdjacentSection } from "@/lib/scroll-sections";
  * also keeps it honest when a classic scrollbar is present, since 100vw counts
  * the scrollbar and the measure does not.
  *
- * And over the home fold it lifts. The credit rail occupies the bottom ~90px of
- * that fold, and at the resting offset the cue landed inside it — which is what
- * the `padding-right` reservations in `.hero-credits-inner` used to be working
- * around. Riding the same `onDark` signal the colour flip already needs, the
- * cue rises above the rule instead, and the logos get their full measure back.
+ * It rests flat at the bottom-right corner on every page, including over the
+ * home fold — it used to lift clear of the credit rail there, but the higher
+ * resting point read as sitting in the way of the fold's own actions instead.
  */
 export default function ScrollHint({ text }: { text: string }) {
   const reduce = useReducedMotion();
@@ -48,11 +46,11 @@ export default function ScrollHint({ text }: { text: string }) {
      an empty dependency list the effect therefore measured the *first* page of
      the visit and then only ever corrected itself when something scrolled,
      which is why the cue behaved differently depending on how you arrived:
-     coming back to the home page it kept the previous page's un-lifted offset
-     and sat on top of the credit logos, and on /contact — which is one fold
-     with nothing to scroll — it kept the previous page's "there is more below".
-     Re-running on `pathname` is the fix; the delayed re-reads cover the gap
-     between this effect firing and the new page finishing its layout. */
+     coming back to the home page it kept the previous page's stale reading,
+     and on /contact — which is one fold with nothing to scroll — it kept the
+     previous page's "there is more below". Re-running on `pathname` is the
+     fix; the delayed re-reads cover the gap between this effect firing and
+     the new page finishing its layout. */
   useEffect(() => {
     const read = () => {
       const { scrollTop, scrollHeight, clientHeight } =
@@ -97,54 +95,51 @@ export default function ScrollHint({ text }: { text: string }) {
   return (
     <div
       className="scroll-cue-rail hidden lg:block"
-      data-lifted={onDark || undefined}
       aria-hidden={atEnd || undefined}
     >
-      <div className="wrap flex justify-end">
-        <button
-          type="button"
-          onClick={advance}
-          aria-label={text}
-          title={text}
-          data-hidden={atEnd || undefined}
-          data-on-dark={onDark || undefined}
-          className="scroll-cue"
+      <button
+        type="button"
+        onClick={advance}
+        aria-label={text}
+        title={text}
+        data-hidden={atEnd || undefined}
+        data-on-dark={onDark || undefined}
+        className="scroll-cue"
+      >
+        <motion.span
+          className="scroll-cue-arrows"
+          aria-hidden
+          animate={reduce ? undefined : { y: [0, 5, 0] }}
+          transition={{ duration: 1.9, repeat: Infinity, ease: "easeInOut" }}
         >
-          <motion.span
-            className="scroll-cue-arrows"
-            aria-hidden
-            animate={reduce ? undefined : { y: [0, 5, 0] }}
-            transition={{ duration: 1.9, repeat: Infinity, ease: "easeInOut" }}
+          {/* Two chevrons: the leading one is solid, the trailing one fades
+              off, so it reads as movement even before the drift starts. */}
+          <svg viewBox="0 0 24 14" width="22" height="13" fill="none">
+            <path
+              d="M2 2l10 9 10-9"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <svg
+            viewBox="0 0 24 14"
+            width="22"
+            height="13"
+            fill="none"
+            opacity="0.4"
           >
-            {/* Two chevrons: the leading one is solid, the trailing one fades
-                off, so it reads as movement even before the drift starts. */}
-            <svg viewBox="0 0 24 14" width="22" height="13" fill="none">
-              <path
-                d="M2 2l10 9 10-9"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <svg
-              viewBox="0 0 24 14"
-              width="22"
-              height="13"
-              fill="none"
-              opacity="0.4"
-            >
-              <path
-                d="M2 2l10 9 10-9"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </motion.span>
-        </button>
-      </div>
+            <path
+              d="M2 2l10 9 10-9"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </motion.span>
+      </button>
     </div>
   );
 }

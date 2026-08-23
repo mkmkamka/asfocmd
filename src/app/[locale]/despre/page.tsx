@@ -248,7 +248,7 @@ export default async function AboutPage({
             <h2>{dict.home.cta.title}</h2>
             <p>{dict.home.cta.subtitle}</p>
             <div className="btns">
-              <Link className="btn btn-primary" href={`${base}/servicii#directoriu`}>{dict.home.cta.primary}</Link>
+              <Link className="btn btn-primary" href={`${base}/specialisti`}>{dict.home.cta.primary}</Link>
               <Link
                 className="btn btn-ghost"
                 href={`${base}/contact`}

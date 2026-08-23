@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
 import { GraduationCap, Map, UserPlus, type LucideIcon } from "lucide-react";
 import { Lamp } from "@/components/ui/lamp";
 import type { Locale } from "@/i18n/config";
@@ -49,6 +50,7 @@ export default function ActionRail({
   atDirectory,
   onDark = false,
   travel,
+  lampId = "act-lamp",
 }: {
   locale: Locale;
   dict: Dictionary;
@@ -56,6 +58,17 @@ export default function ActionRail({
   atDirectory: boolean;
   /** Set while the rail floats over the home page's graded hero. */
   onDark?: boolean;
+  /**
+   * Unique per mounted instance, exactly like `NavBar`'s `lampId`.
+   *
+   * Motion matches `layoutId` globally, across the whole tree — and both the
+   * desktop corner and the phone's top row mount an ActionRail at once (the
+   * other is only `display:none`, which does not unmount it). Sharing one id
+   * meant two lamps claiming the same layout slot: the light landed in the
+   * wrong rail, or took a second navigation to appear at all. The nav pill
+   * already carried this parameter for this reason; the corner needs it too.
+   */
+  lampId?: string;
   /**
    * The travel class, when the top chrome is stepping off the screen.
    *
@@ -100,7 +113,7 @@ export default function ActionRail({
   const actions: Action[] = [
     {
       key: "directory",
-      href: `${base}/servicii#directoriu`,
+      href: `${base}/specialisti`,
       label: nav.directory,
       icon: Map,
       lit: atDirectory,
@@ -138,7 +151,16 @@ export default function ActionRail({
             aria-label={label}
             aria-current={lit ? "page" : undefined}
           >
-            {lit && <Lamp className="act-lamp" color={LAMP} halo={LAMP_HALO} />}
+            {lit && (
+              <motion.span
+                layoutId={lampId}
+                className="act-lamp-slot"
+                initial={false}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+                <Lamp className="act-lamp" color={LAMP} halo={LAMP_HALO} />
+              </motion.span>
+            )}
             <Icon size={18} strokeWidth={1.9} aria-hidden />
           </Link>
           {/* `aria-hidden`: the link's `aria-label` already says this word, and

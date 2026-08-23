@@ -22,7 +22,8 @@
     "about": "Who we are and what we stand for",
     "services": "Sweeping, inspection and the sweeps' directory",
     "news": "News from the association's work",
-    "contact": "Write to us, or come by the office"
+    "contact": "Write to us, or come by the office",
+    "memberArea": "Check your membership status"
   },
   "top": {
     "phone": "+373 79 447 686",
@@ -357,6 +358,10 @@
       "subtitle": "Quickly find a verified specialist in your area, or contact the association for guidance.",
       "primary": "Find a specialist",
       "secondary": "Contact us"
+    },
+    "joinCta": {
+      "title": "Are you a certified chimney sweep?",
+      "subtitle": "Join the association and get listed for clients across the country."
     }
   },
   "footer": {
@@ -383,7 +388,7 @@
     },
     "colContact": {
       "title": "Contact",
-      "address": "Chișinău, Republic of Moldova"
+      "address": "bd. Decebal 76, of. 601, Chișinău, Republic of Moldova"
     },
     "quickTitle": "Quick links",
     "followTitle": "Follow us",

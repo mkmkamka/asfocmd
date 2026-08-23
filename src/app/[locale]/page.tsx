@@ -1,6 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
 import TubelightNav from "@/components/TubelightNav";
-import ScrollGallery from "@/components/ScrollGallery";
 import Footer from "@/components/Footer";
 import MemberStrip from "@/components/MemberStrip";
 import StatCard from "@/components/StatCard";
@@ -36,13 +36,12 @@ export default async function Home({
   const dict = await getDictionary(locale);
   const t = dict.home;
   const base = `/${locale}`;
-  /* Eight, and only posts that carry a photograph. The sideways band is made of
-     pictures — a card falling back to the soot gradient would read as a hole in
-     the row rather than as a post without an image, which is what it looked
-     like in the three-card grid this replaced. */
+  /* Three, and only posts that carry a photograph — the front page is a
+     preview, not the archive; the full record with everything else is one
+     click away at /stiri. */
   const latestPosts = (await getPosts())
     .filter((post) => post.image)
-    .slice(0, 8);
+    .slice(0, 3);
 
   /* The hero band is a story, played in order and then from the top — see
      HeroVideo for the playback. The arc is hearth → sky → country: it opens on
@@ -189,23 +188,41 @@ export default async function Home({
         </div>
       </section>
 
-      {/* NEWS — a sideways band rather than the three-card grid that used to
-          sit here. The grid could only ever show three of twenty-nine posts and
-          spent a full screen doing it; the band shows eight in the same height
-          and makes the archive feel like an archive. `#stiri` stays on the
-          section so the existing deep links still land. */}
-      <section id="stiri">
-        <ScrollGallery
-          cards={latestPosts.map((post) => ({
-            href: `${base}/stiri/${post.slug}`,
-            image: post.image!,
-            label: post.title[locale],
-            meta: post.date[locale],
-          }))}
-          kicker={dict.nav.news}
-          title={t.news.title}
-          more={{ label: dict.pages.news.back, href: `${base}/stiri` }}
-        />
+      {/* NEWS — the three most recent, plain and static. The full archive
+          scrolls sideways on its own page (/stiri); the front page is a
+          preview, not a second place to browse it, so it stays put. `#stiri`
+          stays on the section so existing deep links still land. */}
+      <section id="stiri" className="news-recent">
+        <div className="wrap">
+          <div className="hscroll-head">
+            <span className="hscroll-kick">{dict.nav.news}</span>
+            <h2>{t.news.title}</h2>
+          </div>
+          <div className="news-recent-grid">
+            {latestPosts.map((post) => (
+              <Link
+                key={post.slug}
+                href={`${base}/stiri/${post.slug}`}
+                className="hscroll-card"
+              >
+                <Image
+                  src={post.image!}
+                  alt=""
+                  fill
+                  sizes="(max-width: 700px) 92vw, 380px"
+                  style={{ objectFit: "cover" }}
+                />
+                <div className="hscroll-card-body">
+                  <span className="hscroll-card-meta">{post.date[locale]}</span>
+                  <h3>{post.title[locale]}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <Link className="hscroll-more" href={`${base}/stiri`}>
+            {dict.pages.news.back}
+          </Link>
+        </div>
       </section>
 
       {/* CONTACT — closing CTA */}
@@ -215,7 +232,7 @@ export default async function Home({
             <h2>{t.cta.title}</h2>
             <p>{t.cta.subtitle}</p>
             <div className="btns">
-              <Link className="btn btn-primary" href={`${base}/servicii#directoriu`}>
+              <Link className="btn btn-primary" href={`${base}/specialisti`}>
                 {t.cta.primary}
               </Link>
               <Link

@@ -1,6 +1,7 @@
 import TubelightNav from "@/components/TubelightNav";
 import ScrollGallery from "@/components/ScrollGallery";
 import Footer from "@/components/Footer";
+import Logo from "@/components/Logo";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { isLocale, defaultLocale, type Locale } from "@/i18n/config";
 import { getNewsPosts } from "@/lib/cms";
@@ -33,7 +34,6 @@ export default async function NewsPage({
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const dict = await getDictionary(locale);
-  const t = dict.pages.news;
   const base = `/${locale}`;
   const posts = await getNewsPosts();
 
@@ -41,12 +41,14 @@ export default async function NewsPage({
     <>
       <TubelightNav locale={locale} dict={dict} />
 
-      <div className="page-hero">
-        <div className="wrap">
-          <div className="kick" aria-hidden />
-          <h1>{t.title}</h1>
-          <p className="lead">{t.lead}</p>
-        </div>
+      {/* The seal on soot, and nothing else. The heading and lead that used to
+          sit here said what the cards immediately below already show, and the
+          band reads as an opening rather than as a page header without them.
+          The white knockout, because the ground is dark. */}
+      <div className="news-hero">
+        <span className="news-hero-seal" aria-hidden>
+          <Logo size={104} tone="footer" />
+        </span>
       </div>
 
       {/* The archive as one sideways run, the same band the home page and

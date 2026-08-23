@@ -34,6 +34,12 @@ import { liquidMetalFragmentShader, ShaderMount } from "@paper-design/shaders";
  *   - `prefers-reduced-motion` pins the speed to 0. ShaderMount stops its rAF
  *     entirely at speed 0, so the reduced-motion path costs one static frame
  *     rather than a permanent render loop.
+ *
+ * At rest the rim is paused (speed 0) and centred — a still metal ring, not a
+ * constant shimmer competing with the rest of the fold. Motion is a hover
+ * response, not ambient decoration: entering starts the sweep and biases it
+ * toward wherever the pointer landed, tracking the cursor as it crosses the
+ * rim, and leaving eases the pattern back to centre and pauses it again.
  */
 export function LiquidMetalLink({
   href,
@@ -54,7 +60,6 @@ export function LiquidMetalLink({
     if (!host) return;
 
     let mount: ShaderMount | null = null;
-    let poll: number | undefined;
 
     try {
       mount = new ShaderMount(
@@ -132,44 +137,76 @@ export function LiquidMetalLink({
           u_worldHeight: 100,
         },
         undefined,
-        reduce ? 0 : 0.55,
+        // Paused at mount — see the note above. ShaderMount still draws the
+        // one frame this needs to swap in for the CSS floor below.
+        0,
       );
       mountRef.current = mount;
 
-      /* Only reveal the canvas once it has actually drawn. ShaderMount pauses
-         itself while the tab is hidden or the element is off-screen, so a
-         button rendered in a background tab has a live-but-blank canvas sitting
-         over the fallback — an opaque black ring, which is worse than no effect
-         at all. Polling `getCurrentFrame` on a timer rather than rAF is
-         deliberate: rAF is exactly what is not running in that state. */
-      const m = mount;
-      poll = window.setInterval(() => {
-        if (reduce || m.getCurrentFrame() > 0) {
-          host.dataset.live = "1";
-          window.clearInterval(poll);
-        }
-      }, 120);
+      /* The canvas used to stay transparent until `getCurrentFrame()` reported
+         a drawn frame, because a live-but-blank canvas over the old always-on
+         rim was an opaque black ring. That gate cannot work now — the shader
+         mounts paused, so the frame counter never advances and the canvas
+         would never be revealed at all.
+
+         It is also no longer needed. The whole layer sits at `opacity:0` until
+         the pointer arrives, and the reveal is a 280ms fade against a shader
+         that starts drawing on the first frame after `setSpeed`, so it has
+         painted long before it is visible. A failed context is still handled —
+         see `catch`. */
+      host.dataset.live = "1";
     } catch {
-      // WebGL unavailable — the static gradient floor stays visible.
+      // WebGL unavailable — the plain rim on `.lm-rim` stays, and hovering
+      // simply does nothing rather than exposing a black ring.
       host.dataset.shader = "off";
     }
 
     return () => {
-      window.clearInterval(poll);
       mount?.dispose();
       mountRef.current = null;
     };
   }, [reduce]);
 
-  // A touch more life under the pointer, then back. Cheap: it is the same
-  // render loop, just advanced faster.
+  /* Where the pointer is on the rim, handed to CSS as two percentages. The
+     mask in `.lm-rim-shader` is a disc centred on them, so the metal shows
+     only in an arc around the cursor and travels with it — the melt leans
+     into where you are rather than sweeping the whole ring on a fixed cycle.
+
+     Written straight to the element as custom properties rather than held in
+     React state: this fires on every mousemove, and a re-render per frame to
+     move a gradient is work the browser can do on its own.
+
+     Measured against the rim, not the button inside it, because the rim is
+     the thing being revealed — its box includes the 2px ring the mask is
+     actually cutting into. */
+  const track = (e: React.MouseEvent<HTMLSpanElement>) => {
+    const host = e.currentTarget;
+    const r = host.getBoundingClientRect();
+    host.style.setProperty("--lm-mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+    host.style.setProperty("--lm-my", `${((e.clientY - r.top) / r.height) * 100}%`);
+  };
+
   const speed = (v: number) => mountRef.current?.setSpeed(reduce ? 0 : v);
 
   return (
     <span
       className="lm-rim"
-      onMouseEnter={() => speed(1.1)}
-      onMouseLeave={() => speed(0.55)}
+      /* The shader only runs while the pointer is on the button. Off it, the
+         speed goes to 0 — which stops ShaderMount's rAF entirely, not just
+         the visible motion — and the rim falls back to the plain colour
+         underneath. Reduced motion never starts it at all: `speed()` pins to
+         0, so hovering reveals a still frame of metal rather than nothing,
+         and no render loop is entered. */
+      onMouseEnter={(e) => {
+        track(e);
+        e.currentTarget.dataset.hover = "1";
+        speed(1.1);
+      }}
+      onMouseMove={track}
+      onMouseLeave={(e) => {
+        delete e.currentTarget.dataset.hover;
+        speed(0);
+      }}
     >
       <span ref={ringRef} className="lm-rim-shader" aria-hidden />
       <Link href={href} className={className} {...rest}>

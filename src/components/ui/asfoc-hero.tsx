@@ -11,8 +11,11 @@ import Logo from "@/components/Logo";
 
 /* Big enough for the engraving to resolve — the ring, the lettering and the
    figure inside it. Under about 40px those merge into a dark blob, which is
-   what the 34px mark in the old top rail had been doing. */
-const LOCKUP_SEAL = 96;
+   what the 34px mark in the old top rail had been doing. Sized against the
+   eyebrow beside it (see `.hero-lockup .hero-eyebrow` in globals.css) rather
+   than picked alone — 96px next to 11.5px caps read as a big circle beside
+   an afterthought; both moved up together. */
+const LOCKUP_SEAL = 128;
 
 type HomeDict = Dictionary["home"];
 
@@ -248,7 +251,7 @@ export function AsfocHero({
                 the row. Still the one saturated object in the frame. */}
             <LiquidMetalLink
               className="hero-cta"
-              href={`${base}/servicii#directoriu`}
+              href={`${base}/specialisti`}
             >
               <Map className="hero-cta-mark" size={16} aria-hidden />
               <span className="hero-cta-label">{cta.primary}</span>

@@ -192,13 +192,12 @@ export function NavBar({
                   damping: 30,
                 }}
               >
-                {/* The lamp burns oxblood on a light page. Over the graded hero
-                    that value disappears into the picture, so it switches to
-                    the palette's light oxide red — the same tone the fold's
-                    eyebrow rule uses. */}
+                {/* The lamp burns oxide-red on a light page and deep oxblood
+                    over a dark ground, so it reads warmer against the picture
+                    and stays the quieter, deeper tone on white. */}
                 <Lamp
-                  color={onDark ? "#D9847C" : "var(--ember)"}
-                  halo={onDark ? "rgba(217,132,124,.30)" : "var(--ember-halo)"}
+                  color={onDark ? "var(--ember)" : "#D9847C"}
+                  halo={onDark ? "var(--ember-halo)" : "rgba(217,132,124,.30)"}
                 />
               </motion.div>
             )}

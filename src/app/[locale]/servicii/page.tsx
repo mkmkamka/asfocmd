@@ -1,10 +1,7 @@
 import Link from "next/link";
 import TubelightNav from "@/components/TubelightNav";
 import Footer from "@/components/Footer";
-import Directory from "@/components/Directory";
-import MapFocus from "@/components/MapFocus";
 import Icon, { type IconName } from "@/components/Icon";
-import { getDistrictCounts, getMembers, getTotalMembers } from "@/lib/cms";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { isLocale, defaultLocale, type Locale } from "@/i18n/config";
 import type { Metadata } from "next";
@@ -39,11 +36,6 @@ export default async function ServicesPage({
   const dict = await getDictionary(locale);
   const t = dict.home;
   const base = `/${locale}`;
-  const [members, districtCounts, totalMembers] = await Promise.all([
-    getMembers(),
-    getDistrictCounts(),
-    getTotalMembers(),
-  ]);
 
   return (
     <>
@@ -57,51 +49,29 @@ export default async function ServicesPage({
         </div>
       </div>
 
-      {/* SERVICES */}
+      {/* SERVICES — each box opens the directory, filtered to nothing in
+          particular yet: the map is the finder, not a fourth click deep on a
+          category page for a trade with three specialists in it. */}
       <section className="services">
         <div className="wrap">
           <div className="svc-grid">
             {t.services.items.map((s, i) => (
-              <div className="svc" key={i}>
+              <Link className="svc" href={`${base}/specialisti`} key={i}>
                 <div className="ic"><Icon name={SERVICE_ICONS[i]} size={26} /></div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
-      </section>
-
-      {/* DIRECTORY — find a sweep on the map */}
-      <section id="directoriu" style={{ scrollMarginTop: 96 }}>
-        <div className="wrap">
-          <div className="sec-head">
-            <div className="kick" aria-hidden />
-            <h2>{t.directory.title}</h2>
-            <p>{t.directory.subtitle}</p>
-          </div>
-          {/* No search panel above the map. The map *is* the finder: point at a
-              district, the column beside it filters, and the trade filter now
-              sits at the head of that column. A typed locality field floating
-              over an interactive map is a second control for the same job, and
-              having both is what read as clutter. */}
-          <Directory
-            locale={locale}
-            dict={dict}
-            members={members}
-            districtCounts={districtCounts}
-            totalMembers={totalMembers}
-          />
-        </div>
-        <MapFocus hash="directoriu" />
       </section>
 
       {/* CTA */}
       <section style={{ paddingTop: 0 }}>
         <div className="wrap">
           <div className="cta">
-            <h2>{t.cta.title}</h2>
-            <p>{t.cta.subtitle}</p>
+            <h2>{t.joinCta.title}</h2>
+            <p>{t.joinCta.subtitle}</p>
             <div className="btns">
               <Link className="btn btn-primary" href={`${base}/membru`}>{dict.nav.becomeMember}</Link>
               <Link

@@ -22,7 +22,8 @@
     "about": "Cine suntem și pentru ce stăm",
     "services": "Curățare, inspecție și directoriul coșarilor",
     "news": "Noutăți din activitatea asociației",
-    "contact": "Scrie-ne sau treci pe la sediu"
+    "contact": "Scrie-ne sau treci pe la sediu",
+    "memberArea": "Verifică-ți statutul de membru"
   },
   "top": {
     "phone": "+373 79 447 686",
@@ -357,6 +358,10 @@
       "subtitle": "Găsește rapid un specialist verificat din localitatea ta sau contactează asociația pentru îndrumare.",
       "primary": "Caută un specialist",
       "secondary": "Contactează-ne"
+    },
+    "joinCta": {
+      "title": "Ești un coșar autorizat?",
+      "subtitle": "Alătură-te asociației și fii vizibil pentru clienți din toată țara."
     }
   },
   "footer": {
@@ -383,7 +388,7 @@
     },
     "colContact": {
       "title": "Contact",
-      "address": "Chișinău, Republica Moldova"
+      "address": "bul. Decebal 76, of. 601, mun. Chișinău, Republica Moldova"
     },
     "quickTitle": "Linkuri utile",
     "followTitle": "Urmărește-ne",

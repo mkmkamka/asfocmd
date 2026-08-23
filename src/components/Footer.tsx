@@ -19,7 +19,7 @@ export default function Footer({
     { label: n.home, href: base },
     { label: n.about, href: `${base}/despre` },
     { label: n.services, href: `${base}/servicii` },
-    { label: n.directory, href: `${base}/servicii#directoriu` },
+    { label: n.directory, href: `${base}/specialisti` },
     { label: n.training, href: `${base}/instruire` },
     { label: n.news, href: `${base}/stiri` },
     { label: n.contact, href: `${base}/contact` },

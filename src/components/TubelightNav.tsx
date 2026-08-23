@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   ShieldCheck,
@@ -14,6 +15,8 @@ import {
 } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import LanguageSwitcher from "./LanguageSwitcher";
+import Logo from "@/components/Logo";
+import { scrollPageToTop } from "@/lib/nav";
 import { RAIL_STOPS, type RingStop } from "@/lib/page-ring";
 import ActionRail from "@/components/ActionRail";
 import type { Locale } from "@/i18n/config";
@@ -44,7 +47,8 @@ const TAB_MARKS: Record<RingStop["key"], typeof House> = {
    and the phone's bottom dock comes to rest on it at the end of every scroll.
 
    `.page-hero` is deliberately absent — the inner pages open on sand-to-white,
-   which the resting material is already built for.
+   which the resting material is already built for. `.news-hero` is /stiri's
+   own opening band, which is the one that does open dark.
 
    This list is the known weak point, and every entry after the first three was
    added the same way: something dark shipped, the nav went invisible over it,
@@ -53,7 +57,8 @@ const TAB_MARKS: Record<RingStop["key"], typeof House> = {
    sideways gallery. Both were live and broken before being typed in here.
    Nothing links this list to the rules that actually paint those surfaces
    dark, which is why it keeps going stale — see the note in globals.css. */
-const DARK_BANDS = ".hero-fold,.band,.cta,footer,.a-cover,.hscroll";
+const DARK_BANDS =
+  ".hero-fold,.news-hero,.band,.cta,footer,.a-cover,.hscroll,.news-recent";
 
 /* Is the floating chrome sitting over one of them right now?
 
@@ -179,11 +184,25 @@ function useChromeAway() {
     let band = restBand();
     let last = Math.max(0, window.scrollY);
 
+    /* A sideways gallery is the one place scrolling down does not mean
+       reading down — the page is stationary and the cards are travelling
+       across it. Hiding the rail there takes the navigation away during the
+       longest single band on the page, in exchange for uncovering nothing,
+       so while one is on screen the rail stays put. `.hscroll` pins itself
+       to the viewport for its whole run, so "on screen" is just an overlap
+       test against it. */
+    const inGallery = () =>
+      Array.from(document.querySelectorAll(".hscroll")).some((el) => {
+        const b = el.getBoundingClientRect();
+        return b.top < window.innerHeight && b.bottom > 0;
+      });
+
     const read = () => {
       const y = Math.max(0, window.scrollY); // iOS rubber-bands past zero
       const travel = y - last;
       if (Math.abs(travel) < SETTLE) return;
       last = y;
+      if (inGallery()) return set(false);
       set(travel > 0 && y > band);
     };
 
@@ -206,47 +225,64 @@ function useChromeAway() {
 }
 
 /**
- * Is the directory map actually on the screen?
+ * Is the directory map the page you are on?
  *
- * The map is a *section* of Servicii, not a page, so no amount of reading the
- * URL settles this: you can stand on /servicii with the map a screen and a
- * half below you. `#directoriu` in the address only decides where the browser
- * drops you on arrival — after that it is stale, and a highlight driven by it
- * would stay lit all the way down the page.
- *
- * So it is observed, not parsed. Clicking Caută un specialist on the home page
- * lands you at the map with the corner mark lit, and scrolling away hands the
- * light back to the Servicii tab, with no state stored anywhere to fall out of
- * step. An IntersectionObserver rather than a scroll handler: the browser does
- * the measuring off the main thread and only speaks when the answer changes.
+ * The map used to be a section of Servicii rather than a page of its own,
+ * which meant the URL alone could not settle this — you could stand on
+ * /servicii with the map a screen and a half below you, still on the
+ * "Servicii" tab. Now that Caută un specialist opens its own route, it is
+ * exactly that case: a prefix match, the same test every other off-rail
+ * destination in ActionRail already uses.
  */
 function useAtDirectory(): boolean {
   const pathname = usePathname();
-  const [at, setAt] = useState(false);
+  // Locale-prefixed (`/ro/specialisti`), so a leading match is not enough —
+  // the segment can appear anywhere after it.
+  return /\/specialisti(\/|$)/.test(pathname);
+}
+
+/**
+ * Has the page's own seal — the one every page opens on, in the home fold's
+ * lockup or in `.page-hero`'s kicker — scrolled out of view?
+ *
+ * The corner rail gave up its seal when it moved down into the page itself
+ * (see `dacf278`), so the identity mark is the first thing on screen without
+ * exception. A second, small copy in the corner while that is still visible
+ * would just be saying the same thing twice in one glance; it earns its
+ * corner back only once the page one has scrolled away, and only while you
+ * are looking for it — which is why `useChromeAway`'s direction still gates
+ * it, this only decides whether it is eligible to show at all.
+ *
+ * A scroll read rather than an IntersectionObserver, for the same reason
+ * `useOverDark` is one: everything else the chrome does is decided on the
+ * scroll frame, and a seal fading on the observer's schedule while the rail
+ * it sits in slides on the scroll's is two clocks driving one row. The mark
+ * is a single box on the page's own axis, so there is nothing here an
+ * observer would measure better.
+ */
+function usePastMark(): boolean {
+  const pathname = usePathname();
+  const [past, setPast] = useState(false);
 
   useEffect(() => {
-    const map = document.getElementById("directoriu");
-    if (!map) return; // No map on this page: the tabs own the highlight.
-    const io = new IntersectionObserver(
-      ([entry]) => setAt(entry.isIntersecting),
-      /* A sliver showing is not "you are at the map" — a third of it is. The
-         margin trims the viewport rather than the target so the answer does
-         not flicker while the section's own edge crosses the fold. */
-      { threshold: 0.34, rootMargin: "-10% 0px -10% 0px" },
-    );
-    io.observe(map);
-    /* Unlit on the way out, not on the way in. Resetting in the effect body
-       would be a synchronous setState on every route change; doing it here
-       covers the one case that actually needs it — leaving a page that has a
-       map for one that does not, where nothing would otherwise put the mark
-       out. */
+    const read = () => {
+      const mark = document.querySelector(".hero-lockup, .page-hero");
+      // No mark on this page (e.g. /contact) — the corner is free.
+      // Otherwise: past it once its foot has cleared the rail's own band,
+      // so the two seals are never both on screen at once.
+      const next = mark ? mark.getBoundingClientRect().bottom <= 56 : true;
+      setPast((prev) => (prev === next ? prev : next));
+    };
+    read();
+    window.addEventListener("scroll", read, { passive: true });
+    window.addEventListener("resize", read);
     return () => {
-      io.disconnect();
-      setAt(false);
+      window.removeEventListener("scroll", read);
+      window.removeEventListener("resize", read);
     };
   }, [pathname]);
 
-  return at;
+  return past;
 }
 
 export default function TubelightNav({
@@ -300,7 +336,19 @@ export default function TubelightNav({
 
   const overDark = useOverDark();
   const atDirectory = useAtDirectory();
+  const pastMark = usePastMark();
   const { away, show } = useChromeAway();
+  const pathname = usePathname();
+
+  /* The seal is a link home; on the home page itself it is a link to the top
+     of it. Without this, clicking the identity mark from the middle of the
+     page is a dead press — Next resolves the href to the route you are
+     already on. */
+  const homeClick = (e: React.MouseEvent) => {
+    if (pathname !== base) return;
+    e.preventDefault();
+    scrollPageToTop();
+  };
 
   /* The trip off the screen, carried by each capsule rather than by the shell
      around it. Moving an ancestor — `transform`, or `translate` as Tailwind v4
@@ -336,19 +384,33 @@ export default function TubelightNav({
         onFocusCapture={show}
       >
         <div className="wrap flex items-center justify-between gap-3">
-          {/* The corner the seal used to hold. The seal has gone down into the
-              fold at a size worth looking at (see asfoc-hero), and what is left
-              up here is the one control that is neither identity nor
-              navigation — so it takes the quietest corner rather than the
-              busiest one. */}
-          <div
-            className={`pointer-events-auto vt-rail-lang transition-[translate] duration-300 ease-out ${travel}`}
-          >
-            <LanguageSwitcher
-              current={locale}
-              variant="light"
-              onDark={overDark.top}
-            />
+          {/* The corner the seal used to hold, and — once the page's own mark
+              has scrolled away — the corner it comes back to. The seal's real
+              size lives down in the fold or in `.page-hero`'s kicker; a second
+              copy here is only a wayfinder while that one is out of view, so
+              it stays small and fades in behind the language capsule rather
+              than announcing itself. */}
+          <div className="pointer-events-auto flex items-center gap-2">
+            <Link
+              href={base}
+              aria-label="ASFOCMD"
+              onClick={homeClick}
+              data-shown={pastMark || undefined}
+              className={`vt-mark-seal ${travel} ${overDark.top ? "on-dark" : ""}`}
+            >
+              <span className="vt-mark-seal-plate">
+                <Logo size={16} />
+              </span>
+            </Link>
+            <div
+              className={`vt-rail-lang transition-[translate] duration-300 ease-out ${travel}`}
+            >
+              <LanguageSwitcher
+                current={locale}
+                variant="light"
+                onDark={overDark.top}
+              />
+            </div>
           </div>
 
           {/* In flow on lg (no room to center absolutely), truly centered on
@@ -383,6 +445,7 @@ export default function TubelightNav({
               atDirectory={atDirectory}
               onDark={overDark.top}
               travel={travel}
+              lampId="act-lamp-desktop"
             />
           </div>
         </div>
@@ -398,14 +461,27 @@ export default function TubelightNav({
         onFocusCapture={show}
       >
         <div className="wrap flex items-center justify-between gap-2">
-          <div
-            className={`vt-top-lang transition-[translate] duration-300 ease-out ${travel}`}
-          >
-            <LanguageSwitcher
-              current={locale}
-              variant="light"
-              onDark={overDark.top}
-            />
+          <div className="flex items-center gap-2">
+            <Link
+              href={base}
+              aria-label="ASFOCMD"
+              onClick={homeClick}
+              data-shown={pastMark || undefined}
+              className={`vt-mark-seal ${travel} ${overDark.top ? "on-dark" : ""}`}
+            >
+              <span className="vt-mark-seal-plate">
+                <Logo size={16} />
+              </span>
+            </Link>
+            <div
+              className={`vt-top-lang transition-[translate] duration-300 ease-out ${travel}`}
+            >
+              <LanguageSwitcher
+                current={locale}
+                variant="light"
+                onDark={overDark.top}
+              />
+            </div>
           </div>
           {/* Same three marks as the desktop corner. The bottom dock is five
               tabs now, so without these the phone would have no route to
@@ -416,6 +492,7 @@ export default function TubelightNav({
             atDirectory={atDirectory}
             onDark={overDark.top}
             travel={travel}
+            lampId="act-lamp-mobile"
           />
         </div>
       </div>

@@ -340,19 +340,23 @@ ul{list-style:none}
   --fold-step-2:clamp(34px,6.4vh,58px);
   --fold-step-3:clamp(48px,9.5vh,88px);
 }
+/* Centred, and vertically centred in the fold rather than sitting on its
+   floor. This block used to be set low and left against the site's measure,
+   which is a fine editorial composition but a poor institutional one: the
+   seal ended up beside the eyebrow instead of beside the name it belongs to,
+   and the whole group read as pushed into a corner. The hero-centric pattern
+   for a full-bleed picture puts the mark, the name and the actions on one
+   axis down the middle — nothing left to judge as off-centre, because there
+   is no second edge to be off. */
 .hero-stage{
   position:relative;z-index:1;
-  display:flex;flex-direction:column;align-items:flex-start;
-  flex:1;justify-content:flex-end;
-  /* The group used to end flush against the credits rule. Standing it off the
-     bottom is what stops the lower-left corner reading as crowded — the fold
-     has height to spare and the block was spending none of it. */
-  padding-bottom:clamp(24px,6vh,64px);
-  /* `.wrap` carries `margin:0 auto`, and an auto cross-axis margin on a flex
-     item cancels `stretch` — without this the stage collapses to the width of
-     its own text and the whole block drifts inward, off the site's left edge. */
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  flex:1;justify-content:center;
   width:100%;
-  padding-top:112px;padding-bottom:var(--fold-step-3);
+  /* Clears the floating rail at the top and the credit rule at the foot, so
+     the centred group is centred in the *visible* band, not in the box. */
+  padding-top:clamp(96px,14vh,140px);
+  padding-bottom:var(--fold-step-3);
 }
 
 /* Eyebrow: a short accent rule, the descriptor, and the short name — one line
@@ -360,12 +364,21 @@ ul{list-style:none}
    `--copper-soft`, the light oxide red the palette keeps for dark grounds; the
    ember itself goes muddy at this size over a graded picture. */
 .hero-eyebrow{
-  display:flex;align-items:center;gap:11px;
-  font-size:11.5px;font-weight:700;letter-spacing:.19em;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;gap:13px;
+  font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
   color:rgba(255,255,255,.82);
 }
-.hero-eyebrow-rule{
-  display:block;width:clamp(28px,4vw,54px);height:1px;flex:none;
+/* Mirrored, because the line is centred now. The markup carries one rule, so
+   the second is drawn here rather than added to the component — and both fade
+   *away* from the words, which is what keeps the label the centre of gravity
+   instead of the two rules pointing at each other. */
+.hero-eyebrow-rule,
+.hero-eyebrow::after{
+  content:"";
+  display:block;width:clamp(28px,4vw,52px);height:1.5px;flex:none;
+  background:linear-gradient(90deg,rgba(217,132,124,.15),var(--copper-soft));
+}
+.hero-eyebrow::after{
   background:linear-gradient(90deg,var(--copper-soft),rgba(217,132,124,.15));
 }
 .hero-eyebrow-sep{
@@ -378,13 +391,13 @@ ul{list-style:none}
    to shrink to hold one line. `text-wrap:balance` keeps the three lines even
    instead of leaving a single orphaned word on the last one. */
 .hero-title{
-  /* 22ch is the measure that lands the 77-character name on three lines at the
-     desktop size — 19ch broke it to four and left "a Hornarilor," stranded as a
-     short second line. */
-  max-width:22ch;
+  /* 24ch centred lands the 77-character name on three even lines. Wider than
+     the 22ch it carried left-aligned: a centred block has air on both sides,
+     so the same measure read as a narrow column stranded in the middle. */
+  max-width:24ch;margin-inline:auto;
   margin-top:var(--fold-step-1);
-  font-size:clamp(2rem,4.4vw,3.65rem);
-  line-height:1.06;letter-spacing:-.032em;font-weight:680;
+  font-size:clamp(1.9rem,4vw,3.4rem);
+  line-height:1.07;letter-spacing:-.03em;font-weight:680;
   color:#fff;text-wrap:balance;
   text-shadow:0 1px 30px rgba(10,11,13,.5);
 }
@@ -505,20 +518,43 @@ ul{list-style:none}
    the button: a border would ride the transform and shear against the canvas. */
 .lm-rim{
   --lm-ring:2px;
+  /* Where the pointer is over the rim, in percent, written by the component
+     on every mousemove. The centre default is only what the mask falls back
+     to before the first move — at rest the shader layer is transparent, so
+     it is never actually seen. */
+  --lm-mx:50%; --lm-my:50%;
   position:relative;display:inline-flex;
   padding:var(--lm-ring);border-radius:9999px;
+  /* The resting rim: one plain, still colour. The metal used to run here
+     permanently, which made the button the only thing on the fold that never
+     stopped moving. A steel line at rest is also what the shader resolves to,
+     so the melt reads as the same edge coming alive rather than as a
+     different material being swapped in. */
+  background:#7E8792;
   isolation:isolate;
 }
 .lm-rim-shader{
   position:absolute;inset:0;z-index:0;
   border-radius:inherit;overflow:hidden;
-  /* The floor under the canvas. A brushed sweep in the same cool greys the
-     shader itself resolves to, so a browser that cannot open a WebGL context —
-     or one that has not drawn a frame yet — degrades to a still metal rim
-     rather than a black one. */
-  background:conic-gradient(from 210deg,
-    #7A808C,#D2D7DE,#858B96,#EDEFF2,#7E848F,#C2C7CF,#7A808C);
+  /* The metal shows only through a soft disc centred on the pointer — about a
+     third of the rim at a time — so the melt follows the cursor round the
+     edge instead of the whole ring animating at once. Masking the layer
+     rather than steering the shader's own `u_offset` uniforms is deliberate:
+     the pattern is `fit:cover` over a square world, so nudging its offsets
+     crops the end caps unevenly and the effect dies at exactly the two places
+     the pointer is most likely to enter from. A mask has no such coupling —
+     it reveals whatever the shader is already drawing, wherever the pointer
+     happens to be. */
+  -webkit-mask-image:radial-gradient(circle 72px at var(--lm-mx) var(--lm-my),
+    #000 0%,#000 34%,transparent 78%);
+  mask-image:radial-gradient(circle 72px at var(--lm-mx) var(--lm-my),
+    #000 0%,#000 34%,transparent 78%);
+  /* Transparent until hovered. Position tracks the pointer with no transition
+     — it is following a finger, so any easing reads as lag — while the
+     appearance itself fades, which is what stops the arc snapping on. */
+  opacity:0;transition:opacity .28s ease;
 }
+.lm-rim[data-hover] .lm-rim-shader{opacity:1}
 /* The canvas is transparent until the shader reports a drawn frame; see the
    note by the poll in liquid-metal-button.tsx. Without this the ring flashes
    opaque black on load, and stays black for the whole visit in any tab that
@@ -1169,7 +1205,7 @@ section{padding:64px 0}
 
 .services{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .svc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
-.svc{border:1px solid var(--line);border-radius:var(--r);padding:28px 22px;background:transparent;transition:.2s;cursor:pointer}
+.svc{display:block;border:1px solid var(--line);border-radius:var(--r);padding:28px 22px;background:transparent;transition:.2s;cursor:pointer;color:inherit;text-decoration:none}
 .svc:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--hairline);background:#fff}
 .svc .ic{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--copper);margin-bottom:18px;transition:.2s}
 .svc:hover .ic{border-color:var(--copper);color:var(--ember)}
@@ -1374,6 +1410,9 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
 @media(max-width:560px){.f-field.half{flex-basis:100%}.form-card{padding:24px 20px}}
 
 /* ---- inner pages ---- */
+/* Sand-to-white, as it always was. This band was briefly turned black on
+   every page; only /stiri was ever meant to open dark, and it has its own
+   `.news-hero` for that. The rest of the site opens on paper. */
 .page-hero{background:
    radial-gradient(900px 400px at 85% -20%,rgba(127,31,22,.07),transparent 60%),
    linear-gradient(180deg,var(--sand),#fff);border-bottom:1px solid var(--line)}
@@ -1408,7 +1447,7 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
    instead of seven edits. Decorative, and the element is already aria-hidden,
    which is exactly what a background image should be.
 
-   56px, not the fold's 96: it is a page mark here, introducing a heading,
+   56px, not the fold's 128: it is a page mark here, introducing a heading,
    not the subject of the screen. Still clear of the ~40px floor where the
    engraving stops resolving. The rule and dot stay underneath it. */
 .page-hero .kick{position:relative;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);padding-bottom:11px;margin-bottom:10px;
@@ -1427,6 +1466,27 @@ footer .wrap{position:relative;z-index:1;text-shadow:0 1px 10px rgba(21,23,28,.6
    back on a short viewport. */
 .page-hero h1{font-size:clamp(24px,3.2vw,36px);margin-bottom:11px}
 .page-hero .lead{font-size:clamp(14px,1.5vw,16.5px);line-height:1.55;color:#4a4e57;max-width:640px;margin:0 auto}
+
+/* ── Știri opening band ───────────────────────────────────────────────
+   The one page that does open dark, and the only one that ever should have.
+   Nothing in it but the seal: the archive's own cards say what the page is
+   far better than a heading and a lead paragraph above them did. Soot, not
+   a near-black of its own, so it runs seamlessly into the gallery below and
+   the footer below that — all three are the same ground. */
+.news-hero{
+  background:var(--soot);
+  display:grid;place-items:center;
+  padding:112px 24px clamp(40px,7vh,72px);
+}
+@media(min-width:1024px){.news-hero{padding-top:clamp(140px,17vh,190px)}}
+.news-hero-seal{display:block;line-height:0}
+@media(max-width:640px){.news-hero-seal>*{width:72px!important;height:72px!important}}
+/* No seam between the dark bands. `footer` carries a 24px top margin for the
+   light pages that end on paper; where a soot band runs straight into it the
+   body's sand shows through as a stripe. */
+.news-hero + .hscroll,
+.hscroll + footer,
+.news-recent + footer{margin-top:0}
 
 .svc-grid.cols-4{grid-template-columns:repeat(4,1fr)}
 @media(max-width:900px){.svc-grid.cols-4{grid-template-columns:repeat(2,1fr)}}
@@ -1637,21 +1697,18 @@ a.member-badge:hover{border-color:var(--ember);box-shadow:0 6px 20px rgba(20,21,
    1440 screen left it 126px outside the column the rest of the page lines up
    on. `justify-end` inside `.wrap` does what a `calc()` on `100vw` would, minus
    the scrollbar error. */
+/* The viewport's bottom-right corner, not the measure's. It used to be a
+   full-width rail holding a `.wrap`, which put the cue on the 1180px column
+   — on a wide screen that left it floating a few hundred px in from the
+   edge, reading as neither aligned to the content nor parked in the corner.
+   A corner cue belongs in the corner. */
 .scroll-cue-rail{
-  position:fixed;left:0;right:0;bottom:28px;z-index:60;
+  position:fixed;right:24px;bottom:24px;z-index:60;
   pointer-events:none;
-  transition:bottom .45s cubic-bezier(.16,1,.3,1);
 }
-.scroll-cue-rail > .wrap{pointer-events:none}
-/* Lifted clear of the hero's credit rail while the fold is under it. The rail
-   is ~88px tall including its rule, so 118px puts the cue a comfortable 30px
-   above the hairline instead of sitting on top of the logos. This is what
-   replaced the `padding-right` reservations `.hero-credits-inner` used to carry
-   to dodge the cue horizontally — the logos now get the full measure. */
-.scroll-cue-rail[data-lifted]{bottom:118px}
 .scroll-cue{display:grid;place-items:center;width:44px;height:44px;
   border-radius:9999px;cursor:pointer;pointer-events:auto;
-  color:var(--ember);
+  color:var(--copper-soft);
   background:var(--nav-fill);
   -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
   border:1px solid var(--line);
@@ -1662,20 +1719,20 @@ a.member-badge:hover{border-color:var(--ember);box-shadow:0 6px 20px rgba(20,21,
    advance to — otherwise it stays available for the whole visit. */
 .scroll-cue[data-hidden]{opacity:0;pointer-events:none}
 /* Over the home fold's graded picture the cue keeps its red — it just changes
-   which red. `--ember` is a 4.5:1 oxblood built for white paper; on a graded
-   picture it goes muddy and the glyph all but disappears. `--copper-soft` is
-   the palette's own light oxide red, already carrying the fold's eyebrow rule
-   and the nav lamp, so the cue stays unmistakably red on both grounds and
-   matches the two other accents in the frame. */
+   which red. `--ember` is a 4.5:1 oxblood built for white paper, so it stays
+   the base tone on the site's white bands. `--copper-soft` is the palette's
+   own light oxide red; on a graded picture the deeper `--ember` goes muddy,
+   so the cue switches to copper there, matching the fold's eyebrow rule and
+   the nav lamp — both make the same swap for the same reason. */
 .scroll-cue[data-on-dark]{
-  color:var(--copper-soft);background:rgba(255,255,255,.08);
-  border-color:rgba(217,132,124,.42);box-shadow:none}
+  color:var(--ember);background:rgba(255,255,255,.08);
+  border-color:rgba(127,31,22,.42);box-shadow:none}
 .scroll-cue[data-on-dark]:hover{
-  color:#F2B4AC;
-  border-color:rgba(217,132,124,.85);
-  box-shadow:0 0 0 4px rgba(217,132,124,.14)}
-.scroll-cue:hover{transform:translateY(2px);border-color:rgba(127,31,22,.35);
-  box-shadow:0 0 0 4px rgba(127,31,22,.09),0 14px 22px -6px rgba(20,21,24,.13)}
+  color:#9C2A1C;
+  border-color:rgba(127,31,22,.85);
+  box-shadow:0 0 0 4px rgba(127,31,22,.14)}
+.scroll-cue:hover{transform:translateY(2px);border-color:rgba(217,132,124,.35);
+  box-shadow:0 0 0 4px rgba(217,132,124,.09),0 14px 22px -6px rgba(20,21,24,.13)}
 /* Optical centring, not geometric. The glyph is two 13px chevrons overlapped by
    5px, so its ink runs 21px tall — but the *mass* of a chevron pair sits above
    its bounding box's centre, because the lower one is 60% transparent. Grid
@@ -2235,6 +2292,22 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
 @media(hover:hover) and (pointer:fine){.swipe-hint{display:none}}
 @media(prefers-reduced-motion:reduce){.swipe-hint{transition:opacity .18s ease}}
 
+/* ── Recent news (home page) ──────────────────────────────────────────
+   The three most recent posts, static — the front page is a preview, not a
+   second place to browse the archive, so it does not scroll-jack. Same dark
+   ground and the same `.hscroll-card` the full archive on /stiri uses, just
+   laid out as a plain grid instead of a pinned, dragged track. */
+.news-recent{background:var(--soot);color:#e6e7ec}
+.news-recent-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:22px;
+  margin-top:28px;
+}
+.news-recent-grid .hscroll-card{width:100%;height:340px}
+@media(max-width:860px){
+  .news-recent-grid{grid-template-columns:1fr}
+  .news-recent-grid .hscroll-card{height:280px}
+}
+
 /* ── Sideways gallery ─────────────────────────────────────────────────
    A band that reads across while the page reads down. The rail is the tall
    scroll region, the stage pins to the viewport inside it, and the track of
@@ -2371,8 +2444,29 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
   border:1px solid var(--line);background:color-mix(in srgb,var(--ink) 5%,transparent);
   color:color-mix(in srgb,var(--ink) 80%,transparent);
   backdrop-filter:blur(12px);
-  transition:color .25s ease,background-color .25s ease,border-color .25s ease;
+  /* `translate` is in this list because the rail hands each capsule a travel
+     class to ride out on when the top chrome steps off the screen (see
+     `useChromeAway`). Tailwind v4 compiles `translate-y-*` to the standalone
+     `translate` property, and without it named here the capsules teleported
+     while the nav pill beside them — which does name it — slid. Same list,
+     same duration, same easing as `NavBar`, so the whole rail moves as one
+     object rather than as a pill and three marks that happen to agree. */
+  transition:translate .3s ease-out,color .25s ease,
+             background-color .25s ease,border-color .25s ease;
 }
+/* The lit mark's slot: `layoutId="act-lamp"` FLIPs this box between whichever
+   of the three actions is current, the same spring the nav pill's own lamp
+   uses — see `NavBar`. It needs its own sized, positioned box for Framer to
+   measure and tween; `inset:0` matches `.act` exactly, so the Lamp inside
+   (itself absolutely positioned) lands in the same spot it always has. */
+.act-lamp-slot{
+  position:absolute;inset:0;pointer-events:none;
+}
+/* The Lamp defaults to 2rem (32px), which is right under a nav tab — those
+   are a word wide. A corner mark is a 44px circle, so the same bar spans
+   nearly its whole diameter and reads as a lid rather than as a light. 18px
+   is the same *proportion* of this capsule that 32px is of an average tab. */
+.act-lamp{--lamp-w:18px}
 .act:hover{color:var(--ember);background:color-mix(in srgb,var(--ember) 7%,transparent)}
 .act-rail.on-dark .act{border-color:rgba(255,255,255,.2);background:rgba(0,0,0,.25);color:rgba(255,255,255,.8)}
 .act-rail.on-dark .act:hover{color:#fff;background:rgba(255,255,255,.12)}
@@ -2472,25 +2566,73 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
 }
 
 
+/* ── Corner seal ───────────────────────────────────────────────────────
+   The wayfinder copy of the mark — see `usePastMark` in TubelightNav. Hidden
+   at rest (the page's own seal, down in the fold or in `.page-hero`'s
+   kicker, is the one that actually introduces the page); it only becomes
+   eligible once that has scrolled away, and `useChromeAway`'s own opacity is
+   layered on top of this one, so it also only actually shows while the rail
+   is scrolling back into view. Same glass shell as the language chip beside
+   it, sized to match its 30px content rather than its 40px capsule — the
+   seal is a mark, not a menu, and giving it the taller box would make two
+   different heights read as one control. */
+/* One transition declaration, naming `translate` alongside the rest. The
+   element also carries a Tailwind `transition-[translate,opacity]` utility,
+   and two `transition-property` sources on one box do not merge — the later
+   one simply replaces the earlier, so whichever lost left the seal popping
+   in and out while the rail beside it slid. Everything it animates is named
+   here, in the same rhythm the pill and the corner marks use. */
+.vt-mark-seal{
+  display:grid;place-items:center;width:30px;height:30px;border-radius:9999px;
+  background:var(--nav-fill);border:1px solid var(--line);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  box-shadow:var(--nav-shadow);
+  /* `scale` as well as opacity: a mark that only fades reads as a glitch,
+     one that also settles the last few percent reads as arriving. */
+  opacity:0;scale:.82;pointer-events:none;
+  transition:translate .3s ease-out,opacity .3s ease-out,scale .3s ease-out,
+             background-color .3s ease,border-color .3s ease;
+}
+.vt-mark-seal[data-shown]{opacity:1;scale:1;pointer-events:auto}
+.vt-mark-seal.on-dark{background:rgba(0,0,0,.25);border-color:rgba(255,255,255,.2)}
+/* The seal is black artwork, so it needs its own light plate regardless of
+   the glass shell around it — on-dark that shell is translucent black, which
+   would otherwise swallow the mark whole. Same trick the fold's own seal
+   used before it moved into the page: more opaque over a picture, where a
+   faint plate would let the footage bleed through and break the engraving
+   up; barely-there over paper, where the page is already the backdrop. */
+.vt-mark-seal-plate{
+  display:grid;place-items:center;width:22px;height:22px;border-radius:9999px;
+  background:rgba(255,255,255,.45);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+  transition:background-color .3s ease;
+}
+.vt-mark-seal.on-dark .vt-mark-seal-plate{background:rgba(255,255,255,.85);box-shadow:none}
+
 /* ── Language picker ──────────────────────────────────────────────────
    From the homepage-redesign branch: the code you are reading in, with the
    other two on demand. A visitor picks a language once and never touches
    it again, so three codes in a row spent the widest island in the rail on
    two nobody was going to press. See components/LanguageSwitcher.tsx. */
 .lang-pick{position:relative}
+/* Same glass shell as the nav pill beside it — `--nav-fill`, `--nav-shadow`
+   and `--line` are the exact tokens `.scroll-cue` already borrows for this,
+   so the chip stops reading as a lighter, separate piece of chrome. */
 .lang-current{
   display:inline-flex;align-items:center;gap:4px;
   height:30px;padding:0 8px 0 10px;border-radius:9999px;
   font-size:11px;font-weight:700;letter-spacing:.06em;line-height:1;
   color:var(--soot);cursor:pointer;
-  background:rgba(255,255,255,.5);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
-  transition:background-color .2s ease,color .2s ease;
+  background:var(--nav-fill);
+  border:1px solid var(--line);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  box-shadow:var(--nav-shadow);
+  transition:background-color .2s ease,color .2s ease,border-color .2s ease;
 }
 .lang-caret{flex:none;opacity:.5;transition:transform .22s ease,opacity .2s ease}
 .lang-pick.is-open .lang-caret{transform:rotate(180deg);opacity:.8}
 .lang-pick.on-dark .lang-current{
-  background:rgba(255,255,255,.2);color:#fff;box-shadow:none;
+  background:rgba(0,0,0,.25);border-color:rgba(255,255,255,.2);color:#fff;box-shadow:none;
 }
 .lang-pop{
   position:absolute;top:calc(100% + 10px);left:0;
@@ -2537,12 +2679,18 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
    different weight, so centring them balances two shapes that were never
    going to balance and leaves the label floating. Top edges aligned, the
    label sitting level with the crown of the seal, reads as a letterhead. */
+/* A column now, not a row: seal on the axis, label under it, name under that.
+   Side by side, the seal could only ever align to one of the two things
+   beside it — top-aligned it sat against the eyebrow, centre-aligned it
+   floated against a three-line block — and neither reads as deliberate.
+   Stacked, it is simply on the same centre line as everything else. */
 .hero-lockup{
-  display:flex;align-items:flex-start;gap:20px;
+  display:flex;flex-direction:column;align-items:center;
+  gap:clamp(18px,3vh,28px);
   margin-bottom:var(--fold-step-2,26px);
 }
-.hero-seal{flex:none;display:block;line-height:0;margin-top:2px}
-.hero-lockup-text{display:flex;flex-direction:column;gap:9px;min-width:0}
+.hero-seal{flex:none;display:block;line-height:0}
+.hero-lockup-text{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
 /* The eyebrow keeps its rule but loses the separator and the second name:
    the seal beside it already says ASFOCMD, in the association's own hand. */
 .hero-lockup .hero-eyebrow{display:inline-flex;align-items:center}
@@ -2552,8 +2700,12 @@ a.fx-org:hover{border-color:rgba(27,58,107,.28);background:rgba(255,255,255,.8)}
   /* The seal comes down with everything else, but not to nothing — under
      ~40px the engraving stops resolving, which is the whole reason it left
      the rail. 64px is the floor that keeps the ring and the lettering. */
-  .hero-lockup{gap:14px}
-  .hero-seal>*{width:64px!important;height:64px!important}
+  .hero-lockup{gap:16px}
+  /* Down from the desktop's 128, but not to nothing — under ~40px the ring,
+     the lettering and the figure inside it stop resolving, which is the whole
+     reason the seal left the top rail. 84px is a phone-sized mark that still
+     reads as the engraving it is. */
+  .hero-seal>*{width:84px!important;height:84px!important}
 }
 
 /* ── Three actions, one width ─────────────────────────────────────────
